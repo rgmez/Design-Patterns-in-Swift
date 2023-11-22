@@ -5,7 +5,7 @@ This repository is dedicated to exploring various design patterns used in Swift 
 
 ### Creational Patterns
 These patterns are all about class instantiation. They can be divided into class-creation patterns and object-creational patterns.
-- Factory Method - [More info](#)
+- Factory Method - [TaskFactory.swift](./Creational%20Patterns/TaskFactory.md).
 - Abstract Factory - [More info](#)
 - Builder - [More info](#)
 - Prototype - [More info](#)
