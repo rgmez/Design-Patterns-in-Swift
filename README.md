@@ -1,41 +1,40 @@
-# Swift Design Patterns Repository
+# 📘 Swift Design Patterns Repository
 
-## Introduction
+## 🌟 Introduction
 This repository is dedicated to exploring various design patterns used in Swift programming. It serves as a guide for both novice and experienced developers to understand and implement design patterns effectively in their Swift projects.
 
-### Creational Patterns
+### 🏗 Creational Patterns
 These patterns are all about class instantiation. They can be divided into class-creation patterns and object-creational patterns.
-- Factory Method - [TaskFactory.swift](./Creational%20Patterns/Factory/TaskFactory.md).
-- Abstract Factory - [More info](#)
-- Builder - [More info](#)
-- Prototype - [More info](#)
+- 🏭 **Factory Method** - [TaskFactory.swift](./Creational%20Patterns/Factory/TaskFactory.md).
+- 🏭 **Abstract Factory** - [Details coming soon](#) 🚧 - We are actively working on this and will update it asap!.
+- 🛠 **Builder** - [Update scheduled in sequence](#)
+- 🤖 **Prototype** - [Update scheduled in sequence](#)
 
-### Structural Patterns
+### 🌉 Structural Patterns
 These patterns are concerned with how classes and objects are composed to form larger structures.
-- Adapter - [More info](#)
-- Bridge - [More info](#)
-- Composite - [More info](#)
-- Decorator - [More info](#)
-- Facade - [More info](#)
-- Flyweight - [More info](#)
-- Proxy - [More info](#)
+- 🔌 **Adapter** - [Update scheduled in sequence](#) 
+- 🌁 **Bridge** - [Update scheduled in sequence](#)
+- 🧱 **Composite** - [Update scheduled in sequence](#)
+- 🎨 **Decorator** - [Update scheduled in sequence](#)
+- 🏢 **Facade** - [Update scheduled in sequence](#) 
+- 🪶 **Flyweight** - [Update scheduled in sequence](#) 
+- 🛡️ **Proxy** - [Update scheduled in sequence](#) 
 
-### Behavioral Patterns
+### 🧠 Behavioral Patterns
 These patterns are concerned with algorithms and the assignment of responsibilities between objects.
-- Observer - [More info](#)
-- Mediator - [More info](#)
-- Visitor - [More info](#)
-- Command - [More info](#)
-- State - [More info](#)
-- Strategy - [More info](#)
-- Memento - [More info](#)
+- 👀 **Observer** - [Update scheduled in sequence](#) 
+- 🤝 **Mediator** - [Update scheduled in sequence](#) 
+- 👣 **Visitor** - [Update scheduled in sequence](#) 
+- 💻 **Command** - [Update scheduled in sequence](#) 
+- 📊 **State** - [Update scheduled in sequence](#) 
+- 🕹️ **Strategy** - [Update scheduled in sequence](#) 
+- 📜 **Memento** - [Update scheduled in sequence](#) 
 
-## Additional Resources
-- [Swift Documentation](https://swift.org/documentation/
+## 📚 Additional Resources
+- 📘 [Swift Documentation](https://swift.org/documentation/) 
 
-## Contact
-Feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/robertogomezm/).
+## 📞 Contact
+💼 Feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/robertogomezm/).
 
-## License
+## 📜 License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
