@@ -7,8 +7,8 @@ This repository is dedicated to exploring various design patterns used in Swift 
 These patterns are all about class instantiation. They can be divided into class-creation patterns and object-creational patterns.
 - 🏭 **Factory Method** - [TaskFactory.swift](./Creational%20Patterns/Factory/TaskFactory.md).
 - 🏭 **Abstract Factory** - [TaskAstractFactory.swift](./Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md).
-- 🛠 **Builder** - [Update scheduled in sequence](#) 🚧 - We are actively working on this and will update it asap!.
-- 🤖 **Prototype** - [Update scheduled in sequence](#)
+- 🛠 **Builder** - [TaskBuilder.swift](./Creational%20Patterns/Builder/Builder.md).
+- 🤖 **Prototype** - [Update scheduled in sequence](#) 🚧 - We are actively working on this and will update it asap!.
 
 ### 🌉 Structural Patterns
 These patterns are concerned with how classes and objects are composed to form larger structures.
