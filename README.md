@@ -8,11 +8,11 @@ These patterns are all about class instantiation. They can be divided into class
 - 🏭 **Factory Method** - [TaskFactory.swift](./Creational%20Patterns/Factory/TaskFactory.md).
 - 🏭 **Abstract Factory** - [TaskAstractFactory.swift](./Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md).
 - 🛠 **Builder** - [TaskBuilder.swift](./Creational%20Patterns/Builder/Builder.md).
-- 🤖 **Prototype** - [Update scheduled in sequence](#) 🚧 - We are actively working on this and will update it asap!.
+- 🤖 **Prototype** - [TaskPrototype.swift](./Creational%20Patterns/Prototype/Prototype.md).
 
 ### 🌉 Structural Patterns
 These patterns are concerned with how classes and objects are composed to form larger structures.
-- 🔌 **Adapter** - [Update scheduled in sequence](#) 
+- 🔌 **Adapter** - [Update scheduled in sequence](#) 🚧 - We are actively working on this and will update it asap!.
 - 🌁 **Bridge** - [Update scheduled in sequence](#)
 - 🧱 **Composite** - [Update scheduled in sequence](#)
 - 🎨 **Decorator** - [Update scheduled in sequence](#)
