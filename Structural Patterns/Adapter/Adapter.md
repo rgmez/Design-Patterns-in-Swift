@@ -25,4 +25,4 @@ The Adapter Design Pattern is a structural pattern that allows objects with inco
 
 In our Swift example, we demonstrated the Adapter Pattern by integrating an `ExternalTaskService` with a different interface (`taskName`, `taskDetail`, `isCompleted`) into an existing system expecting a `Task` protocol (`title`, `description`). The `ExternalTaskAdapter` served as a bridge, adapting the `ExternalTaskService` to the `Task` protocol, enabling seamless integration without altering the original code or the external service.
 
-For a practical implementation, see the Swift code in `ExternalTaskAdapter.swift`.
+For a practical implementation, see the Swift code in [ExternalTaskAdapter.swift](./ExternalTaskAdapter.swift).
