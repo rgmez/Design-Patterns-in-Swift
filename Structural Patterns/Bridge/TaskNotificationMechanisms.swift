@@ -4,79 +4,58 @@ import Foundation
 // issues with the Swift's own concurrency construct, Task.
 protocol MyTask {
     var title: String { get }
-    var description: String { get }
-    func performTask() async
+    func performTask() async -> String // Now returns a String describing the task result. I am making this change to try to provide more information to the end user.
 }
 
-// ExecutionMode Protocol (Implementor) - serves as the bridge between the task and how it's executed
-// allowing for flexible task execution strategies
-protocol ExecutionMode {
-    func execute(task: MyTask) async
-}
-
-// Concrete Implementor for Asynchronous Execution
-final class AsyncExecution: ExecutionMode {
-    func execute(task: MyTask) async {
-        print("Asynchronous Task: \(task.title) execution starts")
-        // Simulating a network call or a time-consuming operation
-        // Waiting for 2 seconds
-        await Task.sleep(2_000_000_000)
-        
-        // Now perform the task
-        await task.performTask()
-        print("Asynchronous Task: \(task.title) execution end")
-    }
-}
-
-// Concrete Implementor for Synchronous Execution
-final class SyncExecution: ExecutionMode {
-    func execute(task: MyTask) async {
-        print("Synchronous Task: \(task.title) execution starts")
-        await task.performTask()
-        print("Synchronous Task: \(task.title) execution end")
-    }
-}
-
-// Task Abstraction
-final class GenericTask: MyTask {
+// Concrete MyTask Implementation
+struct ReportGenerationMyTask: MyTask {
     var title: String
-    var description: String
-    var executionMode: ExecutionMode?
     
-    init(
-        title: String,
-        description: String,
-        executionMode: ExecutionMode? = nil
-    ) {
-        self.title = title
-        self.description = description
-        self.executionMode = executionMode
+    func performTask() async -> String {
+        print("\(title) Generating report...")
+        do {
+            try await Task.sleep(nanoseconds: 1_000_000_000) // Simulate time-consuming task
+            return "\(title) Report generated successfully." // Return a success message
+        } catch {
+            return "\(title) Task was cancelled." // Return a cancellation message
+        }
     }
-    
-    func performTask() async {
-        print("Performing Task: \(title) - \(description)")
+}
+
+// Notification Mechanism Protocol (Implementor)
+protocol NotificationMechanism {
+    func sendNotification(taskTitle: String, message: String) async
+}
+
+// Concrete Implementors for Notification Mechanisms
+final class EmailNotification: NotificationMechanism {
+    func sendNotification(taskTitle: String, message: String) async {
+        print("Sending email for '\(taskTitle)': \(message)")
+        
+        // Add the specific code to send the notification by email
     }
-    
-    func execute() async {
-        await executionMode?.execute(task: self)
+}
+
+final class MessagingNotification: NotificationMechanism {
+    func sendNotification(taskTitle: String, message: String) async {
+        print("Sending messaging notification for '\(taskTitle)': \(message)")
+        
+        // Add the specific code to send the notification by message
     }
 }
 
 // Usage Example
 func main() async {
-    let task1 = GenericTask(
-        title: "Update Database",
-        description: "Perform database migration.",
-        executionMode: SyncExecution()
-    )
-    await task1.execute()
-
-    let task2 = GenericTask(
-        title: "Fetch Remote Data",
-        description: "Download data from API.",
-        executionMode: AsyncExecution()
-    )
-    await task2.execute()
+    let task = ReportGenerationMyTask(title: "End-of-Year Financial Report")
+    let taskResult = await task.performTask()
+    
+    // Choose notification mechanism
+    let emailNotifier = EmailNotification()
+    let messageNotifier = MessagingNotification()
+    
+    // Send notifications with task result
+    await emailNotifier.sendNotification(taskTitle: task.title, message: taskResult)
+    await messageNotifier.sendNotification(taskTitle: task.title, message: taskResult)
 }
 
 Task {
