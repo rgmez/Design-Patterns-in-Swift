@@ -29,7 +29,7 @@ The Bridge Design Pattern is a structural design pattern that separates an abstr
 Demonstrates asynchronous and synchronous execution of tasks using the Bridge Pattern. By abstracting the execution logic (`ExecutionMode`) from the task itself (`MyTask`), the system allows for flexible task execution strategies without altering the task's definition. [TaskExecutionModes.swift](./TaskExecutionModes.swift)
 
 ### Example 2: Task Notification Mechanisms
-Explores sending notifications for tasks through different mechanisms (Email, Messaging) using the Bridge Pattern. It separates the notification mechanism (`NotificationMechanism`) from the task, enabling easy integration of new notification methods. [TaskNotificationMechanisms.swift]() 🚧🛠️ Work in Progress!
+Explores sending notifications for tasks through different mechanisms (Email, Messaging) using the Bridge Pattern. It separates the notification mechanism (`NotificationMechanism`) from the task, enabling easy integration of new notification methods. [TaskNotificationMechanisms.swift](./TaskNotificationMechanisms.swift)
 
 ### Example 3: Task Priority Management
 Illustrates assigning priorities (High, Medium, Low) to tasks using different strategies, showcasing another application of the Bridge Pattern. It decouples the priority assignment strategy from the task, facilitating the introduction of new prioritization algorithms. [TaskPriorityManagement.swift]() 🚧🛠️ Work in Progress!
