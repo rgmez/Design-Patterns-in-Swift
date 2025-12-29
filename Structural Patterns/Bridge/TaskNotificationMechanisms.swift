@@ -44,18 +44,38 @@ final class MessagingNotification: NotificationMechanism {
     }
 }
 
+// Bridge Abstraction
+struct NotifyingTaskRunner {
+    let task: MyTask
+    let notificationMechanism: NotificationMechanism
+    
+    func run() async {
+        let taskResult = await task.performTask()
+        await notificationMechanism.sendNotification(
+            taskTitle: task.title,
+            message: taskResult
+        )
+    }
+}
+
 // Usage Example
 func main() async {
     let task = ReportGenerationMyTask(title: "End-of-Year Financial Report")
-    let taskResult = await task.performTask()
     
     // Choose notification mechanism
     let emailNotifier = EmailNotification()
     let messageNotifier = MessagingNotification()
     
-    // Send notifications with task result
-    await emailNotifier.sendNotification(taskTitle: task.title, message: taskResult)
-    await messageNotifier.sendNotification(taskTitle: task.title, message: taskResult)
+    // Run the same task with different notification implementations
+    await NotifyingTaskRunner(
+        task: task,
+        notificationMechanism: emailNotifier
+    ).run()
+    
+    await NotifyingTaskRunner(
+        task: task,
+        notificationMechanism: messageNotifier
+    ).run()
 }
 
 Task {
