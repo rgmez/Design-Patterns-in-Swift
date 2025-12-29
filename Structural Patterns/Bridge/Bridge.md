@@ -32,6 +32,6 @@ Demonstrates asynchronous and synchronous execution of tasks using the Bridge Pa
 Explores sending notifications for tasks through different mechanisms (Email, Messaging) using the Bridge Pattern. It separates the notification mechanism (`NotificationMechanism`) from the task, enabling easy integration of new notification methods. [TaskNotificationMechanisms.swift](./TaskNotificationMechanisms.swift)
 
 ### Example 3: Task Priority Management
-Illustrates assigning priorities (High, Medium, Low) to tasks using different strategies, showcasing another application of the Bridge Pattern. It decouples the priority assignment strategy from the task, facilitating the introduction of new prioritization algorithms. [TaskPriorityManagement.swift]() 🚧🛠️ Work in Progress!
+Illustrates assigning priorities (High, Medium, Low) to tasks using different strategies, showcasing another application of the Bridge Pattern. It decouples the priority assignment strategy from the task, facilitating the introduction of new prioritization algorithms. [TaskPriorityManagement.swift](./TaskPriorityManagement.swift)
 
 These examples highlight the Bridge Design Pattern's utility in creating scalable, maintainable, and extensible systems by effectively managing the interdependencies between different parts of a system.
