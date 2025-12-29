@@ -13,7 +13,7 @@ These patterns are all about class instantiation. They can be divided into class
 ### 🌉 Structural Patterns
 These patterns are concerned with how classes and objects are composed to form larger structures.
 - 🔌 **Adapter** - [ExternalTaskFactory.swift](./Structural%20Patterns/Adapter/Adapter.md).
-- 🌁 **Bridge** - [Update scheduled in sequence](Structural%20Patterns/Bridge.md)
+- 🌁 **Bridge** - [TaskExecutionModes.swift](Structural%20Patterns/Bridge.md)
 - 🧱 **Composite** - [Update scheduled in sequence](#) 🚧 - We are actively working on this and will update it asap!.
 - 🎨 **Decorator** - [Update scheduled in sequence](#)
 - 🏢 **Facade** - [Update scheduled in sequence](#) 
