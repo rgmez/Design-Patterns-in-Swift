@@ -34,7 +34,7 @@ By Day 100, the repository should provide:
 - Publishing unverified code or presenting a work in progress as complete.
 - Publishing a LinkedIn post for every internal workday regardless of whether
   it contains a complete technical story.
-- Tracking private LinkedIn drafts under `Content/LinkedIn/` in Git.
+- Tracking private editorial working files under `Editorial/` in Git.
 - Automatically pushing, opening pull requests, publishing posts, or releasing
   tags without review.
 
@@ -110,7 +110,7 @@ independent from the public series: daily progress does not create an obligation
 to publish daily.
 
 - Public entries use `Day N` as a series sequence, not as elapsed calendar days.
-- Drafts live only under the Git-ignored `Content/LinkedIn/series/` directory.
+- Drafts live only under the Git-ignored `Editorial/series/` directory.
 - Publication remains manual after review, with a target cadence of two or three
   posts per week rather than a fixed daily promise.
 - An internal day without a complete, useful story produces no LinkedIn draft.
@@ -140,8 +140,9 @@ an editorial guide, not a content quota.
 - [x] **Day 002 — Audit the current catalogue.** Record implemented, missing,
   misclassified, duplicated, and undocumented patterns with file-level evidence
   in the [baseline audit](Documentation/catalogue-audit.md).
-- [ ] **Day 003 — Create the package boundary.** Introduce the smallest Swift
-  Package structure that can compile examples together without target explosion.
+- [x] **Day 003 — Create the package boundary.** Introduce the smallest Swift
+  Package structure that can compile examples together without target explosion,
+  documented in the [package boundary](Documentation/package-boundary.md).
 - [ ] **Day 004 — Make behavior verifiable.** Add the initial test target and CI
   checks for build, tests, and compiler warnings.
 - [ ] **Day 005 — Standardize teaching units.** Define the pattern README

@@ -1,2 +1,5 @@
-# LinkedIn drafts are private editorial material and must remain local.
-Content/LinkedIn/
+# Swift Package Manager build artifacts.
+.build/
+
+# Editorial working files are private and must remain local.
+Editorial/
