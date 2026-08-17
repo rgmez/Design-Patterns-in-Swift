@@ -1,8 +1,8 @@
-# 100 Days of Pragmatic Design Patterns in Swift
+# 100-Day Internal Roadmap: Pragmatic Design Patterns in Swift
 
-This roadmap turns the repository into an executable, tested, visual guide to
-the 23 Gang of Four design patterns without treating patterns as goals by
-themselves.
+This internal roadmap turns the repository into an executable, tested, visual
+guide to the 23 Gang of Four design patterns without treating patterns as goals
+by themselves or imposing the same cadence on the public series.
 
 The series follows one rule:
 
@@ -21,8 +21,8 @@ By Day 100, the repository should provide:
 - A consistent RG editorial header and an accessible technical diagram per
   pattern.
 - Explicit alternatives and a `When not to use it` section for every pattern.
-- A private, Git-ignored daily Spanish LinkedIn draft grounded in verified
-  repository work.
+- A private, Git-ignored English LinkedIn draft for each meaningful publication
+  milestone, grounded in verified repository work.
 - A reusable `choose-swift-design-pattern` Codex skill.
 
 ## Non-goals
@@ -32,6 +32,8 @@ By Day 100, the repository should provide:
   make an example look architectural.
 - Recreating production infrastructure that does not help explain the pattern.
 - Publishing unverified code or presenting a work in progress as complete.
+- Publishing a LinkedIn post for every internal workday regardless of whether
+  it contains a complete technical story.
 - Tracking private LinkedIn drafts under `Content/LinkedIn/` in Git.
 - Automatically pushing, opening pull requests, publishing posts, or releasing
   tags without review.
@@ -42,7 +44,7 @@ By Day 100, the repository should provide:
 2. Start from the first unchecked day.
 3. Keep the change small enough to review as one coherent commit.
 4. Prefer direct Swift before introducing a pattern.
-5. Base documentation and posts only on verified behavior.
+5. Base documentation and publication drafts only on verified behavior.
 6. Stop when unrelated local changes, failed validation, or a scope-expanding
    decision requires human review.
 7. Do not begin the next day early.
@@ -56,7 +58,8 @@ A day can be checked only when every applicable item is true:
 - Relevant builds and tests pass without warnings.
 - Documentation matches the code and its commands have been checked.
 - Visuals follow the approved RG system when the day includes a visual asset.
-- The LinkedIn draft refers only to evidence produced or verified that day.
+- When the day closes a publication milestone, its LinkedIn draft refers only
+  to evidence produced or verified by completed roadmap work.
 - The complete diff has been reviewed for unrelated changes.
 - One focused English commit has been created using `New:`, `Fix:`, or
   `Update:`.
@@ -74,14 +77,14 @@ Each pattern gets three focused days:
   the concrete requirement that makes it insufficient.
 - **Day C — Pattern:** introduce the smallest justified pattern implementation,
   complete tests, `README.md`, editorial header, Mermaid diagram, alternatives,
-  trade-offs, and `When not to use it`.
+  trade-offs, `When not to use it`, and one complete publication draft.
 
 The direct implementation does not need to remain in the final source when the
 documentation and Git history explain the evolution more clearly.
 
 ## Pattern inventory
 
-The canonical target is the complete GoF catalogue:
+The initial canonical target is the complete GoF catalogue:
 
 - **Creational:** Abstract Factory, Builder, Factory Method, Prototype,
   Singleton.
@@ -94,14 +97,49 @@ Existing files are historical inputs, not automatically accepted examples.
 Factory Method, Abstract Factory, Bridge, Builder, and Prototype require a
 conceptual review before being marked as complete.
 
+The 23 GoF patterns are a first milestone, not a permanent boundary. A modern
+Swift, concurrency, Apple-platform, or architectural pattern may be added later
+only when a real app problem demonstrates its value under the same decision
+criteria. Any expansion must be visible in a reviewed roadmap change; catalogue
+size is never a goal by itself.
+
+## Publication cadence
+
+The 100 roadmap days are small internal work units. They are deliberately
+independent from the public series: daily progress does not create an obligation
+to publish daily.
+
+- Public entries use `Day N` as a series sequence, not as elapsed calendar days.
+- Drafts live only under the Git-ignored `Content/LinkedIn/series/` directory.
+- Publication remains manual after review, with a target cadence of two or three
+  posts per week rather than a fixed daily promise.
+- An internal day without a complete, useful story produces no LinkedIn draft.
+
+The initial publication map contains approximately 29 posts:
+
+| Public entry | Internal trigger | Story |
+| --- | --- | --- |
+| Day 0 | Before the programme | Introduce the repository, the initial 23-pattern milestone, and the no-overengineering rule. |
+| Day 1 | Day 007 | Explain the verified baseline and the foundation built before the first rewrite. |
+| Days 2–24 | Each pattern's Day C | Publish one complete problem-to-trade-offs story for each GoF pattern. |
+| Day 25 | Day 090 | Show a real case where the direct Swift solution wins and no named pattern is added. |
+| Day 26 | Day 091 | Review the complete initial catalogue and the distinctions that prevented misclassification. |
+| Day 27 | Day 098 | Explain how repository evidence became the `choose-swift-design-pattern` skill. |
+| Day 28 | Day 100 | Share the retrospective, rejected abstractions, and possible next patterns. |
+
+This map may shrink, merge, or grow when the technical story requires it. It is
+an editorial guide, not a content quota.
+
 ## Daily schedule
 
 ### Week 1 — Foundation
 
-- [x] **Day 001 — Establish the programme.** Create the 100-day roadmap,
-  operating rules, Definition of Done, and evidence-based launch post.
-- [ ] **Day 002 — Audit the current catalogue.** Record implemented, missing,
-  misclassified, duplicated, and undocumented patterns with file-level evidence.
+- [x] **Day 001 — Establish the programme.** Create the 100-day internal
+  roadmap, operating rules, and Definition of Done. Day 0 remains a separate
+  private launch draft.
+- [x] **Day 002 — Audit the current catalogue.** Record implemented, missing,
+  misclassified, duplicated, and undocumented patterns with file-level evidence
+  in the [baseline audit](Documentation/catalogue-audit.md).
 - [ ] **Day 003 — Create the package boundary.** Introduce the smallest Swift
   Package structure that can compile examples together without target explosion.
 - [ ] **Day 004 — Make behavior verifiable.** Add the initial test target and CI
@@ -111,7 +149,8 @@ conceptual review before being marked as complete.
 - [ ] **Day 006 — Map realistic app domains.** Assign each pattern a credible
   commerce, editor, integration, content, media, or system scenario.
 - [ ] **Day 007 — Foundation review.** Run all available checks, repair links,
-  remove avoidable structure, and confirm readiness for the first pattern.
+  remove avoidable structure, confirm readiness for the first pattern, and
+  prepare the first evidence-based public-series draft.
 
 ### Week 2 — Adapter and Strategy
 
