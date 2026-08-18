@@ -143,8 +143,9 @@ an editorial guide, not a content quota.
 - [x] **Day 003 — Create the package boundary.** Introduce the smallest Swift
   Package structure that can compile examples together without target explosion,
   documented in the [package boundary](Documentation/package-boundary.md).
-- [ ] **Day 004 — Make behavior verifiable.** Add the initial test target and CI
-  checks for build, tests, and compiler warnings.
+- [x] **Day 004 — Make behavior verifiable.** Add the initial test target and CI
+  checks for build, tests, and compiler warnings, documented in the
+  [quality gates](Documentation/quality-gates.md).
 - [ ] **Day 005 — Standardize teaching units.** Define the pattern README
   template, visual style contract, approved Adapter reference, and RG logo asset.
 - [ ] **Day 006 — Map realistic app domains.** Assign each pattern a credible

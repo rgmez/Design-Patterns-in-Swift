@@ -24,8 +24,8 @@ This keeps the package useful for two purposes:
 
 - `swift build` verifies that canonical examples coexist without symbol
   collisions or top-level playground behavior.
-- The test target introduced on Day 004 can verify examples through ordinary
-  module imports rather than executable print statements.
+- The `DesignPatternsTests` target verifies examples through ordinary module
+  imports rather than executable print statements.
 
 ## Why historical examples are not included
 
@@ -62,3 +62,6 @@ swift build
 
 The `.build/` directory is a local Swift Package Manager artifact and is ignored
 by Git.
+
+Build and test commands shared with CI are documented in the
+[quality gates](quality-gates.md).
