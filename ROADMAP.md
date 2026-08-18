@@ -150,8 +150,9 @@ an editorial guide, not a content quota.
   [pattern README template](Documentation/pattern-readme-template.md),
   [visual style contract](Documentation/visual-style.md), approved Adapter
   reference, and RG logo asset.
-- [ ] **Day 006 — Map realistic app domains.** Assign each pattern a credible
-  commerce, editor, integration, content, media, or system scenario.
+- [x] **Day 006 — Map realistic app domains.** Assign each pattern a credible
+  commerce, editor, integration, content, media, or system scenario in the
+  [real-app domain map](Documentation/app-domain-map.md).
 - [ ] **Day 007 — Foundation review.** Run all available checks, repair links,
   remove avoidable structure, confirm readiness for the first pattern, and
   prepare the first evidence-based public-series draft.
