@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-17
+Last updated: 2026-08-18
 
 ## Outcomes
 
@@ -153,9 +153,10 @@ an editorial guide, not a content quota.
 - [x] **Day 006 — Map realistic app domains.** Assign each pattern a credible
   commerce, editor, integration, content, media, or system scenario in the
   [real-app domain map](Documentation/app-domain-map.md).
-- [ ] **Day 007 — Foundation review.** Run all available checks, repair links,
+- [x] **Day 007 — Foundation review.** Run all available checks, repair links,
   remove avoidable structure, confirm readiness for the first pattern, and
-  prepare the first evidence-based public-series draft.
+  prepare the first evidence-based public-series draft. Evidence is recorded
+  in the [foundation review](Documentation/foundation-review.md).
 
 ### Week 2 — Adapter and Strategy
 
