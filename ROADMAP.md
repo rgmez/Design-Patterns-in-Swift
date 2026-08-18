@@ -160,8 +160,10 @@ an editorial guide, not a content quota.
 
 ### Week 2 — Adapter and Strategy
 
-- [ ] **Day 008 — Adapter problem.** Define an incompatible external payment or
+- [x] **Day 008 — Adapter problem.** Define an incompatible external payment or
   analytics SDK boundary, direct integration, and acceptance tests.
+  The [payment SDK problem](Documentation/adapter-problem.md) fixes the first
+  vendor contract and the evidence required before introducing an adapter.
 - [ ] **Day 009 — Adapter pressure.** Demonstrate how vendor types and errors leak
   into the app when the second integration requirement arrives.
 - [ ] **Day 010 — Adapter solution.** Implement the minimal adapter, tests,
