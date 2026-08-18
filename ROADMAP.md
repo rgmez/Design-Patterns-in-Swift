@@ -146,8 +146,10 @@ an editorial guide, not a content quota.
 - [x] **Day 004 — Make behavior verifiable.** Add the initial test target and CI
   checks for build, tests, and compiler warnings, documented in the
   [quality gates](Documentation/quality-gates.md).
-- [ ] **Day 005 — Standardize teaching units.** Define the pattern README
-  template, visual style contract, approved Adapter reference, and RG logo asset.
+- [x] **Day 005 — Standardize teaching units.** Define the
+  [pattern README template](Documentation/pattern-readme-template.md),
+  [visual style contract](Documentation/visual-style.md), approved Adapter
+  reference, and RG logo asset.
 - [ ] **Day 006 — Map realistic app domains.** Assign each pattern a credible
   commerce, editor, integration, content, media, or system scenario.
 - [ ] **Day 007 — Foundation review.** Run all available checks, repair links,
