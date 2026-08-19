@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## Outcomes
 
@@ -164,8 +164,10 @@ an editorial guide, not a content quota.
   analytics SDK boundary, direct integration, and acceptance tests.
   The [payment SDK problem](Documentation/adapter-problem.md) fixes the first
   vendor contract and the evidence required before introducing an adapter.
-- [ ] **Day 009 — Adapter pressure.** Demonstrate how vendor types and errors leak
-  into the app when the second integration requirement arrives.
+- [x] **Day 009 — Adapter pressure.** Demonstrate how vendor types and errors leak
+  into the app when the second integration requirement arrives. The
+  [pressure review](Documentation/adapter-pressure.md) records the direct,
+  executable two-provider branch and the coupling it exposes.
 - [ ] **Day 010 — Adapter solution.** Implement the minimal adapter, tests,
   canonical README, RG header, Mermaid diagram, and trade-offs.
 - [ ] **Day 011 — Strategy problem.** Define runtime-selectable pricing or
