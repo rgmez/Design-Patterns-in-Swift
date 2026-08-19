@@ -1,4 +1,4 @@
-# Adapter
+# 🔌 Adapter
 
 ![A payment contract feeds a red translation housing before reaching an incompatible vendor connector.](../../Documentation/Assets/Patterns/structural/adapter-header.png)
 
@@ -6,7 +6,7 @@
 
 **Category:** Structural
 
-## The app problem
+## 🎯 The app problem
 
 Checkout must authorize a card payment before placing an order. The app owns
 `PaymentRequest`, `PaymentAuthorization`, and the small `PaymentError` vocabulary
@@ -25,7 +25,7 @@ under app control.
 - Select a provider once at the composition root, not during checkout.
 - Reject invalid domain input before invoking a vendor SDK.
 
-## Start with direct Swift
+## 🪶 Start with direct Swift
 
 The first provider was intentionally integrated directly. Day 009 extended that
 solution with a `CheckoutPaymentProvider` enum and a `switch` in
@@ -38,7 +38,7 @@ factory, or payment framework was needed. The second provider changed the
 decision. Checkout now imported and branched on vendor types, and every new SDK
 would extend the same service.
 
-## The turning point
+## ⚡ The turning point
 
 The pressure is not that `submit(_:)` and `authorize(payment:)` have different
 names. The pressure is that request ownership, success identity, terminal states,
@@ -50,14 +50,14 @@ a second error taxonomy inside checkout. A local helper could make a branch
 shorter, but it could not stop checkout from knowing which SDK vocabulary to
 branch on.
 
-## Pattern intent
+## 🧭 Pattern intent
 
 Adapter gives checkout one app-owned authorization operation and lets each
 provider translate its own request, result, and errors at the integration edge.
 The pattern contains incompatibility; it does not make the vendors identical or
 choose a provider for business logic.
 
-## Participants and responsibilities
+## 🧩 Participants and responsibilities
 
 | App role | Swift type | Responsibility |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ The protocol exists because two concrete integrations already vary at this
 boundary and because the composition root must substitute one for the other.
 There is no protocol for domain values or for provider selection.
 
-## How the Swift implementation works
+## ⚙️ How the Swift implementation works
 
 1. The composition root wraps either SDK in `AtlasPayAdapter` or
    `BorealPayAdapter` and injects it into `CheckoutPaymentService`.
@@ -84,7 +84,7 @@ The adapters are value types holding `Sendable` client closures. Async work stay
 at the vendor boundary; checkout owns no provider-specific cancellation or
 retry policy beyond the domain error it receives.
 
-## Diagram
+## 🗺️ Diagram
 
 ```mermaid
 flowchart LR
@@ -107,7 +107,7 @@ or BorealPayAdapter. Both conform to PaymentAuthorizing, which is the only
 contract CheckoutPaymentService uses. Each adapter talks to its own vendor SDK
 and returns the same authorization or domain error outcome.
 
-## Run the example
+## ▶️ Run the example
 
 From the repository root:
 
@@ -119,7 +119,7 @@ The package contains deterministic SDK closures rather than live payment
 traffic. The executable proof is the Swift Testing suite, so no network or
 credentials are required.
 
-## Tests
+## 🧪 Tests
 
 ```sh
 swift test -Xswiftc -warnings-as-errors --filter AdapterTests
@@ -133,7 +133,7 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 - Checkout can swap adapters without changing its operation or branching on a
   provider.
 
-## Trade-offs
+## ⚖️ Trade-offs
 
 ### What improves
 
@@ -150,7 +150,7 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
   may need to model explicitly.
 - Adapters must preserve async cancellation and error semantics as SDKs evolve.
 
-## Alternatives considered
+## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
@@ -163,7 +163,7 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 Factory Method is also deliberately absent: provider selection is composition
 wiring, not a creator workflow that subclasses extend.
 
-## When not to use it
+## 🚫 When not to use it
 
 - Keep the direct SDK call when one provider is stable and its mapping is local.
 - Prefer a function or enum when the variation is closed, synchronous, and does
@@ -171,7 +171,7 @@ wiring, not a creator workflow that subclasses extend.
 - Do not add a protocol only for mocking a single concrete SDK; use the SDK
   closure seam until a second real integration exists.
 
-## Source map
+## 🗂️ Source map
 
 - [`PaymentDomain.swift`](../../Sources/DesignPatterns/Adapter/PaymentDomain.swift) — app-owned request, authorization, and error values.
 - [`PaymentAuthorizing.swift`](../../Sources/DesignPatterns/Adapter/PaymentAuthorizing.swift) — minimal target contract.
