@@ -168,8 +168,10 @@ an editorial guide, not a content quota.
   into the app when the second integration requirement arrives. The
   [pressure review](Documentation/adapter-pressure.md) records the direct,
   executable two-provider branch and the coupling it exposes.
-- [ ] **Day 010 — Adapter solution.** Implement the minimal adapter, tests,
-  canonical README, RG header, Mermaid diagram, and trade-offs.
+- [x] **Day 010 — Adapter solution.** Implement the minimal adapter, tests,
+  canonical README, RG header, Mermaid diagram, and trade-offs. The [canonical
+  Adapter guide](Structural%20Patterns/Adapter/README.md) keeps provider
+  translation outside checkout.
 - [ ] **Day 011 — Strategy problem.** Define runtime-selectable pricing or
   shipping policies and a direct implementation.
 - [ ] **Day 012 — Strategy pressure.** Show the requirement that makes growing

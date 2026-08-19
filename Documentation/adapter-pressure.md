@@ -70,8 +70,8 @@ stable provider, the Atlas-only local mapping described on Day 008 remains
 shorter and easier to navigate than an abstraction.
 
 The pressure is specifically the combination of immediate provider variation
-and integration knowledge inside app-owned checkout code. Day 010 may introduce
-one domain operation at that boundary only if it removes the provider switch and
+and integration knowledge inside app-owned checkout code. Day 010 addresses it
+with one domain operation at that boundary, removing the provider switch and
 mappings from `CheckoutPaymentService` without moving provider selection into
 business logic.
 
@@ -80,17 +80,18 @@ business logic.
 Run the focused evidence from the repository root:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter AdapterPressureTests
+swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 ```
 
-[`AdapterPressureTests`](../Tests/DesignPatternsTests/AdapterPressureTests.swift)
-verify lossless request mapping, approval mapping, hidden vendor decline codes,
-retryable infrastructure failures, validation before SDK invocation, and the
-second provider's distinct request and result path.
+[`AdapterTests`](../Tests/DesignPatternsTests/AdapterTests.swift) now verify
+lossless request mapping, approval mapping, hidden vendor decline codes,
+retryable infrastructure failures, validation before SDK invocation, and
+provider substitution through the common contract.
 
 ## Day 009 decision
 
 Adapter has now earned consideration: checkout changes whenever a payment SDK is
-added or replaced, even though its domain operation is stable. The next day must
-test whether two minimal SDK-specific adapters reduce that coupling. It must not
-add a factory or a broader payment framework.
+added or replaced, even though its domain operation is stable. The completed
+solution in [`Structural Patterns/Adapter/README.md`](../Structural%20Patterns/Adapter/README.md)
+uses two minimal SDK-specific adapters and keeps provider selection at the
+composition root. It does not add a factory or a broader payment framework.

@@ -36,7 +36,7 @@ The links below distinguish historical material from canonical, tested examples.
 
 ### Structural
 
-- **Adapter** — [historical draft](Structural%20Patterns/Adapter/Adapter.md); first canonical cycle on Days 008–010.
+- **Adapter** — [canonical example](Structural%20Patterns/Adapter/README.md) with [historical draft](Structural%20Patterns/Adapter/Adapter.md); completed on Days 008–010.
 - **Bridge** — [historical draft](Structural%20Patterns/Bridge/Bridge.md); scheduled for replacement on Days 015–017.
 - **Composite** — scheduled for Days 064–066; see the [catalogue audit](Documentation/catalogue-audit.md#complete-gof-catalogue).
 - **Decorator** — scheduled for Days 046–048; see the [catalogue audit](Documentation/catalogue-audit.md#complete-gof-catalogue).
