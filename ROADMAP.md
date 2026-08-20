@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 ## Outcomes
 
@@ -172,8 +172,10 @@ an editorial guide, not a content quota.
   canonical README, RG header, Mermaid diagram, and trade-offs. The [canonical
   Adapter guide](Structural%20Patterns/Adapter/README.md) keeps provider
   translation outside checkout.
-- [ ] **Day 011 — Strategy problem.** Define runtime-selectable pricing or
-  shipping policies and a direct implementation.
+- [x] **Day 011 — Strategy problem.** Define runtime-selectable pricing or
+  shipping policies and a direct implementation. The [delivery promise
+  problem](Documentation/strategy-problem.md) proves the enum-and-function
+  baseline before any Strategy boundary exists.
 - [ ] **Day 012 — Strategy pressure.** Show the requirement that makes growing
   conditionals harder to test and vary independently.
 - [ ] **Day 013 — Strategy solution.** Implement the minimal strategy boundary

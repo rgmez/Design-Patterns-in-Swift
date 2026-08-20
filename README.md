@@ -60,7 +60,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 📸 **Memento** — Planned · Days 057–059
 - 👀 **Observer** — Planned · Days 032–034
 - 🚦 **State** — Planned · Days 036–038
-- ♟️ **Strategy** — Planned · Days 011–013
+- ♟️ **Strategy** — [Problem defined](Documentation/strategy-problem.md) · Days 011–013
 - 📋 **Template Method** — Planned · Days 071–073
 - 🚪 **Visitor** — Planned · Days 078–080
 
