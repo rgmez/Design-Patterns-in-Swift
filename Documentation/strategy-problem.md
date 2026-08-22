@@ -66,11 +66,13 @@ The Day 011 implementation and Swift Testing suite prove:
 
 ## Evidence required on Day 012
 
-Day 012 must introduce one credible product requirement that cannot be reduced
+Day 012 introduced one credible product requirement that cannot be reduced
 to another local integer key without making the central conditional own
 independent policy dependencies or release cadence. Candidate pressure includes
 a partner-funded score that needs basket context or an experiment policy
 delivered independently from the three built-in choices.
+
+The implemented evidence is recorded in the [Strategy pressure review](strategy-pressure.md).
 
 That day must identify the actual edits, setup, and tests forced into this
 function. If an added enum case or injected comparison closure remains clearer,

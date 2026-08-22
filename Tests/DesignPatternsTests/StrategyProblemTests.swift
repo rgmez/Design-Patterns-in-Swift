@@ -3,7 +3,7 @@ import Testing
 
 @Suite("Strategy problem")
 struct StrategyProblemTests {
-    private let options = [
+    private static let options = [
         DeliveryOption(
             id: "express-courier",
             feeInMinorUnits: 1_299,
@@ -23,55 +23,118 @@ struct StrategyProblemTests {
             carbonGrams: 1_100
         )
     ]
-
-    @Test("Ranks the same options by the selected checkout preference", arguments: [
-        (DeliverySortPreference.lowestCost, [
-            "standard-home", "parcel-locker", "express-courier"
-        ]),
-        (DeliverySortPreference.earliestArrival, [
-            "express-courier", "parcel-locker", "standard-home"
-        ]),
-        (DeliverySortPreference.lowestCarbon, [
-            "parcel-locker", "standard-home", "express-courier"
-        ])
+    private static let firstCampaign = DeliveryRankingContext(partnerPointsByOptionID: [
+        "express-courier": 15,
+        "parcel-locker": 80,
+        "standard-home": 35
     ])
-    func ranksBySelectedPreference(
-        _ preference: DeliverySortPreference,
-        expectedIDs: [String]
-    ) {
-        let rankedOptions = rankDeliveryOptions(options, by: preference)
+    private static let updatedCampaign = DeliveryRankingContext(partnerPointsByOptionID: [
+        "express-courier": 95,
+        "parcel-locker": 20,
+        "standard-home": 35
+    ])
 
-        #expect(rankedOptions.map(\.id) == expectedIDs)
+    @Suite("Built-in preferences")
+    struct BuiltInPreferences {
+        @Test("Ranks the same options by the selected checkout preference", arguments: [
+            (DeliverySortPreference.lowestCost, [
+                "standard-home", "parcel-locker", "express-courier"
+            ]),
+            (DeliverySortPreference.earliestArrival, [
+                "express-courier", "parcel-locker", "standard-home"
+            ]),
+            (DeliverySortPreference.lowestCarbon, [
+                "parcel-locker", "standard-home", "express-courier"
+            ])
+        ])
+        func ranksBySelectedPreference(
+            _ preference: DeliverySortPreference,
+            expectedIDs: [String]
+        ) {
+            let rankedOptions = rankDeliveryOptions(StrategyProblemTests.options, by: preference)
+
+            #expect(rankedOptions.map(\.id) == expectedIDs)
+        }
+
+        @Test("Uses option identity as a deterministic tie-breaker")
+        func resolvesTiesDeterministically() {
+            let tiedOptions = [
+                DeliveryOption(
+                    id: "weekend-home",
+                    feeInMinorUnits: 599,
+                    estimatedArrivalDays: 2,
+                    carbonGrams: 900
+                ),
+                DeliveryOption(
+                    id: "collection-point",
+                    feeInMinorUnits: 599,
+                    estimatedArrivalDays: 4,
+                    carbonGrams: 300
+                )
+            ]
+
+            let rankedOptions = rankDeliveryOptions(tiedOptions, by: .lowestCost)
+
+            #expect(rankedOptions.map(\.id) == ["collection-point", "weekend-home"])
+        }
+
+        @Test("Leaves the fulfillment response unchanged")
+        func preservesSourceOptions() {
+            let sourceOptions = StrategyProblemTests.options
+
+            _ = rankDeliveryOptions(StrategyProblemTests.options, by: .earliestArrival)
+
+            #expect(StrategyProblemTests.options == sourceOptions)
+        }
     }
 
-    @Test("Uses option identity as a deterministic tie-breaker")
-    func resolvesTiesDeterministically() {
-        let tiedOptions = [
-            DeliveryOption(
-                id: "weekend-home",
-                feeInMinorUnits: 599,
-                estimatedArrivalDays: 2,
-                carbonGrams: 900
-            ),
-            DeliveryOption(
-                id: "collection-point",
-                feeInMinorUnits: 599,
-                estimatedArrivalDays: 4,
-                carbonGrams: 300
+    @Suite("Partner-sponsored preference")
+    struct PartnerSponsoredPreference {
+        @Test("Applies partner campaign scores supplied outside the ranking function")
+        func ranksPartnerSponsoredOptions() {
+            let rankedOptions = rankDeliveryOptions(
+                StrategyProblemTests.options,
+                by: .partnerSponsored,
+                context: StrategyProblemTests.firstCampaign
             )
-        ]
 
-        let rankedOptions = rankDeliveryOptions(tiedOptions, by: .lowestCost)
+            #expect(rankedOptions.map(\.id) == [
+                "parcel-locker", "standard-home", "express-courier"
+            ])
+        }
 
-        #expect(rankedOptions.map(\.id) == ["collection-point", "weekend-home"])
-    }
+        @Test("Uses zero points for an option missing from the campaign")
+        func defaultsMissingPartnerScore() {
+            let campaign = DeliveryRankingContext(partnerPointsByOptionID: [
+                "parcel-locker": 80
+            ])
 
-    @Test("Leaves the fulfillment response unchanged")
-    func preservesSourceOptions() {
-        let sourceOptions = options
+            let rankedOptions = rankDeliveryOptions(
+                StrategyProblemTests.options,
+                by: .partnerSponsored,
+                context: campaign
+            )
 
-        _ = rankDeliveryOptions(options, by: .earliestArrival)
+            #expect(rankedOptions.map(\.id) == [
+                "parcel-locker", "express-courier", "standard-home"
+            ])
+        }
 
-        #expect(options == sourceOptions)
+        @Test("Lets a campaign update change its policy without changing checkout code")
+        func respondsToUpdatedPartnerCampaign() {
+            let firstRanking = rankDeliveryOptions(
+                StrategyProblemTests.options,
+                by: .partnerSponsored,
+                context: StrategyProblemTests.firstCampaign
+            )
+            let updatedRanking = rankDeliveryOptions(
+                StrategyProblemTests.options,
+                by: .partnerSponsored,
+                context: StrategyProblemTests.updatedCampaign
+            )
+
+            #expect(firstRanking.first?.id == "parcel-locker")
+            #expect(updatedRanking.first?.id == "express-courier")
+        }
     }
 }
