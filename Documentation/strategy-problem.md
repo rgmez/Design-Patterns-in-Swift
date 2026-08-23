@@ -89,10 +89,10 @@ or carbon ordering and recombines them as one ranked line on the right. The
 selector is the focal point; the rails express alternative behavior, not state
 transitions or two-dimensional product combinations.
 
-Day 013 will generate and compose the final header only after the Strategy
-implementation and its wording are verified. Until then, this thesis is the
-reviewable visual specification; it is not a claim that the pattern has earned
-its place.
+Day 013 verified this thesis and composed the final header for the
+[canonical Strategy guide](../Behavioral%20Patterns/Strategy/README.md). The
+selector represents the first-class ranking value; the three lanes remain
+alternative behavior, not state transitions or coupled implementation axes.
 
 ## Day 011 decision
 

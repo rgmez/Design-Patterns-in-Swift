@@ -72,11 +72,11 @@ enum case.
 Run the focused evidence from the repository root:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter StrategyProblemTests
+swift test -Xswiftc -warnings-as-errors --filter StrategyTests
 ```
 
-The tests cover the campaign ranking and demonstrate that two campaign
-snapshots change ordering without mutating fulfillment values or checkout code.
+The current suite retains the campaign evidence and demonstrates that two
+snapshots change ordering without mutating fulfillment values or the ranker.
 
 ## Day 012 decision
 
@@ -84,3 +84,11 @@ The direct implementation remains the current solution, but it now carries a
 credible pressure point: independently changing campaign policy data is
 entering a central conditional. Day 013 may introduce only the minimum Strategy
 structure if it removes a measurable cost from that boundary.
+
+## Day 013 resolution
+
+The [canonical Strategy guide](../Behavioral%20Patterns/Strategy/README.md)
+records the verified replacement. `DeliveryRankingStrategy` now owns the score
+function, direction, and immutable campaign snapshot, while the ranker owns only
+sorting. This removes the preference switch and generic context without adding
+a protocol or one concrete type per policy.

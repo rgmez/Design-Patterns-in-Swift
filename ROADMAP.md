@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-21
+Last updated: 2026-08-23
 
 ## Outcomes
 
@@ -180,8 +180,10 @@ an editorial guide, not a content quota.
   conditionals harder to test and vary independently. The [pressure review](Documentation/strategy-pressure.md)
   adds a partner-sponsored ranking policy with independently supplied campaign
   data while deliberately retaining the direct switch.
-- [ ] **Day 013 — Strategy solution.** Implement the minimal strategy boundary
-  and explain when an enum or function remains better.
+- [x] **Day 013 — Strategy solution.** Implement the minimal strategy boundary
+  and explain when an enum or function remains better. The [canonical Strategy
+  guide](Behavioral%20Patterns/Strategy/README.md) uses one value type to make
+  delivery ranking policies interchangeable without a protocol hierarchy.
 - [ ] **Day 014 — Weekly review.** Validate Adapter and Strategy together and
   compare Strategy with State and Bridge.
 
