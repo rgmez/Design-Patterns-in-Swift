@@ -8,7 +8,11 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation is ready for the first pattern cycle. The repository now has one Swift Package library target, a Swift Testing target, warning-as-error build gates, and a CI workflow. Historical playground files remain outside the package until each scheduled replacement is tested and documented.
+The foundation and the first two pattern cycles are complete. Adapter and
+Strategy now provide canonical, tested examples; historical playground files
+remain outside the package until each scheduled replacement is tested and
+documented. The [first pattern review](Documentation/week-02-review.md) verifies
+their shared quality gates and distinguishes Strategy from State and Bridge.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and readiness decision for Day 007.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and conceptual decisions for all 23 patterns.
@@ -60,7 +64,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 📸 **Memento** — Planned · Days 057–059
 - 👀 **Observer** — Planned · Days 032–034
 - 🚦 **State** — Planned · Days 036–038
-- ♟️ **Strategy** — [Complete guide](Behavioral%20Patterns/Strategy/README.md) · Days 011–013
+- ♟️ **Strategy** — [Canonical example](Behavioral%20Patterns/Strategy/README.md) · Days 011–013 ✅
 - 📋 **Template Method** — Planned · Days 071–073
 - 🚪 **Visitor** — Planned · Days 078–080
 

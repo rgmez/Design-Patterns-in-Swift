@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-23
+Last updated: 2026-08-24
 
 ## Outcomes
 
@@ -184,8 +184,10 @@ an editorial guide, not a content quota.
   and explain when an enum or function remains better. The [canonical Strategy
   guide](Behavioral%20Patterns/Strategy/README.md) uses one value type to make
   delivery ranking policies interchangeable without a protocol hierarchy.
-- [ ] **Day 014 — Weekly review.** Validate Adapter and Strategy together and
-  compare Strategy with State and Bridge.
+- [x] **Day 014 — Weekly review.** Validate Adapter and Strategy together and
+  compare Strategy with State and Bridge. The [review evidence](Documentation/week-02-review.md)
+  confirms both examples remain minimal, warning-free, visually consistent, and
+  correctly classified.
 
 ### Week 3 — Bridge and Factory Method
 
