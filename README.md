@@ -78,7 +78,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 ## 📚 Resources
 
 - [Swift documentation](https://swift.org/documentation/)
-- [LinkedIn](https://www.linkedin.com/in/robertogomezm/)
+- [LinkedIn](https://www.linkedin.com/in/rgmez)
 
 ## 📜 License
 
