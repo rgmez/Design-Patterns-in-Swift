@@ -8,6 +8,7 @@ public enum NotificationChannel: String, CaseIterable, Equatable, Sendable {
     case push
     case email
     case inAppInbox
+    case sms
 }
 
 public enum NotificationSound: String, Equatable, Sendable {
@@ -42,6 +43,7 @@ public struct NotificationDispatch: Equatable, Sendable {
     public let body: String
     public let subject: String?
     public let sound: NotificationSound?
+    public let senderID: String?
 
     public init(
         recipientID: String,
@@ -49,7 +51,8 @@ public struct NotificationDispatch: Equatable, Sendable {
         title: String,
         body: String,
         subject: String? = nil,
-        sound: NotificationSound? = nil
+        sound: NotificationSound? = nil,
+        senderID: String? = nil
     ) {
         self.recipientID = recipientID
         self.channel = channel
@@ -57,6 +60,7 @@ public struct NotificationDispatch: Equatable, Sendable {
         self.body = body
         self.subject = subject
         self.sound = sound
+        self.senderID = senderID
     }
 }
 
@@ -102,6 +106,14 @@ private func prepareSecurityAlert(
             title: "Security alert: \(request.title)",
             body: request.body
         )
+    case .sms:
+        NotificationDispatch(
+            recipientID: request.recipientID,
+            channel: channel,
+            title: "Security alert: \(request.title)",
+            body: request.body,
+            senderID: "RGSHOP"
+        )
     }
 }
 
@@ -133,6 +145,14 @@ private func prepareOrderUpdate(
             title: "Order update: \(request.title)",
             body: request.body
         )
+    case .sms:
+        NotificationDispatch(
+            recipientID: request.recipientID,
+            channel: channel,
+            title: "Order update: \(request.title)",
+            body: request.body,
+            senderID: "RGSHOP"
+        )
     }
 }
 
@@ -163,6 +183,14 @@ private func preparePromotionalReminder(
             channel: channel,
             title: "Offer: \(request.title)",
             body: request.body
+        )
+    case .sms:
+        NotificationDispatch(
+            recipientID: request.recipientID,
+            channel: channel,
+            title: "Offer: \(request.title)",
+            body: "\(request.body) Reply STOP to opt out.",
+            senderID: "RGSHOP"
         )
     }
 }

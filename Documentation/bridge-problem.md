@@ -2,6 +2,8 @@
 
 Problem-definition date: 2026-08-25
 
+Pressure evidence: [Day 016 review](bridge-pressure.md)
+
 This document defines Day 015 of the Bridge cycle. It fixes the notification
 problem, the direct Swift baseline, the acceptance tests, and the visual thesis
 before any Bridge structure is introduced.
@@ -82,7 +84,7 @@ Run the focused suite with:
 swift test -Xswiftc -warnings-as-errors --filter BridgeProblemTests
 ```
 
-## Pressure to measure on Day 016
+## Pressure measured on Day 016
 
 The direct `switch` is still the right choice for this day. Bridge should earn
 its place only if both axes remain open and the matrix starts duplicating work:
@@ -93,10 +95,11 @@ its place only if both axes remain open and the matrix starts duplicating work:
 - the number of combinations grows faster than the rules each combination
   actually needs.
 
-Day 016 will add one concrete product requirement and measure those edits. It
-must not introduce a Bridge merely because two enums exist. If a small helper,
-an enum, or a function table keeps the rules clearer, the pattern should be
-rejected.
+Day 016 added SMS as one channel requirement. The matrix grew from 9 to 12
+combinations, `NotificationDispatch` gained an SMS-only field, and every
+purpose-specific switch required a new branch. The [pressure review](bridge-pressure.md)
+records the edits, alternatives, and boundary for Day 017. Bridge remains
+absent until the pattern can reduce that verified coupling.
 
 ## Initial visual thesis
 

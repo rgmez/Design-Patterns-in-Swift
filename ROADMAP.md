@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 ## Outcomes
 
@@ -194,8 +194,10 @@ an editorial guide, not a content quota.
 - [x] **Day 015 — Bridge problem.** Define two independently changing axes in a
   real notification scenario. The [notification problem baseline](Documentation/bridge-problem.md)
   keeps the nine-case direct switch executable before Bridge is considered.
-- [ ] **Day 016 — Bridge pressure.** Demonstrate the product-type by channel
-  combination growth without introducing a class explosion.
+- [x] **Day 016 — Bridge pressure.** Demonstrate the product-type by channel
+  combination growth without introducing a class explosion. The [pressure
+  review](Documentation/bridge-pressure.md) adds SMS to the direct solution and
+  measures why one channel change must touch every notification purpose.
 - [ ] **Day 017 — Bridge solution.** Implement and document the two-axis bridge
   with executable asynchronous behavior.
 - [ ] **Day 018 — Factory Method problem.** Define import workflows in which each
