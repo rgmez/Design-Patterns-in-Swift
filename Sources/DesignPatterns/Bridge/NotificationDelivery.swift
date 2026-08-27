@@ -36,6 +36,29 @@ public struct NotificationRequest: Equatable, Sendable {
     }
 }
 
+/// Semantic content is produced by the purpose axis before a channel adds transport policy.
+public struct NotificationContent: Equatable, Sendable {
+    public let recipientID: String
+    public let title: String
+    public let body: String
+    public let categoryLabel: String
+    public let purpose: NotificationPurpose
+
+    public init(
+        recipientID: String,
+        title: String,
+        body: String,
+        categoryLabel: String,
+        purpose: NotificationPurpose
+    ) {
+        self.recipientID = recipientID
+        self.title = title
+        self.body = body
+        self.categoryLabel = categoryLabel
+        self.purpose = purpose
+    }
+}
+
 public struct NotificationDispatch: Equatable, Sendable {
     public let recipientID: String
     public let channel: NotificationChannel
@@ -64,133 +87,12 @@ public struct NotificationDispatch: Equatable, Sendable {
     }
 }
 
-public func prepareNotification(
-    _ request: NotificationRequest,
-    for channel: NotificationChannel
-) -> NotificationDispatch {
-    switch request.purpose {
-    case .securityAlert:
-        prepareSecurityAlert(request, for: channel)
-    case .orderUpdate:
-        prepareOrderUpdate(request, for: channel)
-    case .promotionalReminder:
-        preparePromotionalReminder(request, for: channel)
-    }
-}
+public struct NotificationDeliveryReceipt: Equatable, Sendable {
+    public let recipientID: String
+    public let channel: NotificationChannel
 
-private func prepareSecurityAlert(
-    _ request: NotificationRequest,
-    for channel: NotificationChannel
-) -> NotificationDispatch {
-    switch channel {
-    case .push:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Security alert: \(request.title)",
-            body: request.body,
-            sound: .critical
-        )
-    case .email:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: request.title,
-            body: request.body,
-            subject: "Security alert: \(request.title)"
-        )
-    case .inAppInbox:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Security alert: \(request.title)",
-            body: request.body
-        )
-    case .sms:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Security alert: \(request.title)",
-            body: request.body,
-            senderID: "RGSHOP"
-        )
-    }
-}
-
-private func prepareOrderUpdate(
-    _ request: NotificationRequest,
-    for channel: NotificationChannel
-) -> NotificationDispatch {
-    switch channel {
-    case .push:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Order update: \(request.title)",
-            body: request.body,
-            sound: .default
-        )
-    case .email:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: request.title,
-            body: request.body,
-            subject: "Order update: \(request.title)"
-        )
-    case .inAppInbox:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Order update: \(request.title)",
-            body: request.body
-        )
-    case .sms:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Order update: \(request.title)",
-            body: request.body,
-            senderID: "RGSHOP"
-        )
-    }
-}
-
-private func preparePromotionalReminder(
-    _ request: NotificationRequest,
-    for channel: NotificationChannel
-) -> NotificationDispatch {
-    switch channel {
-    case .push:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "New offer: \(request.title)",
-            body: request.body,
-            sound: .silent
-        )
-    case .email:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: request.title,
-            body: "\(request.body) Manage preferences in the app.",
-            subject: "Offer: \(request.title)"
-        )
-    case .inAppInbox:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Offer: \(request.title)",
-            body: request.body
-        )
-    case .sms:
-        NotificationDispatch(
-            recipientID: request.recipientID,
-            channel: channel,
-            title: "Offer: \(request.title)",
-            body: "\(request.body) Reply STOP to opt out.",
-            senderID: "RGSHOP"
-        )
+    public init(recipientID: String, channel: NotificationChannel) {
+        self.recipientID = recipientID
+        self.channel = channel
     }
 }

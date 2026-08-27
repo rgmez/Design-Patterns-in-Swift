@@ -5,8 +5,8 @@ Problem-definition date: 2026-08-25
 Pressure evidence: [Day 016 review](bridge-pressure.md)
 
 This document defines Day 015 of the Bridge cycle. It fixes the notification
-problem, the direct Swift baseline, the acceptance tests, and the visual thesis
-before any Bridge structure is introduced.
+problem and the direct Swift baseline before any Bridge structure is introduced.
+The completed solution is documented in the [canonical Bridge guide](../Structural%20Patterns/Bridge/README.md).
 
 ## Product scenario
 
@@ -29,7 +29,7 @@ matrix observable without timing or external services.
 ## Requirements and invariants
 
 `NotificationRequest` is app-owned and contains the recipient, purpose, title,
-and message body. `prepareNotification(_:for:)` must:
+and message body. The baseline `prepareNotification(_:for:)` must:
 
 1. Preserve the recipient and the requested channel.
 2. Produce a non-empty title and body for every purpose-channel pair.
@@ -69,7 +69,7 @@ or printed output.
 
 ## Acceptance tests
 
-[`BridgeProblemTests.swift`](../Tests/DesignPatternsTests/BridgeProblemTests.swift)
+[`BridgeTests.swift`](../Tests/DesignPatternsTests/BridgeTests.swift)
 verifies that:
 
 - all nine combinations produce a valid dispatch with the original recipient;
@@ -112,9 +112,9 @@ central routing boundary, then emerge as push, email, and inbox delivery
 instructions. The central boundary is the focal point; the rails show the
 two-axis product matrix without decorative devices or fake interface chrome.
 
-The final Bridge header belongs to Day 017. It must follow the shared visual
-contract in [`Documentation/visual-style.md`](visual-style.md) and use the
-approved Adapter header only as the composition reference.
+The completed Bridge header is [`bridge-header.png`](Assets/Patterns/structural/bridge-header.png).
+It follows the shared visual contract in [`Documentation/visual-style.md`](visual-style.md)
+and uses the approved Adapter header only as the composition reference.
 
 ## Day 015 decision
 

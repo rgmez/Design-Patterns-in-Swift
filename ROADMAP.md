@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-26
+Last updated: 2026-08-27
 
 ## Outcomes
 
@@ -198,8 +198,8 @@ an editorial guide, not a content quota.
   combination growth without introducing a class explosion. The [pressure
   review](Documentation/bridge-pressure.md) adds SMS to the direct solution and
   measures why one channel change must touch every notification purpose.
-- [ ] **Day 017 — Bridge solution.** Implement and document the two-axis bridge
-  with executable asynchronous behavior.
+- [x] **Day 017 — Bridge solution.** Implement and document the two-axis bridge
+  with executable asynchronous behavior in the [canonical Bridge guide](Structural%20Patterns/Bridge/README.md).
 - [ ] **Day 018 — Factory Method problem.** Define import workflows in which each
   provider must choose its parser.
 - [ ] **Day 019 — Factory Method pressure.** Contrast the extension pressure with

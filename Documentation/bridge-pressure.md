@@ -70,7 +70,7 @@ business capability changes.
 
 ## Executable evidence
 
-[`BridgeProblemTests.swift`](../Tests/DesignPatternsTests/BridgeProblemTests.swift)
+[`BridgeTests.swift`](../Tests/DesignPatternsTests/BridgeTests.swift)
 now uses Swift Testing parameterization so every one of the 12 combinations is
 reported independently. Its focused suites verify:
 
@@ -101,10 +101,10 @@ The pressure is not raw line count. It is the change direction: channel policy
 is copied into purpose-owned branches, so independently changing axes are no
 longer independently editable.
 
-## Boundary for Day 017
+## Boundary carried into Day 017
 
-Day 017 may introduce Bridge only if it preserves these verified rules while
-making each axis change in one place. The smallest acceptable design must:
+Day 017 introduced Bridge only after preserving these verified rules while
+making each axis change in one place. The smallest acceptable design had to:
 
 - keep purpose-specific content separate from channel delivery policy;
 - add or replace a channel without modifying every purpose;
@@ -113,14 +113,14 @@ making each axis change in one place. The smallest acceptable design must:
   or protocol with only one implementation;
 - retain value semantics wherever reference identity is unnecessary.
 
-The final implementation must also complete the canonical README, Mermaid
-diagram, RG editorial header, trade-offs, alternatives, and `When not to use
-it` guidance. This day stops at the measured direct solution.
+The resulting implementation completed the canonical README, Mermaid diagram,
+RG editorial header, trade-offs, alternatives, and `When not to use it`
+guidance. See the [canonical Bridge guide](../Structural%20Patterns/Bridge/README.md).
 
 ## Day 016 decision
 
 SMS proves a repeatable coupling cost rather than a hypothetical preference for
-patterns. The direct solution still passes and remains readable at 12
-combinations, but one channel change now touches every purpose and leaks
-provider policy into each branch. That evidence is sufficient to evaluate a
-minimal Bridge on Day 017; Bridge itself has not been introduced today.
+patterns. The direct solution still passed and remained readable at 12
+combinations, but one channel change touched every purpose and leaked provider
+policy into each branch. That evidence justified the minimal Bridge completed
+on Day 017.

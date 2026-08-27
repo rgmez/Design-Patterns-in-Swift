@@ -8,10 +8,10 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first two pattern cycles are complete. Adapter and
-Strategy provide canonical, tested examples, and Bridge now has executable
-pressure evidence; historical playground files remain outside the package until
-each scheduled replacement is tested and documented. The [first pattern review](Documentation/week-02-review.md)
+The foundation and the first three pattern cycles are complete. Adapter,
+Strategy, and Bridge provide canonical, tested examples; historical playground
+files remain outside the package until each scheduled replacement is tested and
+documented. The [first pattern review](Documentation/week-02-review.md)
 verifies the shared quality gates and distinguishes Strategy from State and
 Bridge.
 
@@ -46,7 +46,7 @@ Patterns that control how values and object graphs are created.
 Patterns that compose types behind focused, stable interfaces.
 
 - 🔌 **Adapter** — [Canonical example](Structural%20Patterns/Adapter/README.md) · [Historical draft](Structural%20Patterns/Adapter/Adapter.md) · Days 008–010 ✅
-- 🌁 **Bridge** — [Problem baseline](Documentation/bridge-problem.md) · [Pressure review](Documentation/bridge-pressure.md) · [Historical draft](Structural%20Patterns/Bridge/Bridge.md) · Days 015–017
+- 🌁 **Bridge** — [Canonical example](Structural%20Patterns/Bridge/README.md) · [Problem baseline](Documentation/bridge-problem.md) · [Pressure review](Documentation/bridge-pressure.md) · [Historical draft](Structural%20Patterns/Bridge/Bridge.md) · Days 015–017 ✅
 - 🧱 **Composite** — Planned · Days 064–066
 - 🎨 **Decorator** — Planned · Days 046–048
 - 🏢 **Facade** — Planned · Days 043–045
