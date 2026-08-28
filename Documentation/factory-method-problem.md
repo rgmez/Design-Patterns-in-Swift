@@ -4,7 +4,8 @@ Problem-definition date: 2026-08-28
 
 This document defines Day 018 of the Factory Method cycle. It fixes a real
 import workflow, keeps the first solution direct, and records the pressure
-that Day 019 must demonstrate before any creator hierarchy is introduced.
+that Day 019 demonstrates before any creator hierarchy is introduced. The
+pressure review is recorded in the [Factory Method pressure review](factory-method-pressure.md).
 
 ## Product scenario
 
@@ -20,15 +21,15 @@ The app still needs one stable `BankStatementImport` value for categorization,
 search, and reconciliation.
 
 The example stops before authentication, pagination, currency conversion,
-deduplication, and persistence. The payloads are local fixtures so parser
-selection and normalization remain executable without network services.
+deduplication, and persistence. The payloads are local fixtures so preparation,
+parser selection, and normalization remain executable without network services.
 
 ## Requirements and invariants
 
 `BankStatementImportRequest` is app-owned and contains the account, provider,
 and provider-shaped payload. `importBankStatement(_:)` must:
 
-1. Select the parser compatible with the declared provider and payload.
+1. Prepare the provider envelope and select its compatible parser.
 2. Normalize each provider's fields into `ImportedBankTransaction`.
 3. Preserve account identity and the provider on the resulting import.
 4. Reject a payload paired with the wrong provider before parsing.
@@ -38,27 +39,24 @@ and provider-shaped payload. `importBankStatement(_:)` must:
 ## Direct Swift first
 
 The first implementation is one function with a provider `switch`. Each case
-checks its payload shape, calls one private parser, and returns the same
-app-owned result:
+checks its payload shape, prepares the provider envelope, calls one private
+parser, and returns the same app-owned result:
 
 ```swift
 switch request.provider {
 case .northstar:
-    guard case let .csv(csv) = request.payload else { throw ... }
-    transactions = try parseNorthstarCSV(csv)
+    transactions = try parseNorthstarCSV(prepareNorthstarPayload(request.payload))
 case .mercadoSur:
-    guard case let .ofx(ofx) = request.payload else { throw ... }
-    transactions = try parseMercadoSurOFX(ofx)
+    transactions = try parseMercadoSurOFX(prepareMercadoSurPayload(request.payload))
 case .lumenOpenBanking:
-    guard case let .openBankingJSON(json) = request.payload else { throw ... }
-    transactions = try parseLumenJSON(json)
+    transactions = try parseLumenJSON(prepareLumenPayload(request.payload))
 }
 ```
 
 This is deliberately not Factory Method. There is no creator workflow with an
-overridable factory operation; a single centralized function chooses every
-parser. With three providers and no provider-specific preparation steps, the
-direct switch keeps the control flow visible and compiler-exhaustive.
+overridable factory operation; a single centralized function prepares every
+payload and chooses every parser. With three providers, the direct switch keeps
+the control flow visible and compiler-exhaustive.
 
 ## Acceptance tests
 
@@ -66,6 +64,7 @@ direct switch keeps the control flow visible and compiler-exhaustive.
 verifies:
 
 - Northstar CSV, Mercado Sur OFX, and Lumen JSON normalize to the same domain value;
+- provider envelopes are prepared before parsing;
 - provider and account identity survive import;
 - mismatched payloads and malformed data fail explicitly;
 - the request remains unchanged.
@@ -76,21 +75,24 @@ Run the focused suite with:
 swift test -Xswiftc -warnings-as-errors --filter FactoryMethodProblemTests
 ```
 
-## Pressure to demonstrate on Day 019
+## Pressure demonstrated on Day 019
 
 Factory Method should earn its place only if adding a provider means extending
-an importer workflow, not merely adding another format case. Day 019 must make
-that pressure concrete by showing at least one of these changes:
+an importer workflow, not merely adding another format case. Day 019 makes
+that pressure concrete by showing provider-specific preparation and envelope
+validation in the direct switch:
 
-- each provider needs different preparation or authentication before parsing;
-- provider-specific workflow rules must choose the parser they own;
-- a centralized switch can pair a prepared payload with an incompatible parser;
+- Northstar, Mercado Sur, and Lumen each need different preparation before
+  parsing;
+- provider-specific workflow rules now sit beside parser selection;
+- malformed envelopes add a second failure point before normalization;
 - independent provider additions repeatedly modify the same import function and
   its tests.
 
 If format selection remains the only variation, a closed enum and direct parser
 switch is the better design. A Simple Factory may also be enough when creation
-has no creator workflow to specialize.
+has no creator workflow to specialize. See the [pressure review](factory-method-pressure.md)
+for the measured extension cost and the boundary carried into Day 020.
 
 ## Initial visual thesis
 
@@ -109,6 +111,6 @@ Adapter header only as the composition reference.
 
 ## Day 018 decision
 
-The direct provider switch is executable and covered by six tests. It remains
-the right baseline while all providers are simple format parsers. Day 019 must
-add provider workflow pressure before Factory Method is introduced.
+The direct provider switch is executable and covered by nine tests. It remains
+the right baseline while provider workflows are small, but Day 019 now records
+the concrete preparation pressure before Factory Method is introduced.

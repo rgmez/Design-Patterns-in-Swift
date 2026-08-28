@@ -71,7 +71,8 @@ public enum BankStatementImportError: Error, Equatable, Sendable {
     case malformedStatement(provider: BankStatementProvider)
 }
 
-/// Direct baseline: the provider switch owns both workflow selection and parser creation.
+/// Direct baseline under pressure: the provider switch owns workflow preparation
+/// and parser selection in one place.
 public func importBankStatement(
     _ request: BankStatementImportRequest
 ) throws -> BankStatementImport {
@@ -79,20 +80,11 @@ public func importBankStatement(
 
     switch request.provider {
     case .northstar:
-        guard case let .csv(csv) = request.payload else {
-            throw BankStatementImportError.unsupportedPayload(provider: request.provider)
-        }
-        transactions = try parseNorthstarCSV(csv)
+        transactions = try parseNorthstarCSV(prepareNorthstarPayload(request.payload))
     case .mercadoSur:
-        guard case let .ofx(ofx) = request.payload else {
-            throw BankStatementImportError.unsupportedPayload(provider: request.provider)
-        }
-        transactions = try parseMercadoSurOFX(ofx)
+        transactions = try parseMercadoSurOFX(prepareMercadoSurPayload(request.payload))
     case .lumenOpenBanking:
-        guard case let .openBankingJSON(json) = request.payload else {
-            throw BankStatementImportError.unsupportedPayload(provider: request.provider)
-        }
-        transactions = try parseLumenJSON(json)
+        transactions = try parseLumenJSON(prepareLumenPayload(request.payload))
     }
 
     return BankStatementImport(
@@ -100,6 +92,59 @@ public func importBankStatement(
         provider: request.provider,
         transactions: transactions
     )
+}
+
+private func prepareNorthstarPayload(_ payload: BankStatementPayload) throws -> String {
+    guard case let .csv(csv) = payload else {
+        throw BankStatementImportError.unsupportedPayload(provider: .northstar)
+    }
+
+    let lines = csv
+        .replacingOccurrences(of: "\u{FEFF}", with: "")
+        .split(whereSeparator: \.isNewline)
+    guard lines.first == "NORTHSTAR-STATEMENT" else {
+        throw BankStatementImportError.malformedStatement(provider: .northstar)
+    }
+    return lines.dropFirst().joined(separator: "\n")
+}
+
+private func prepareMercadoSurPayload(_ payload: BankStatementPayload) throws -> String {
+    guard case let .ofx(ofx) = payload else {
+        throw BankStatementImportError.unsupportedPayload(provider: .mercadoSur)
+    }
+    guard ofx.contains("<OFX>"),
+          ofx.contains("</OFX>"),
+          let firstTransaction = ofx.range(of: "<STMTTRN>") else {
+        throw BankStatementImportError.malformedStatement(provider: .mercadoSur)
+    }
+    return String(ofx[firstTransaction.lowerBound...])
+}
+
+private func prepareLumenPayload(_ payload: BankStatementPayload) throws -> Data {
+    guard case let .openBankingJSON(json) = payload else {
+        throw BankStatementImportError.unsupportedPayload(provider: .lumenOpenBanking)
+    }
+
+    struct Envelope: Decodable {
+        let data: Statement
+    }
+    struct Statement: Encodable, Decodable {
+        let transactions: [Transaction]
+    }
+    struct Transaction: Encodable, Decodable {
+        let id: String
+        let date: String
+        let amountMinor: Int
+        let currency: String
+        let merchant: String
+    }
+
+    do {
+        let envelope = try JSONDecoder().decode(Envelope.self, from: json)
+        return try JSONEncoder().encode(envelope.data)
+    } catch {
+        throw BankStatementImportError.malformedStatement(provider: .lumenOpenBanking)
+    }
 }
 
 private func parseNorthstarCSV(_ csv: String) throws -> [ImportedBankTransaction] {

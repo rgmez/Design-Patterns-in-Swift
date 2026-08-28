@@ -13,16 +13,28 @@ struct FactoryMethodProblemTests {
         merchant: "Metro Market"
     )
     private static let northstarCSV = """
+    \u{FEFF}NORTHSTAR-STATEMENT
     id,date,amount_minor,currency,merchant
     txn-1,2026-08-28,-1299,EUR,Metro Market
     """
     private static let mercadoSurOFX = """
-    <STMTTRN>
-    <FITID>txn-1<DTPOSTED>20260828<TRNAMT>-1299<NAME>Metro Market
-    </STMTTRN>
+    <OFX><BANKID>MSUR</BANKID><STMTTRN>
+    <FITID>txn-1<DTPOSTED>20260828<TRNAMT>-1299<NAME>Metro Market</STMTTRN></OFX>
     """
     private static let lumenJSON = Data("""
-    {"transactions":[{"id":"txn-1","date":"2026-08-28","amountMinor":-1299,"currency":"EUR","merchant":"Metro Market"}]}
+    {
+      "data": {
+        "transactions": [
+          {
+            "id": "txn-1",
+            "date": "2026-08-28",
+            "amountMinor": -1299,
+            "currency": "EUR",
+            "merchant": "Metro Market"
+          }
+        ]
+      }
+    }
     """.utf8)
 
     @Suite("Provider workflows")
@@ -95,6 +107,45 @@ struct FactoryMethodProblemTests {
             )
 
             #expect(throws: BankStatementImportError.malformedStatement(provider: .northstar)) {
+                try importBankStatement(request)
+            }
+        }
+
+        @Test("Rejects a provider envelope that cannot be prepared")
+        func rejectsMalformedProviderEnvelope() {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .csv("id,date,amount_minor,currency,merchant\ntxn-1,2026-08-28,-1299,EUR,Metro Market")
+            )
+
+            #expect(throws: BankStatementImportError.malformedStatement(provider: .northstar)) {
+                try importBankStatement(request)
+            }
+        }
+
+        @Test("Rejects an incomplete Mercado Sur envelope")
+        func rejectsIncompleteMercadoSurEnvelope() {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .mercadoSur,
+                payload: .ofx("<OFX><STMTTRN><FITID>txn-1")
+            )
+
+            #expect(throws: BankStatementImportError.malformedStatement(provider: .mercadoSur)) {
+                try importBankStatement(request)
+            }
+        }
+
+        @Test("Rejects an incomplete Lumen envelope")
+        func rejectsIncompleteLumenEnvelope() {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .lumenOpenBanking,
+                payload: .openBankingJSON(Data("{\"transactions\":[]}".utf8))
+            )
+
+            #expect(throws: BankStatementImportError.malformedStatement(provider: .lumenOpenBanking)) {
                 try importBankStatement(request)
             }
         }

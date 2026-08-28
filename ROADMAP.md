@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 ## Outcomes
 
@@ -202,8 +202,8 @@ an editorial guide, not a content quota.
   with executable asynchronous behavior in the [canonical Bridge guide](Structural%20Patterns/Bridge/README.md).
 - [x] **Day 018 — Factory Method problem.** Define import workflows in which each
   provider must choose its parser in the [bank statement baseline](Documentation/factory-method-problem.md).
-- [ ] **Day 019 — Factory Method pressure.** Contrast the extension pressure with
-  a centralized Simple Factory switch.
+- [x] **Day 019 — Factory Method pressure.** Contrast the extension pressure with
+  a centralized Simple Factory switch in the [pressure review](Documentation/factory-method-pressure.md).
 - [ ] **Day 020 — Factory Method solution.** Implement the minimal factory method
   and document its distinction from Simple and Abstract Factory.
 - [ ] **Day 021 — Weekly review.** Validate Bridge and Factory Method and remove
