@@ -200,8 +200,8 @@ an editorial guide, not a content quota.
   measures why one channel change must touch every notification purpose.
 - [x] **Day 017 — Bridge solution.** Implement and document the two-axis bridge
   with executable asynchronous behavior in the [canonical Bridge guide](Structural%20Patterns/Bridge/README.md).
-- [ ] **Day 018 — Factory Method problem.** Define import workflows in which each
-  provider must choose its parser.
+- [x] **Day 018 — Factory Method problem.** Define import workflows in which each
+  provider must choose its parser in the [bank statement baseline](Documentation/factory-method-problem.md).
 - [ ] **Day 019 — Factory Method pressure.** Contrast the extension pressure with
   a centralized Simple Factory switch.
 - [ ] **Day 020 — Factory Method solution.** Implement the minimal factory method

@@ -1,0 +1,120 @@
+import Foundation
+import DesignPatterns
+import Testing
+
+@Suite("Factory Method problem")
+struct FactoryMethodProblemTests {
+    private static let accountID = "account-77"
+    private static let transaction = ImportedBankTransaction(
+        transactionID: "txn-1",
+        bookedOn: "2026-08-28",
+        amountInMinorUnits: -1_299,
+        currency: "EUR",
+        merchant: "Metro Market"
+    )
+    private static let northstarCSV = """
+    id,date,amount_minor,currency,merchant
+    txn-1,2026-08-28,-1299,EUR,Metro Market
+    """
+    private static let mercadoSurOFX = """
+    <STMTTRN>
+    <FITID>txn-1<DTPOSTED>20260828<TRNAMT>-1299<NAME>Metro Market
+    </STMTTRN>
+    """
+    private static let lumenJSON = Data("""
+    {"transactions":[{"id":"txn-1","date":"2026-08-28","amountMinor":-1299,"currency":"EUR","merchant":"Metro Market"}]}
+    """.utf8)
+
+    @Suite("Provider workflows")
+    struct ProviderWorkflows {
+        @Test("Imports Northstar CSV into app-owned transactions")
+        func importsNorthstar() throws {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .csv(FactoryMethodProblemTests.northstarCSV)
+            )
+
+            let statement = try importBankStatement(request)
+
+            #expect(statement.accountID == FactoryMethodProblemTests.accountID)
+            #expect(statement.provider == .northstar)
+            #expect(statement.transactions == [FactoryMethodProblemTests.transaction])
+        }
+
+        @Test("Imports Mercado Sur OFX with provider-specific dates")
+        func importsMercadoSur() throws {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .mercadoSur,
+                payload: .ofx(FactoryMethodProblemTests.mercadoSurOFX)
+            )
+
+            let statement = try importBankStatement(request)
+
+            #expect(statement.provider == .mercadoSur)
+            #expect(statement.transactions == [FactoryMethodProblemTests.transaction])
+        }
+
+        @Test("Imports Lumen open-banking JSON")
+        func importsLumen() throws {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .lumenOpenBanking,
+                payload: .openBankingJSON(FactoryMethodProblemTests.lumenJSON)
+            )
+
+            let statement = try importBankStatement(request)
+
+            #expect(statement.provider == .lumenOpenBanking)
+            #expect(statement.transactions == [FactoryMethodProblemTests.transaction])
+        }
+    }
+
+    @Suite("Input boundary")
+    struct InputBoundary {
+        @Test("Rejects a payload that does not belong to the provider")
+        func rejectsMismatchedPayload() {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .ofx(FactoryMethodProblemTests.mercadoSurOFX)
+            )
+
+            #expect(throws: BankStatementImportError.unsupportedPayload(provider: .northstar)) {
+                try importBankStatement(request)
+            }
+        }
+
+        @Test("Rejects malformed provider data")
+        func rejectsMalformedData() {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .csv("id,date,amount_minor,currency,merchant\nbroken")
+            )
+
+            #expect(throws: BankStatementImportError.malformedStatement(provider: .northstar)) {
+                try importBankStatement(request)
+            }
+        }
+    }
+
+    @Suite("Value semantics")
+    struct ValueSemantics {
+        @Test("Does not mutate the import request")
+        func preservesInputValue() throws {
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .csv(FactoryMethodProblemTests.northstarCSV)
+            )
+
+            _ = try importBankStatement(request)
+
+            #expect(request.accountID == FactoryMethodProblemTests.accountID)
+            #expect(request.provider == .northstar)
+            #expect(request.payload == .csv(FactoryMethodProblemTests.northstarCSV))
+        }
+    }
+}
