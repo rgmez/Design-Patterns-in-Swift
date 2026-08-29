@@ -13,7 +13,8 @@ Strategy, Bridge, and Factory Method provide canonical, tested examples;
 historical playground files remain outside the package until each scheduled
 replacement is tested and documented. The [first pattern review](Documentation/week-02-review.md)
 verifies the shared quality gates and distinguishes Strategy from State and
-Bridge.
+Bridge. The [second pattern review](Documentation/week-03-review.md) validates
+Bridge and Factory Method together before the next creational cycle.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and readiness decision for Day 007.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and conceptual decisions for all 23 patterns.

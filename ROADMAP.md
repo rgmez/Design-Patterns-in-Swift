@@ -206,8 +206,10 @@ an editorial guide, not a content quota.
   a centralized Simple Factory switch in the [pressure review](Documentation/factory-method-pressure.md).
 - [x] **Day 020 — Factory Method solution.** Implement the minimal factory method
   and document its distinction from Simple and Abstract Factory in the [canonical guide](Creational%20Patterns/Factory%20Method/README.md).
-- [ ] **Day 021 — Weekly review.** Validate Bridge and Factory Method and remove
-  any Strategy-like or factory-like misclassification.
+- [x] **Day 021 — Weekly review.** Validate Bridge and Factory Method and remove
+  any Strategy-like or factory-like misclassification. The [review evidence](Documentation/week-03-review.md)
+  confirms their change boundaries, visual consistency, and warning-free full
+  suite before Abstract Factory.
 
 ### Week 4 — Abstract Factory and Builder
 
