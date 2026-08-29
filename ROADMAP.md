@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 ## Outcomes
 
@@ -204,8 +204,8 @@ an editorial guide, not a content quota.
   provider must choose its parser in the [bank statement baseline](Documentation/factory-method-problem.md).
 - [x] **Day 019 — Factory Method pressure.** Contrast the extension pressure with
   a centralized Simple Factory switch in the [pressure review](Documentation/factory-method-pressure.md).
-- [ ] **Day 020 — Factory Method solution.** Implement the minimal factory method
-  and document its distinction from Simple and Abstract Factory.
+- [x] **Day 020 — Factory Method solution.** Implement the minimal factory method
+  and document its distinction from Simple and Abstract Factory in the [canonical guide](Creational%20Patterns/Factory%20Method/README.md).
 - [ ] **Day 021 — Weekly review.** Validate Bridge and Factory Method and remove
   any Strategy-like or factory-like misclassification.
 

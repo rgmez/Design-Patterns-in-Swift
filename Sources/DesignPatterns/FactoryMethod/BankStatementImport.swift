@@ -71,27 +71,88 @@ public enum BankStatementImportError: Error, Equatable, Sendable {
     case malformedStatement(provider: BankStatementProvider)
 }
 
-/// Direct baseline under pressure: the provider switch owns workflow preparation
-/// and parser selection in one place.
+public protocol BankStatementParser: Sendable {
+    func parse(_ payload: BankStatementPayload) throws -> [ImportedBankTransaction]
+}
+
+public protocol BankStatementImportWorkflow: Sendable {
+    var provider: BankStatementProvider { get }
+
+    func preparePayload(_ payload: BankStatementPayload) throws -> BankStatementPayload
+    func makeParser() -> any BankStatementParser
+}
+
+public extension BankStatementImportWorkflow {
+    func importStatement(
+        accountID: String,
+        payload: BankStatementPayload
+    ) throws -> BankStatementImport {
+        let preparedPayload = try preparePayload(payload)
+        let transactions = try makeParser().parse(preparedPayload)
+        return BankStatementImport(
+            accountID: accountID,
+            provider: provider,
+            transactions: transactions
+        )
+    }
+}
+
+public struct NorthstarBankStatementWorkflow: BankStatementImportWorkflow {
+    public let provider = BankStatementProvider.northstar
+
+    public init() {}
+
+    public func preparePayload(_ payload: BankStatementPayload) throws -> BankStatementPayload {
+        .csv(try prepareNorthstarPayload(payload))
+    }
+
+    public func makeParser() -> any BankStatementParser {
+        NorthstarCSVParser()
+    }
+}
+
+public struct MercadoSurBankStatementWorkflow: BankStatementImportWorkflow {
+    public let provider = BankStatementProvider.mercadoSur
+
+    public init() {}
+
+    public func preparePayload(_ payload: BankStatementPayload) throws -> BankStatementPayload {
+        .ofx(try prepareMercadoSurPayload(payload))
+    }
+
+    public func makeParser() -> any BankStatementParser {
+        MercadoSurOFXParser()
+    }
+}
+
+public struct LumenBankStatementWorkflow: BankStatementImportWorkflow {
+    public let provider = BankStatementProvider.lumenOpenBanking
+
+    public init() {}
+
+    public func preparePayload(_ payload: BankStatementPayload) throws -> BankStatementPayload {
+        .openBankingJSON(try prepareLumenPayload(payload))
+    }
+
+    public func makeParser() -> any BankStatementParser {
+        LumenOpenBankingParser()
+    }
+}
+
+/// The composition root selects a workflow; each workflow owns its parser factory method.
 public func importBankStatement(
     _ request: BankStatementImportRequest
 ) throws -> BankStatementImport {
-    let transactions: [ImportedBankTransaction]
-
+    let workflow: any BankStatementImportWorkflow
     switch request.provider {
     case .northstar:
-        transactions = try parseNorthstarCSV(prepareNorthstarPayload(request.payload))
+        workflow = NorthstarBankStatementWorkflow()
     case .mercadoSur:
-        transactions = try parseMercadoSurOFX(prepareMercadoSurPayload(request.payload))
+        workflow = MercadoSurBankStatementWorkflow()
     case .lumenOpenBanking:
-        transactions = try parseLumenJSON(prepareLumenPayload(request.payload))
+        workflow = LumenBankStatementWorkflow()
     }
-
-    return BankStatementImport(
-        accountID: request.accountID,
-        provider: request.provider,
-        transactions: transactions
-    )
+    return try workflow.importStatement(accountID: request.accountID, payload: request.payload)
 }
 
 private func prepareNorthstarPayload(_ payload: BankStatementPayload) throws -> String {
@@ -144,6 +205,33 @@ private func prepareLumenPayload(_ payload: BankStatementPayload) throws -> Data
         return try JSONEncoder().encode(envelope.data)
     } catch {
         throw BankStatementImportError.malformedStatement(provider: .lumenOpenBanking)
+    }
+}
+
+private struct NorthstarCSVParser: BankStatementParser {
+    func parse(_ payload: BankStatementPayload) throws -> [ImportedBankTransaction] {
+        guard case let .csv(csv) = payload else {
+            throw BankStatementImportError.unsupportedPayload(provider: .northstar)
+        }
+        return try parseNorthstarCSV(csv)
+    }
+}
+
+private struct MercadoSurOFXParser: BankStatementParser {
+    func parse(_ payload: BankStatementPayload) throws -> [ImportedBankTransaction] {
+        guard case let .ofx(ofx) = payload else {
+            throw BankStatementImportError.unsupportedPayload(provider: .mercadoSur)
+        }
+        return try parseMercadoSurOFX(ofx)
+    }
+}
+
+private struct LumenOpenBankingParser: BankStatementParser {
+    func parse(_ payload: BankStatementPayload) throws -> [ImportedBankTransaction] {
+        guard case let .openBankingJSON(json) = payload else {
+            throw BankStatementImportError.unsupportedPayload(provider: .lumenOpenBanking)
+        }
+        return try parseLumenJSON(json)
     }
 }
 

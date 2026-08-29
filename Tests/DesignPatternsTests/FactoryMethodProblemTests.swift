@@ -37,6 +37,36 @@ struct FactoryMethodProblemTests {
     }
     """.utf8)
 
+    @Suite("Factory Method creators")
+    struct Creators {
+        @Test("Northstar workflow creates the CSV parser")
+        func northstarCreatesParser() throws {
+            let workflow = NorthstarBankStatementWorkflow()
+            let prepared = try workflow.preparePayload(.csv(FactoryMethodProblemTests.northstarCSV))
+            let transactions = try workflow.makeParser().parse(prepared)
+
+            #expect(transactions == [FactoryMethodProblemTests.transaction])
+        }
+
+        @Test("Mercado Sur workflow creates the OFX parser")
+        func mercadoSurCreatesParser() throws {
+            let workflow = MercadoSurBankStatementWorkflow()
+            let prepared = try workflow.preparePayload(.ofx(FactoryMethodProblemTests.mercadoSurOFX))
+            let transactions = try workflow.makeParser().parse(prepared)
+
+            #expect(transactions == [FactoryMethodProblemTests.transaction])
+        }
+
+        @Test("Lumen workflow creates the open-banking parser")
+        func lumenCreatesParser() throws {
+            let workflow = LumenBankStatementWorkflow()
+            let prepared = try workflow.preparePayload(.openBankingJSON(FactoryMethodProblemTests.lumenJSON))
+            let transactions = try workflow.makeParser().parse(prepared)
+
+            #expect(transactions == [FactoryMethodProblemTests.transaction])
+        }
+    }
+
     @Suite("Provider workflows")
     struct ProviderWorkflows {
         @Test("Imports Northstar CSV into app-owned transactions")

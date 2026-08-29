@@ -4,7 +4,7 @@ Pressure-review date: 2026-08-28
 
 This document records Day 019 of the Factory Method cycle. It extends the
 direct bank-statement importer with provider-specific preparation and measures
-the pressure without introducing Factory Method yet.
+the pressure before introducing Factory Method.
 
 ## The requirement that changed
 
@@ -105,8 +105,9 @@ Simple Factory remains preferable when preparation is absent or shared.
 
 The pattern earns consideration when provider workflows need to evolve and be
 tested independently, while the import operation must continue to enforce one
-stable result contract. Day 020 introduces only that minimum creator boundary
-and contrasts it with the direct and Simple Factory alternatives.
+stable result contract. The completed [canonical Factory Method guide](../Creational%20Patterns/Factory%20Method/README.md)
+introduces only that minimum creator boundary and contrasts it with the direct
+and Simple Factory alternatives.
 
 ## Day 019 decision
 
@@ -114,4 +115,5 @@ Provider-specific preparation makes the workflow variation concrete: the
 central switch now coordinates transport validation, preparation, parser
 selection, and parser errors. The direct solution remains correct and
 warning-free, but its extension pressure is now observable rather than
-hypothetical. Factory Method is considered, not yet implemented.
+hypothetical. Factory Method is considered and is now implemented in the
+canonical guide without expanding the parser product contract.

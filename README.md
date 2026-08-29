@@ -8,10 +8,10 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first three pattern cycles are complete. Adapter,
-Strategy, and Bridge provide canonical, tested examples; historical playground
-files remain outside the package until each scheduled replacement is tested and
-documented. The [first pattern review](Documentation/week-02-review.md)
+The foundation and the first four pattern cycles are complete. Adapter,
+Strategy, Bridge, and Factory Method provide canonical, tested examples;
+historical playground files remain outside the package until each scheduled
+replacement is tested and documented. The [first pattern review](Documentation/week-02-review.md)
 verifies the shared quality gates and distinguishes Strategy from State and
 Bridge.
 
@@ -37,7 +37,7 @@ Patterns that control how values and object graphs are created.
 
 - 🧰 **Abstract Factory** — [Historical draft](Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md) · Days 022–024
 - 🛠️ **Builder** — [Historical draft](Creational%20Patterns/Builder/Builder.md) · Days 025–027
-- 🏭 **Factory Method** — [Problem baseline](Documentation/factory-method-problem.md) · [Pressure review](Documentation/factory-method-pressure.md) · [Historical draft](Creational%20Patterns/Factory/TaskFactory.md) · Days 018–020
+- 🏭 **Factory Method** — [Canonical example](Creational%20Patterns/Factory%20Method/README.md) · [Problem baseline](Documentation/factory-method-problem.md) · [Pressure review](Documentation/factory-method-pressure.md) · [Historical draft](Creational%20Patterns/Factory/TaskFactory.md) · Days 018–020 ✅
 - 🧬 **Prototype** — [Historical draft](Creational%20Patterns/Prototype/Prototype.md) · Days 029–031
 - 1️⃣ **Singleton** — Planned · Days 085–087
 

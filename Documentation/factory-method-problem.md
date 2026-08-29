@@ -111,6 +111,7 @@ Adapter header only as the composition reference.
 
 ## Day 018 decision
 
-The direct provider switch is executable and covered by nine tests. It remains
-the right baseline while provider workflows are small, but Day 019 now records
-the concrete preparation pressure before Factory Method is introduced.
+The direct provider switch was executable and covered by nine tests. It was the
+right baseline while provider workflows were small; Day 019 recorded the
+preparation pressure that earned the Factory Method boundary now documented in
+the [canonical guide](../Creational%20Patterns/Factory%20Method/README.md).
