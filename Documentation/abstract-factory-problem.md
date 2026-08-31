@@ -2,6 +2,8 @@
 
 Problem-definition date: 2026-08-30
 
+Pressure evidence added: 2026-08-31
+
 This document defines Day 022 of the Abstract Factory cycle. It fixes the
 regional commerce problem, keeps the first solution direct, and records the
 acceptance tests and visual thesis before any factory protocol is introduced.
@@ -75,19 +77,18 @@ Run the focused suite with:
 swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryProblemTests
 ```
 
-## Pressure required on Day 023
+## Pressure observed on Day 023
 
 Abstract Factory should earn its place only when selecting family members
 independently becomes a recurring source of invalid combinations or duplicated
-composition code. Day 023 must measure that pressure rather than adding a
-factory protocol because the names “EU” and “LATAM” exist:
+composition code. The [pressure review](abstract-factory-pressure.md) measures
+that cost without adding a factory protocol merely because the names “EU” and
+“LATAM” exist:
 
-- another regional deployment should require a complete family, not three
-  unrelated switches;
-- a new service product should be added to every family without allowing a
-  partial configuration;
-- tests should be able to prove family compatibility without enumerating every
-  cross-region combination manually.
+- the three service products now have independent region selectors;
+- the composition root must repeat one regional decision across all three;
+- two regions and three independent selectors expose 16 declared assemblies,
+  of which only two are coherent.
 
 If the app keeps one family, a compile-time-fixed configuration, or a single
 value that already enforces coherence, the direct composition root remains the
@@ -112,7 +113,8 @@ factory icon.
 
 ## Day 022 decision
 
-The direct `RegionalServices` value and composition-root switch are executable,
-small, and covered by acceptance tests. Abstract Factory is not introduced
-until the next day demonstrates repeated family assembly and invalid-member
-combinations as measurable costs.
+The original direct `RegionalServices` value and composition-root switch were
+executable, small, and covered by acceptance tests. Day 023 retains direct
+selection while making its repetition and invalid-member matrix executable.
+Abstract Factory is still not introduced; Day 024 must remove more risk than
+its additional factory types create.

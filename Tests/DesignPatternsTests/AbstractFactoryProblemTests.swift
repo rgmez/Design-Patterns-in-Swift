@@ -16,6 +16,28 @@ struct AbstractFactoryProblemTests {
         var testDescription: String { name }
     }
 
+    struct IndependentSelectionScenario: Sendable, CustomTestStringConvertible {
+        let expectedRegion: CommerceRegion
+        let taxCalculator: RegionalTaxCalculator
+        let paymentAuthorizer: RegionalPaymentAuthorizer
+        let receiptFormatter: RegionalReceiptFormatter
+
+        var isCoherent: Bool {
+            taxCalculator.region == expectedRegion
+                && paymentAuthorizer.region == expectedRegion
+                && receiptFormatter.region == expectedRegion
+        }
+
+        var testDescription: String {
+            [
+                "expected: \(expectedRegion.rawValue)",
+                "tax: \(taxCalculator.rawValue)",
+                "payment: \(paymentAuthorizer.rawValue)",
+                "receipt: \(receiptFormatter.rawValue)"
+            ].joined(separator: ", ")
+        }
+    }
+
     private static let order = RegionalCheckoutOrder(
         orderID: "order-42",
         subtotalInMinorUnits: 1_000,
@@ -43,6 +65,20 @@ struct AbstractFactoryProblemTests {
             receipt: "LATAM fiscal receipt | order order-42 | subtotal 1000 | tax 180 | total 1180"
         )
     ]
+    private static let independentSelectionScenarios = CommerceRegion.allCases.flatMap { region in
+        RegionalTaxCalculator.allCases.flatMap { taxCalculator in
+            RegionalPaymentAuthorizer.allCases.flatMap { paymentAuthorizer in
+                RegionalReceiptFormatter.allCases.map { receiptFormatter in
+                    IndependentSelectionScenario(
+                        expectedRegion: region,
+                        taxCalculator: taxCalculator,
+                        paymentAuthorizer: paymentAuthorizer,
+                        receiptFormatter: receiptFormatter
+                    )
+                }
+            }
+        }
+    }
 
     @Suite("Regional families")
     struct RegionalFamilies {
@@ -75,17 +111,49 @@ struct AbstractFactoryProblemTests {
 
     @Suite("Composition boundary")
     struct CompositionBoundary {
-        @Test("Rejects a cross-region service combination")
-        func rejectsMixedFamily() {
-            let mixedServices = RegionalServices(
-                region: .europeanUnion,
-                taxCalculator: .euVAT,
-                paymentAuthorizer: .latamPix,
-                receiptFormatter: .euStandard
+        @Test(
+            "Exposes every independently selectable service combination",
+            arguments: AbstractFactoryProblemTests.independentSelectionScenarios
+        )
+        func exposesIndependentSelection(_ scenario: IndependentSelectionScenario) {
+            let services = makeRegionalServices(
+                from: RegionalServiceSelection(
+                    expectedRegion: scenario.expectedRegion,
+                    taxRegion: scenario.taxCalculator.region,
+                    paymentRegion: scenario.paymentAuthorizer.region,
+                    receiptRegion: scenario.receiptFormatter.region
+                )
             )
 
-            #expect(!mixedServices.isCoherent)
-            #expect(throws: RegionalCheckoutError.mixedServiceFamily(expected: .europeanUnion)) {
+            #expect(services.taxCalculator == scenario.taxCalculator)
+            #expect(services.paymentAuthorizer == scenario.paymentAuthorizer)
+            #expect(services.receiptFormatter == scenario.receiptFormatter)
+            #expect(services.isCoherent == scenario.isCoherent)
+        }
+
+        @Test("Leaves only two coherent families among sixteen combinations")
+        func measuresInvalidCombinationSpace() {
+            let scenarios = AbstractFactoryProblemTests.independentSelectionScenarios
+
+            #expect(scenarios.count == 16)
+            #expect(scenarios.count(where: \.isCoherent) == 2)
+        }
+
+        @Test(
+            "Rejects every cross-region service combination",
+            arguments: AbstractFactoryProblemTests.independentSelectionScenarios.filter {
+                !$0.isCoherent
+            }
+        )
+        func rejectsMixedFamily(_ scenario: IndependentSelectionScenario) {
+            let mixedServices = RegionalServices(
+                region: scenario.expectedRegion,
+                taxCalculator: scenario.taxCalculator,
+                paymentAuthorizer: scenario.paymentAuthorizer,
+                receiptFormatter: scenario.receiptFormatter
+            )
+
+            #expect(throws: RegionalCheckoutError.mixedServiceFamily(expected: scenario.expectedRegion)) {
                 try placeRegionalOrder(
                     AbstractFactoryProblemTests.order,
                     using: mixedServices

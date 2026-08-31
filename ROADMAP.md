@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-08-30
+Last updated: 2026-08-31
 
 ## Outcomes
 
@@ -217,8 +217,10 @@ an editorial guide, not a content quota.
   families for real app brands, tenants, or environments. The [regional
   commerce baseline](Documentation/abstract-factory-problem.md) keeps the
   composition root direct and makes mixed-family values observable in tests.
-- [ ] **Day 023 — Abstract Factory pressure.** Demonstrate how independently
-  selecting family members creates invalid combinations.
+- [x] **Day 023 — Abstract Factory pressure.** Demonstrate how independently
+  selecting family members creates invalid combinations. The [pressure review](Documentation/abstract-factory-pressure.md)
+  measures 16 direct assemblies for two regions and three products: only two
+  form coherent service families.
 - [ ] **Day 024 — Abstract Factory solution.** Implement complete families and
   document why one concrete factory would not justify the pattern.
 - [ ] **Day 025 — Builder problem.** Define a multipart request or checkout

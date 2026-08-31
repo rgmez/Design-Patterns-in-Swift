@@ -36,7 +36,7 @@ The catalogue distinguishes historical material from canonical, tested examples.
 
 Patterns that control how values and object graphs are created.
 
-- 🧰 **Abstract Factory** — [Problem baseline](Documentation/abstract-factory-problem.md) · [Historical draft](Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md) · Days 022–024
+- 🧰 **Abstract Factory** — [Problem baseline](Documentation/abstract-factory-problem.md) · [Pressure review](Documentation/abstract-factory-pressure.md) · [Historical draft](Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md) · Days 022–024
 - 🛠️ **Builder** — [Historical draft](Creational%20Patterns/Builder/Builder.md) · Days 025–027
 - 🏭 **Factory Method** — [Canonical example](Creational%20Patterns/Factory%20Method/README.md) · [Problem baseline](Documentation/factory-method-problem.md) · [Pressure review](Documentation/factory-method-pressure.md) · [Historical draft](Creational%20Patterns/Factory/TaskFactory.md) · Days 018–020 ✅
 - 🧬 **Prototype** — [Historical draft](Creational%20Patterns/Prototype/Prototype.md) · Days 029–031

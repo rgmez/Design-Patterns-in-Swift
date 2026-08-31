@@ -3,7 +3,7 @@ public enum CommerceRegion: String, CaseIterable, Equatable, Sendable {
     case latam
 }
 
-public enum RegionalTaxCalculator: String, Equatable, Sendable {
+public enum RegionalTaxCalculator: String, CaseIterable, Equatable, Sendable {
     case euVAT
     case latamIVA
 
@@ -26,7 +26,7 @@ public enum RegionalTaxCalculator: String, Equatable, Sendable {
     }
 }
 
-public enum RegionalPaymentAuthorizer: String, Equatable, Sendable {
+public enum RegionalPaymentAuthorizer: String, CaseIterable, Equatable, Sendable {
     case euCard
     case latamPix
 
@@ -44,7 +44,7 @@ public enum RegionalPaymentAuthorizer: String, Equatable, Sendable {
     }
 }
 
-public enum RegionalReceiptFormatter: String, Equatable, Sendable {
+public enum RegionalReceiptFormatter: String, CaseIterable, Equatable, Sendable {
     case euStandard
     case latamFiscal
 
@@ -141,24 +141,72 @@ public enum RegionalCheckoutError: Error, Equatable, Sendable {
     case mixedServiceFamily(expected: CommerceRegion)
 }
 
-/// The composition root keeps the family selection explicit before Abstract Factory.
-public func makeRegionalServices(for region: CommerceRegion) -> RegionalServices {
+public struct RegionalServiceSelection: Equatable, Sendable {
+    public let expectedRegion: CommerceRegion
+    public let taxRegion: CommerceRegion
+    public let paymentRegion: CommerceRegion
+    public let receiptRegion: CommerceRegion
+
+    public init(
+        expectedRegion: CommerceRegion,
+        taxRegion: CommerceRegion,
+        paymentRegion: CommerceRegion,
+        receiptRegion: CommerceRegion
+    ) {
+        self.expectedRegion = expectedRegion
+        self.taxRegion = taxRegion
+        self.paymentRegion = paymentRegion
+        self.receiptRegion = receiptRegion
+    }
+}
+
+public func makeRegionalTaxCalculator(for region: CommerceRegion) -> RegionalTaxCalculator {
     switch region {
     case .europeanUnion:
-        RegionalServices(
-            region: .europeanUnion,
-            taxCalculator: .euVAT,
-            paymentAuthorizer: .euCard,
-            receiptFormatter: .euStandard
-        )
+        .euVAT
     case .latam:
-        RegionalServices(
-            region: .latam,
-            taxCalculator: .latamIVA,
-            paymentAuthorizer: .latamPix,
-            receiptFormatter: .latamFiscal
-        )
+        .latamIVA
     }
+}
+
+public func makeRegionalPaymentAuthorizer(for region: CommerceRegion) -> RegionalPaymentAuthorizer {
+    switch region {
+    case .europeanUnion:
+        .euCard
+    case .latam:
+        .latamPix
+    }
+}
+
+public func makeRegionalReceiptFormatter(for region: CommerceRegion) -> RegionalReceiptFormatter {
+    switch region {
+    case .europeanUnion:
+        .euStandard
+    case .latam:
+        .latamFiscal
+    }
+}
+
+/// Keeps independently delivered regional settings visible before Abstract Factory.
+public func makeRegionalServices(from selection: RegionalServiceSelection) -> RegionalServices {
+    RegionalServices(
+        region: selection.expectedRegion,
+        taxCalculator: makeRegionalTaxCalculator(for: selection.taxRegion),
+        paymentAuthorizer: makeRegionalPaymentAuthorizer(for: selection.paymentRegion),
+        receiptFormatter: makeRegionalReceiptFormatter(for: selection.receiptRegion)
+    )
+}
+
+/// The composition root must repeat the same region for every related product.
+public func makeRegionalServices(for region: CommerceRegion) -> RegionalServices {
+    makeRegionalServices(
+        from: RegionalServiceSelection(
+            expectedRegion: region,
+            taxRegion: region,
+            paymentRegion: region,
+            receiptRegion: region
+        )
+    )
 }
 
 public func placeRegionalOrder(
