@@ -57,16 +57,16 @@ system and creation API do not make the complete-family invariant the default.
 
 ## Executable evidence
 
-[`AbstractFactoryProblemTests.swift`](../Tests/DesignPatternsTests/AbstractFactoryProblemTests.swift)
-generates the full two-region product matrix as parameterized Swift Testing
-cases. It verifies every member selected by the direct functions, confirms that
-only two of 16 assemblies are coherent, and proves checkout rejects all 14
-mixed families.
+The Day 023 evidence was captured by the former problem suite. The completed
+[`AbstractFactoryTests.swift`](../Tests/DesignPatternsTests/AbstractFactoryTests.swift)
+preserves the two valid families as parameterized cases and verifies the new
+complete-family boundary. The measured baseline remains: only two of the 16
+assemblies were coherent, while checkout rejected all 14 mixed families.
 
 Run the focused evidence from the repository root:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryProblemTests
+swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryTests
 ```
 
 ## Alternatives still worth considering
@@ -82,10 +82,14 @@ Factory only when clients need a family of related products behind stable
 creation operations and multiple concrete families must guarantee compatible
 members.
 
-## Day 023 decision
+## Day 024 resolution
 
-The direct solution remains correct and warning-free, but independent selection
-turns one regional decision into three switches and admits 14 invalid assemblies
-for only two valid families. Day 024 may introduce the smallest complete-family
-creation boundary if it makes invalid combinations unavailable by default and
-does not hide the checkout domain behind generic factory ceremony.
+The direct solution remained correct and warning-free, but independent
+selection turned one regional decision into three switches and admitted 14
+invalid assemblies for only two valid families. Day 024 replaces those selectors
+with the smallest complete-family boundary: one `RegionalCommerceFactory`
+protocol and two concrete value factories. `RegionalServices` construction is
+module-owned, while checkout retains a defensive coherence check for external
+factory conformers. See the
+[canonical guide](../Creational%20Patterns/Abstract%20Factory/README.md) for the
+implementation, diagram, costs, and alternatives.

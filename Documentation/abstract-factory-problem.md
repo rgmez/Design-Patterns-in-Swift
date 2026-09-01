@@ -7,6 +7,8 @@ Pressure evidence added: 2026-08-31
 This document defines Day 022 of the Abstract Factory cycle. It fixes the
 regional commerce problem, keeps the first solution direct, and records the
 acceptance tests and visual thesis before any factory protocol is introduced.
+The completed solution is documented in the
+[canonical Abstract Factory guide](../Creational%20Patterns/Abstract%20Factory/README.md).
 
 ## Product scenario
 
@@ -62,8 +64,9 @@ validation.
 
 ## Acceptance tests
 
-[`AbstractFactoryProblemTests.swift`](../Tests/DesignPatternsTests/AbstractFactoryProblemTests.swift)
-verifies:
+The original acceptance evidence evolved into
+[`AbstractFactoryTests.swift`](../Tests/DesignPatternsTests/AbstractFactoryTests.swift),
+which verifies:
 
 - EU and LATAM composition roots create coherent service families;
 - each family calculates its own tax and payment reference;
@@ -74,7 +77,7 @@ verifies:
 Run the focused suite with:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryProblemTests
+swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryTests
 ```
 
 ## Pressure observed on Day 023
@@ -106,15 +109,17 @@ order result. The paired rails and the locked three-module bundles show family
 coherence; a visibly crossed module is the single warning signal for the
 invalid-combination pressure reserved for Day 023.
 
-The final Abstract Factory header belongs to Day 024. It must follow the shared
-visual contract in [`visual-style.md`](visual-style.md), retain the approved RG
-composition, and use a construction/assembly metaphor rather than a generic
-factory icon.
+Day 024 completes the final
+[`abstract-factory-header.png`](Assets/Patterns/creational/abstract-factory-header.png)
+under the shared contract in [`visual-style.md`](visual-style.md). It retains
+the approved RG composition and uses controlled three-module assembly rather
+than a generic factory icon.
 
-## Day 022 decision
+## Day 024 resolution
 
 The original direct `RegionalServices` value and composition-root switch were
-executable, small, and covered by acceptance tests. Day 023 retains direct
+executable, small, and covered by acceptance tests. Day 023 retained direct
 selection while making its repetition and invalid-member matrix executable.
-Abstract Factory is still not introduced; Day 024 must remove more risk than
-its additional factory types create.
+Day 024 introduces one `RegionalCommerceFactory` boundary and two concrete
+value factories only after that evidence: standard callers now select one
+complete family instead of assembling three independently chosen products.
