@@ -1,23 +1,7 @@
-public enum SupportUploadAttachmentCategory: Equatable, Sendable {
+public enum SupportUploadAttachmentCategory: Hashable, Sendable {
     case diagnostics
     case screenshots
     case screenRecording
-}
-
-public struct SupportUploadConsent: Equatable, Sendable {
-    public let allowsDiagnostics: Bool
-    public let allowsScreenshots: Bool
-    public let allowsScreenRecording: Bool
-
-    public init(
-        allowsDiagnostics: Bool = false,
-        allowsScreenshots: Bool = false,
-        allowsScreenRecording: Bool = false
-    ) {
-        self.allowsDiagnostics = allowsDiagnostics
-        self.allowsScreenshots = allowsScreenshots
-        self.allowsScreenRecording = allowsScreenRecording
-    }
 }
 
 public struct RedactedSupportDiagnostics: Equatable, Sendable {
@@ -71,11 +55,24 @@ public struct SupportUploadPart: Equatable, Sendable {
     }
 }
 
+public enum SupportUploadAssemblyStep: Equatable, Sendable {
+    case message(String)
+    case grantConsent(for: SupportUploadAttachmentCategory)
+    case diagnostics(RedactedSupportDiagnostics)
+    case screenshot(SupportScreenshot)
+    case screenRecording(SupportScreenRecording)
+    case finalize
+}
+
 public enum SupportUploadRequestError: Error, Equatable, Sendable {
     case emptyMessage
     case invalidMaximumPayloadSize
+    case messageMustBeFirst
+    case duplicateMessage
     case consentRequired(for: SupportUploadAttachmentCategory)
     case payloadTooLarge(actualBytes: Int, maximumBytes: Int)
+    case stepAfterFinalization
+    case requestNotFinalized
 }
 
 public struct SupportUploadRequest: Equatable, Sendable {
@@ -85,82 +82,153 @@ public struct SupportUploadRequest: Equatable, Sendable {
 
     public init(
         ticketID: String,
-        message: String,
-        diagnostics: RedactedSupportDiagnostics? = nil,
-        screenshots: [SupportScreenshot] = [],
-        screenRecording: SupportScreenRecording? = nil,
-        consent: SupportUploadConsent = SupportUploadConsent(),
+        steps: [SupportUploadAssemblyStep],
         maximumPayloadSizeInBytes: Int
     ) throws {
-        guard message.contains(where: { !$0.isWhitespace }) else {
-            throw SupportUploadRequestError.emptyMessage
-        }
         guard maximumPayloadSizeInBytes > 0 else {
             throw SupportUploadRequestError.invalidMaximumPayloadSize
         }
 
-        try Self.validateConsent(
-            consent,
-            diagnostics: diagnostics,
-            screenshots: screenshots,
-            screenRecording: screenRecording
+        var parts = try Self.makeInitialParts(from: steps.first)
+        try Self.validatePayloadSize(
+            parts,
+            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
         )
+        var consentedCategories = Set<SupportUploadAttachmentCategory>()
+        var isFinalized = false
 
-        var parts = [
+        for step in steps.dropFirst() {
+            try Self.apply(
+                step,
+                to: &parts,
+                consentedCategories: &consentedCategories,
+                isFinalized: &isFinalized,
+                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+            )
+        }
+        guard isFinalized else {
+            throw SupportUploadRequestError.requestNotFinalized
+        }
+
+        self.ticketID = ticketID
+        self.parts = parts
+        self.totalPayloadSizeInBytes = Self.payloadSize(of: parts)
+    }
+
+    private static func makeInitialParts(
+        from step: SupportUploadAssemblyStep?
+    ) throws -> [SupportUploadPart] {
+        guard case .message(let message) = step else {
+            throw SupportUploadRequestError.messageMustBeFirst
+        }
+        guard message.contains(where: { !$0.isWhitespace }) else {
+            throw SupportUploadRequestError.emptyMessage
+        }
+
+        return [
             SupportUploadPart(
                 kind: .message,
                 contentType: "text/plain; charset=utf-8",
                 payload: Array(message.utf8)
             )
         ]
+    }
 
-        if let diagnostics {
-            parts.append(
+    private static func apply(
+        _ step: SupportUploadAssemblyStep,
+        to parts: inout [SupportUploadPart],
+        consentedCategories: inout Set<SupportUploadAttachmentCategory>,
+        isFinalized: inout Bool,
+        maximumPayloadSizeInBytes: Int
+    ) throws {
+        guard !isFinalized else {
+            throw SupportUploadRequestError.stepAfterFinalization
+        }
+
+        switch step {
+        case .message:
+            throw SupportUploadRequestError.duplicateMessage
+        case .grantConsent(let category):
+            consentedCategories.insert(category)
+        case .diagnostics(let diagnostics):
+            try requireConsent(.diagnostics, in: consentedCategories)
+            try append(
                 SupportUploadPart(
                     kind: .diagnostics,
                     contentType: "application/json",
                     payload: diagnostics.payload
-                )
+                ),
+                to: &parts,
+                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
             )
-        }
-        parts.append(contentsOf: screenshots.map(Self.makeScreenshotPart))
-        if let screenRecording {
-            parts.append(
+        case .screenshot(let screenshot):
+            try requireConsent(.screenshots, in: consentedCategories)
+            try append(
+                makeScreenshotPart(screenshot),
+                to: &parts,
+                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+            )
+        case .screenRecording(let screenRecording):
+            try requireConsent(.screenRecording, in: consentedCategories)
+            try append(
                 SupportUploadPart(
                     kind: .screenRecording(filename: screenRecording.filename),
                     contentType: "video/mp4",
                     payload: screenRecording.payload
-                )
+                ),
+                to: &parts,
+                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
             )
+        case .finalize:
+            isFinalized = true
         }
-
-        let totalPayloadSizeInBytes = parts.reduce(0) { $0 + $1.payload.count }
-        guard totalPayloadSizeInBytes <= maximumPayloadSizeInBytes else {
-            throw SupportUploadRequestError.payloadTooLarge(
-                actualBytes: totalPayloadSizeInBytes,
-                maximumBytes: maximumPayloadSizeInBytes
-            )
-        }
-
-        self.ticketID = ticketID
-        self.parts = parts
-        self.totalPayloadSizeInBytes = totalPayloadSizeInBytes
     }
 
-    private static func validateConsent(
-        _ consent: SupportUploadConsent,
-        diagnostics: RedactedSupportDiagnostics?,
-        screenshots: [SupportScreenshot],
-        screenRecording: SupportScreenRecording?
+    private static func requireConsent(
+        _ category: SupportUploadAttachmentCategory,
+        in consentedCategories: Set<SupportUploadAttachmentCategory>
     ) throws {
-        if diagnostics != nil, !consent.allowsDiagnostics {
-            throw SupportUploadRequestError.consentRequired(for: .diagnostics)
+        guard consentedCategories.contains(category) else {
+            throw SupportUploadRequestError.consentRequired(for: category)
         }
-        if !screenshots.isEmpty, !consent.allowsScreenshots {
-            throw SupportUploadRequestError.consentRequired(for: .screenshots)
-        }
-        if screenRecording != nil, !consent.allowsScreenRecording {
-            throw SupportUploadRequestError.consentRequired(for: .screenRecording)
+    }
+
+    private static func append(
+        _ part: SupportUploadPart,
+        to parts: inout [SupportUploadPart],
+        maximumPayloadSizeInBytes: Int
+    ) throws {
+        let actualSize = payloadSize(of: parts) + part.payload.count
+        try validatePayloadSize(
+            actualSize,
+            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+        )
+        parts.append(part)
+    }
+
+    private static func payloadSize(of parts: [SupportUploadPart]) -> Int {
+        parts.reduce(0) { $0 + $1.payload.count }
+    }
+
+    private static func validatePayloadSize(
+        _ parts: [SupportUploadPart],
+        maximumPayloadSizeInBytes: Int
+    ) throws {
+        try validatePayloadSize(
+            payloadSize(of: parts),
+            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+        )
+    }
+
+    private static func validatePayloadSize(
+        _ actualSize: Int,
+        maximumPayloadSizeInBytes: Int
+    ) throws {
+        guard actualSize <= maximumPayloadSizeInBytes else {
+            throw SupportUploadRequestError.payloadTooLarge(
+                actualBytes: actualSize,
+                maximumBytes: maximumPayloadSizeInBytes
+            )
         }
     }
 

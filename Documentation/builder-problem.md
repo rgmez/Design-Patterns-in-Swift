@@ -21,9 +21,7 @@ the construction flow.
 
 ## Requirements and invariants
 
-The direct implementation in
-[`SupportUploadRequest.swift`](../Sources/DesignPatterns/Builder/SupportUploadRequest.swift)
-must:
+The Day 025 direct implementation established that the support upload must:
 
 1. Require a non-blank support message.
 2. Accept diagnostics only as `RedactedSupportDiagnostics`; raw logs are not a
@@ -35,14 +33,20 @@ must:
    byte limit, while accepting an exact-boundary payload.
 6. Keep inputs and the final request as immutable, `Sendable` values.
 
+Day 026 preserves these rules and adds ordered, intermediate construction. The
+current implementation lives in
+[`SupportUploadRequest.swift`](../Sources/DesignPatterns/Builder/SupportUploadRequest.swift),
+and the added evidence is documented in the
+[Builder pressure review](builder-pressure.md).
+
 The reported size covers part payloads, not transport headers or multipart
 boundary bytes. A production encoder must add its own framing overhead before
 enforcing a wire-level limit.
 
-## Direct Swift first
+## Day 025 direct Swift baseline
 
-All data is available when the customer taps Submit, so one throwing value
-initializer remains the clearest construction API:
+When all data was available at Submit time, one throwing value initializer was
+the clearest construction API:
 
 ```swift
 let request = try SupportUploadRequest(
@@ -56,20 +60,18 @@ let request = try SupportUploadRequest(
 )
 ```
 
-The initializer validates the whole value once, then uses ordinary conditional
-appends to create the ordered parts. Default arguments keep message-only tickets
-small. There is no builder protocol, director, reference-backed accumulator,
-fluent API, or partially valid request type. Those additions would duplicate a
-construction flow that currently fits in one place and completes atomically.
+That baseline validated the whole value once, then used ordinary conditional
+appends to create the ordered parts. Default arguments kept message-only tickets
+small. Day 026 replaces this API with a direct enum of UI construction steps so
+the new ordered workflow can be measured before choosing a pattern.
 
 Specific input types carry useful privacy meaning without adding abstraction:
 the initializer can accept redacted diagnostics, but it has no raw-diagnostics
 overload that a caller might choose accidentally.
 
-## Acceptance tests
+## Day 025 acceptance baseline
 
-[`BuilderProblemTests.swift`](../Tests/DesignPatternsTests/BuilderProblemTests.swift)
-uses Swift Testing to verify:
+The initial Swift Testing suite verified:
 
 - a message-only request has one text part;
 - consented optional inputs produce deterministic multipart ordering;
@@ -77,24 +79,22 @@ uses Swift Testing to verify:
 - a blank message and a non-positive configured limit are rejected;
 - the exact payload limit succeeds and an oversized request reports both sizes.
 
-Run the focused suite with:
+The same
+[`BuilderProblemTests.swift`](../Tests/DesignPatternsTests/BuilderProblemTests.swift)
+now carries the Day 026 order and intermediate-validation evidence. Run it with:
 
 ```sh
 swift test -Xswiftc -warnings-as-errors --filter BuilderProblemTests
 ```
 
-## Evidence required on Day 026
+## Day 026 resolution
 
-Builder has not earned a place merely because this initializer has several
-parameters. Day 026 must add a credible product constraint where construction
-actually spans ordered steps—for example, diagnostics must be redacted before
-they can be attached, recording finalization changes the size budget, or a final
-manifest can only be produced after every accepted attachment is known.
-
-The pressure review must identify which invalid intermediate states or repeated
-validation branches the direct initializer permits or hides. If a smaller
-validated value, an enum, a helper function, or default arguments keep the flow
-atomic and readable, the Builder pattern should still be rejected.
+The support flow now spans ordered UI interactions: message, consent, attachment
+selection, intermediate byte-limit checks, and explicit finalization. The
+direct step enum proves the behavior, but admits four invalid order families
+and makes the initializer interpret a public construction state machine. The
+[pressure review](builder-pressure.md) records the measurements and the narrow
+boundary proposed for Day 027.
 
 ## Initial visual thesis
 
@@ -114,8 +114,8 @@ needed.
 
 ## Day 025 decision
 
-The support upload has conditional assembly and meaningful privacy rules, but
-all required values still arrive together. A throwing initializer plus immutable
-values is the least complex correct solution. Builder remains deliberately
-absent until Day 026 produces verified step-order or intermediate-validation
-pressure.
+The support upload had conditional assembly and meaningful privacy rules, but
+all required values still arrived together. A throwing initializer plus
+immutable values was the least complex correct solution. Day 026 has now added
+verified step-order and intermediate-validation pressure; Builder remains
+absent until Day 027 evaluates the smallest concrete construction API.

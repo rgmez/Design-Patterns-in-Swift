@@ -1,14 +1,20 @@
 import DesignPatterns
 import Testing
 
-@Suite("Builder problem")
+@Suite("Builder pressure")
 struct BuilderProblemTests {
     struct MissingConsentScenario: Sendable, CustomTestStringConvertible {
         let name: String
         let category: SupportUploadAttachmentCategory
-        let diagnostics: RedactedSupportDiagnostics?
-        let screenshots: [SupportScreenshot]
-        let screenRecording: SupportScreenRecording?
+        let step: SupportUploadAssemblyStep
+
+        var testDescription: String { name }
+    }
+
+    struct InvalidOrderScenario: Sendable, CustomTestStringConvertible {
+        let name: String
+        let steps: [SupportUploadAssemblyStep]
+        let error: SupportUploadRequestError
 
         var testDescription: String { name }
     }
@@ -27,43 +33,57 @@ struct BuilderProblemTests {
         filename: "freeze.mp4",
         payload: [0x04, 0x05, 0x06]
     )
-    private static let fullConsent = SupportUploadConsent(
-        allowsDiagnostics: true,
-        allowsScreenshots: true,
-        allowsScreenRecording: true
-    )
     private static let generousPayloadLimit = 1_024
     private static let missingConsentScenarios = [
         MissingConsentScenario(
             name: "diagnostics",
             category: .diagnostics,
-            diagnostics: diagnostics,
-            screenshots: [],
-            screenRecording: nil
+            step: .diagnostics(diagnostics)
         ),
         MissingConsentScenario(
             name: "screenshots",
             category: .screenshots,
-            diagnostics: nil,
-            screenshots: screenshots,
-            screenRecording: nil
+            step: .screenshot(screenshots[0])
         ),
         MissingConsentScenario(
             name: "screen recording",
             category: .screenRecording,
-            diagnostics: nil,
-            screenshots: [],
-            screenRecording: screenRecording
+            step: .screenRecording(screenRecording)
+        )
+    ]
+    private static let invalidOrderScenarios = [
+        InvalidOrderScenario(
+            name: "consent before message",
+            steps: [.grantConsent(for: .diagnostics), .message(message), .finalize],
+            error: .messageMustBeFirst
+        ),
+        InvalidOrderScenario(
+            name: "message repeated",
+            steps: [.message(message), .message(message), .finalize],
+            error: .duplicateMessage
+        ),
+        InvalidOrderScenario(
+            name: "step after finalization",
+            steps: [.message(message), .finalize, .grantConsent(for: .diagnostics)],
+            error: .stepAfterFinalization
+        ),
+        InvalidOrderScenario(
+            name: "missing finalization",
+            steps: [.message(message)],
+            error: .requestNotFinalized
         )
     ]
 
-    @Suite("Conditional assembly")
-    struct ConditionalAssembly {
-        @Test("Creates a valid message-only request")
+    @Suite("Ordered assembly")
+    struct OrderedAssembly {
+        @Test("Creates a finalized message-only request")
         func createsMessageOnlyRequest() throws {
             let request = try SupportUploadRequest(
                 ticketID: BuilderProblemTests.ticketID,
-                message: BuilderProblemTests.message,
+                steps: [
+                    .message(BuilderProblemTests.message),
+                    .finalize
+                ],
                 maximumPayloadSizeInBytes: BuilderProblemTests.generousPayloadLimit
             )
 
@@ -76,27 +96,31 @@ struct BuilderProblemTests {
             )
         }
 
-        @Test("Appends consented attachments in deterministic multipart order")
-        func appendsAttachmentsInOrder() throws {
+        @Test("Preserves accepted attachment order before finalization")
+        func appendsAttachmentsInStepOrder() throws {
             let request = try SupportUploadRequest(
                 ticketID: BuilderProblemTests.ticketID,
-                message: BuilderProblemTests.message,
-                diagnostics: BuilderProblemTests.diagnostics,
-                screenshots: BuilderProblemTests.screenshots,
-                screenRecording: BuilderProblemTests.screenRecording,
-                consent: BuilderProblemTests.fullConsent,
+                steps: [
+                    .message(BuilderProblemTests.message),
+                    .grantConsent(for: .diagnostics),
+                    .diagnostics(BuilderProblemTests.diagnostics),
+                    .grantConsent(for: .screenshots),
+                    .screenshot(BuilderProblemTests.screenshots[0]),
+                    .screenshot(BuilderProblemTests.screenshots[1]),
+                    .grantConsent(for: .screenRecording),
+                    .screenRecording(BuilderProblemTests.screenRecording),
+                    .finalize
+                ],
                 maximumPayloadSizeInBytes: BuilderProblemTests.generousPayloadLimit
             )
 
-            #expect(
-                request.parts.map(\.kind) == [
-                    .message,
-                    .diagnostics,
-                    .screenshot(filename: "checkout.png"),
-                    .screenshot(filename: "spinner.png"),
-                    .screenRecording(filename: "freeze.mp4")
-                ]
-            )
+            #expect(request.parts.map(\.kind) == [
+                .message,
+                .diagnostics,
+                .screenshot(filename: "checkout.png"),
+                .screenshot(filename: "spinner.png"),
+                .screenRecording(filename: "freeze.mp4")
+            ])
             #expect(request.parts.map(\.contentType) == [
                 "text/plain; charset=utf-8",
                 "application/json",
@@ -110,7 +134,7 @@ struct BuilderProblemTests {
     @Suite("Privacy")
     struct Privacy {
         @Test(
-            "Rejects attachments without category-specific consent",
+            "Rejects an attachment whose consent step has not occurred",
             arguments: BuilderProblemTests.missingConsentScenarios
         )
         func rejectsMissingConsent(_ scenario: MissingConsentScenario) {
@@ -121,10 +145,28 @@ struct BuilderProblemTests {
             ) {
                 try SupportUploadRequest(
                     ticketID: BuilderProblemTests.ticketID,
-                    message: BuilderProblemTests.message,
-                    diagnostics: scenario.diagnostics,
-                    screenshots: scenario.screenshots,
-                    screenRecording: scenario.screenRecording,
+                    steps: [
+                        .message(BuilderProblemTests.message),
+                        scenario.step,
+                        .finalize
+                    ],
+                    maximumPayloadSizeInBytes: BuilderProblemTests.generousPayloadLimit
+                )
+            }
+        }
+    }
+
+    @Suite("Construction order")
+    struct ConstructionOrder {
+        @Test(
+            "Rejects representable but invalid step sequences",
+            arguments: BuilderProblemTests.invalidOrderScenarios
+        )
+        func rejectsInvalidOrder(_ scenario: InvalidOrderScenario) {
+            #expect(throws: scenario.error) {
+                try SupportUploadRequest(
+                    ticketID: BuilderProblemTests.ticketID,
+                    steps: scenario.steps,
                     maximumPayloadSizeInBytes: BuilderProblemTests.generousPayloadLimit
                 )
             }
@@ -133,12 +175,12 @@ struct BuilderProblemTests {
 
     @Suite("Validation")
     struct Validation {
-        @Test("Rejects a blank support message")
+        @Test("Rejects a blank first message")
         func rejectsBlankMessage() {
             #expect(throws: SupportUploadRequestError.emptyMessage) {
                 try SupportUploadRequest(
                     ticketID: BuilderProblemTests.ticketID,
-                    message: "   ",
+                    steps: [.message("   "), .finalize],
                     maximumPayloadSizeInBytes: BuilderProblemTests.generousPayloadLimit
                 )
             }
@@ -149,17 +191,17 @@ struct BuilderProblemTests {
             #expect(throws: SupportUploadRequestError.invalidMaximumPayloadSize) {
                 try SupportUploadRequest(
                     ticketID: BuilderProblemTests.ticketID,
-                    message: BuilderProblemTests.message,
+                    steps: [.message(BuilderProblemTests.message), .finalize],
                     maximumPayloadSizeInBytes: 0
                 )
             }
         }
 
-        @Test("Accepts a payload at the exact configured limit")
+        @Test("Accepts a finalized payload at the exact configured limit")
         func acceptsExactLimit() throws {
             let request = try SupportUploadRequest(
                 ticketID: BuilderProblemTests.ticketID,
-                message: BuilderProblemTests.message,
+                steps: [.message(BuilderProblemTests.message), .finalize],
                 maximumPayloadSizeInBytes: BuilderProblemTests.messagePayload.count
             )
 
@@ -169,8 +211,8 @@ struct BuilderProblemTests {
             )
         }
 
-        @Test("Reports the measured size when the payload is too large")
-        func rejectsOversizedPayload() {
+        @Test("Rejects an oversized initial message")
+        func rejectsOversizedMessage() {
             let limit = BuilderProblemTests.messagePayload.count - 1
 
             #expect(
@@ -181,7 +223,31 @@ struct BuilderProblemTests {
             ) {
                 try SupportUploadRequest(
                     ticketID: BuilderProblemTests.ticketID,
-                    message: BuilderProblemTests.message,
+                    steps: [.message(BuilderProblemTests.message), .finalize],
+                    maximumPayloadSizeInBytes: limit
+                )
+            }
+        }
+
+        @Test("Rejects an oversized attachment before finalization")
+        func rejectsOversizedAttachmentImmediately() {
+            let actualSize = BuilderProblemTests.messagePayload.count
+                + BuilderProblemTests.diagnostics.payload.count
+            let limit = actualSize - 1
+
+            #expect(
+                throws: SupportUploadRequestError.payloadTooLarge(
+                    actualBytes: actualSize,
+                    maximumBytes: limit
+                )
+            ) {
+                try SupportUploadRequest(
+                    ticketID: BuilderProblemTests.ticketID,
+                    steps: [
+                        .message(BuilderProblemTests.message),
+                        .grantConsent(for: .diagnostics),
+                        .diagnostics(BuilderProblemTests.diagnostics)
+                    ],
                     maximumPayloadSizeInBytes: limit
                 )
             }

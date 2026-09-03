@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-02
+Last updated: 2026-09-03
 
 ## Outcomes
 
@@ -228,8 +228,10 @@ an editorial guide, not a content quota.
   configuration assembled across conditional steps. The [privacy-aware support
   upload baseline](Documentation/builder-problem.md) keeps construction in one
   throwing value initializer until ordered intermediate steps justify Builder.
-- [ ] **Day 026 — Builder pressure.** Show validation and construction-order
-  requirements that an initializer no longer communicates safely.
+- [x] **Day 026 — Builder pressure.** Show validation and construction-order
+  requirements that an initializer no longer communicates safely. The
+  [pressure review](Documentation/builder-pressure.md) records four invalid
+  order families exposed by the direct step sequence.
 - [ ] **Day 027 — Builder solution.** Implement the smallest useful builder and
   contrast it with a memberwise initializer and default arguments.
 - [ ] **Day 028 — Weekly review.** Validate both creational examples and inspect
