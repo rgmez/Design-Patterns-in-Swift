@@ -79,8 +79,7 @@ runtime rejection instead of an API that guides the normal path.
 
 ## Executable evidence
 
-[`BuilderProblemTests.swift`](../Tests/DesignPatternsTests/BuilderProblemTests.swift)
-now verifies:
+The Day 026 `BuilderProblemTests` suite verified:
 
 - a finalized message-only request;
 - deterministic part order for a full consented sequence;
@@ -93,8 +92,13 @@ now verifies:
 Run the focused evidence from the repository root:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter BuilderProblemTests
+swift test -Xswiftc -warnings-as-errors --filter BuilderTests
 ```
+
+The raw-step suite belongs to the evolution captured in Git history. The final
+[`BuilderTests.swift`](../Tests/DesignPatternsTests/BuilderTests.swift) checks
+the same product, privacy, byte-limit, and sealing invariants through the
+smaller Builder API.
 
 ## Smaller alternatives considered
 
@@ -119,11 +123,17 @@ default arguments, or the desire for chained syntax. It earns its place here
 only because construction now spans ordered interactions and intermediate
 validation has observable product behavior.
 
-## Day 026 decision
+## Day 027 resolution
 
 The direct step enum proves the new workflow without prematurely adding a
 pattern, but it makes four invalid order families public and centralizes every
-intermediate rule. Builder has now earned consideration for Day 027. The next
-day may replace the raw sequence with one concrete value builder; it must not
-add a protocol, director, dependency container, or staged-type hierarchy unless
-new evidence requires one.
+intermediate rule. Day 027 replaces that sequence with one concrete
+`SupportUploadRequestBuilder`: its initializer requires the message, its named
+operations validate consent and size at each append, and `build()` alone creates
+and seals the immutable request.
+
+This removes the public step enum and three order-specific errors. The remaining
+runtime errors represent real domain checks rather than an invalid construction
+language. The [canonical Builder guide](../Creational%20Patterns/Builder/README.md)
+documents the implementation, tests, Mermaid flow, final header, trade-offs, and
+the cases where the Day 025 initializer remains preferable.

@@ -79,12 +79,13 @@ The initial Swift Testing suite verified:
 - a blank message and a non-positive configured limit are rejected;
 - the exact payload limit succeeds and an oversized request reports both sizes.
 
-The same
-[`BuilderProblemTests.swift`](../Tests/DesignPatternsTests/BuilderProblemTests.swift)
-now carries the Day 026 order and intermediate-validation evidence. Run it with:
+The Day 025 and Day 026 suites established this baseline before the raw step API
+was removed. The current
+[`BuilderTests.swift`](../Tests/DesignPatternsTests/BuilderTests.swift) preserves
+the product invariants against the final construction boundary. Run it with:
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter BuilderProblemTests
+swift test -Xswiftc -warnings-as-errors --filter BuilderTests
 ```
 
 ## Day 026 resolution
@@ -108,14 +109,17 @@ sealed multipart package on a scale at the right; rejected parts stop at their
 gate. The rail expresses conditional construction, while the final scale makes
 whole-request validation the single focal point.
 
-Day 027 may turn this scene into the final Builder header under the shared
-[`visual-style.md`](visual-style.md) contract. Until then, no editorial header is
-needed.
+Day 027 turns this thesis into the final
+[`builder-header.png`](Assets/Patterns/creational/builder-header.png) under the
+shared [`visual-style.md`](visual-style.md) contract. The scene keeps the three
+consent gates, left-to-right part assembly, and one sealed request on a payload
+gauge.
 
 ## Day 025 decision
 
 The support upload had conditional assembly and meaningful privacy rules, but
 all required values still arrived together. A throwing initializer plus
-immutable values was the least complex correct solution. Day 026 has now added
-verified step-order and intermediate-validation pressure; Builder remains
-absent until Day 027 evaluates the smallest concrete construction API.
+immutable values was the least complex correct solution. Day 026 then added
+verified step-order and intermediate-validation pressure. Day 027 resolves it
+with the one concrete value builder documented in the
+[canonical Builder guide](../Creational%20Patterns/Builder/README.md).

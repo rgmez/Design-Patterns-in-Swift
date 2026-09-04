@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-03
+Last updated: 2026-09-04
 
 ## Outcomes
 
@@ -232,8 +232,9 @@ an editorial guide, not a content quota.
   requirements that an initializer no longer communicates safely. The
   [pressure review](Documentation/builder-pressure.md) records four invalid
   order families exposed by the direct step sequence.
-- [ ] **Day 027 — Builder solution.** Implement the smallest useful builder and
-  contrast it with a memberwise initializer and default arguments.
+- [x] **Day 027 — Builder solution.** Implement the smallest useful builder and
+  contrast it with a memberwise initializer and default arguments in the
+  [canonical Builder guide](Creational%20Patterns/Builder/README.md).
 - [ ] **Day 028 — Weekly review.** Validate both creational examples and inspect
   their construction APIs for accidental ceremony.
 

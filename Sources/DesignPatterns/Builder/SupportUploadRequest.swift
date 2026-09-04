@@ -55,24 +55,12 @@ public struct SupportUploadPart: Equatable, Sendable {
     }
 }
 
-public enum SupportUploadAssemblyStep: Equatable, Sendable {
-    case message(String)
-    case grantConsent(for: SupportUploadAttachmentCategory)
-    case diagnostics(RedactedSupportDiagnostics)
-    case screenshot(SupportScreenshot)
-    case screenRecording(SupportScreenRecording)
-    case finalize
-}
-
 public enum SupportUploadRequestError: Error, Equatable, Sendable {
     case emptyMessage
     case invalidMaximumPayloadSize
-    case messageMustBeFirst
-    case duplicateMessage
     case consentRequired(for: SupportUploadAttachmentCategory)
     case payloadTooLarge(actualBytes: Int, maximumBytes: Int)
-    case stepAfterFinalization
-    case requestNotFinalized
+    case requestAlreadyBuilt
 }
 
 public struct SupportUploadRequest: Equatable, Sendable {
@@ -80,144 +68,120 @@ public struct SupportUploadRequest: Equatable, Sendable {
     public let parts: [SupportUploadPart]
     public let totalPayloadSizeInBytes: Int
 
+    fileprivate init(ticketID: String, parts: [SupportUploadPart]) {
+        self.ticketID = ticketID
+        self.parts = parts
+        totalPayloadSizeInBytes = parts.reduce(0) { $0 + $1.payload.count }
+    }
+}
+
+public struct SupportUploadRequestBuilder: Sendable {
+    private let ticketID: String
+    private let maximumPayloadSizeInBytes: Int
+    private var parts: [SupportUploadPart]
+    private var consentedCategories = Set<SupportUploadAttachmentCategory>()
+    private var isBuilt = false
+
     public init(
         ticketID: String,
-        steps: [SupportUploadAssemblyStep],
+        message: String,
         maximumPayloadSizeInBytes: Int
     ) throws {
         guard maximumPayloadSizeInBytes > 0 else {
             throw SupportUploadRequestError.invalidMaximumPayloadSize
         }
-
-        var parts = try Self.makeInitialParts(from: steps.first)
-        try Self.validatePayloadSize(
-            parts,
-            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
-        )
-        var consentedCategories = Set<SupportUploadAttachmentCategory>()
-        var isFinalized = false
-
-        for step in steps.dropFirst() {
-            try Self.apply(
-                step,
-                to: &parts,
-                consentedCategories: &consentedCategories,
-                isFinalized: &isFinalized,
-                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
-            )
-        }
-        guard isFinalized else {
-            throw SupportUploadRequestError.requestNotFinalized
-        }
-
-        self.ticketID = ticketID
-        self.parts = parts
-        self.totalPayloadSizeInBytes = Self.payloadSize(of: parts)
-    }
-
-    private static func makeInitialParts(
-        from step: SupportUploadAssemblyStep?
-    ) throws -> [SupportUploadPart] {
-        guard case .message(let message) = step else {
-            throw SupportUploadRequestError.messageMustBeFirst
-        }
         guard message.contains(where: { !$0.isWhitespace }) else {
             throw SupportUploadRequestError.emptyMessage
         }
 
-        return [
+        let messagePart = SupportUploadPart(
+            kind: .message,
+            contentType: "text/plain; charset=utf-8",
+            payload: Array(message.utf8)
+        )
+        try Self.validatePayloadSize(
+            messagePart.payload.count,
+            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+        )
+
+        self.ticketID = ticketID
+        self.maximumPayloadSizeInBytes = maximumPayloadSizeInBytes
+        parts = [messagePart]
+    }
+
+    public mutating func grantConsent(
+        for category: SupportUploadAttachmentCategory
+    ) throws {
+        try requireOpenBuilder()
+        consentedCategories.insert(category)
+    }
+
+    public mutating func addDiagnostics(
+        _ diagnostics: RedactedSupportDiagnostics
+    ) throws {
+        try requireConsent(for: .diagnostics)
+        try append(
             SupportUploadPart(
-                kind: .message,
-                contentType: "text/plain; charset=utf-8",
-                payload: Array(message.utf8)
+                kind: .diagnostics,
+                contentType: "application/json",
+                payload: diagnostics.payload
             )
-        ]
+        )
     }
 
-    private static func apply(
-        _ step: SupportUploadAssemblyStep,
-        to parts: inout [SupportUploadPart],
-        consentedCategories: inout Set<SupportUploadAttachmentCategory>,
-        isFinalized: inout Bool,
-        maximumPayloadSizeInBytes: Int
-    ) throws {
-        guard !isFinalized else {
-            throw SupportUploadRequestError.stepAfterFinalization
-        }
+    public mutating func addScreenshot(_ screenshot: SupportScreenshot) throws {
+        try requireConsent(for: .screenshots)
+        try append(
+            SupportUploadPart(
+                kind: .screenshot(filename: screenshot.filename),
+                contentType: "image/png",
+                payload: screenshot.payload
+            )
+        )
+    }
 
-        switch step {
-        case .message:
-            throw SupportUploadRequestError.duplicateMessage
-        case .grantConsent(let category):
-            consentedCategories.insert(category)
-        case .diagnostics(let diagnostics):
-            try requireConsent(.diagnostics, in: consentedCategories)
-            try append(
-                SupportUploadPart(
-                    kind: .diagnostics,
-                    contentType: "application/json",
-                    payload: diagnostics.payload
-                ),
-                to: &parts,
-                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
+    public mutating func addScreenRecording(
+        _ screenRecording: SupportScreenRecording
+    ) throws {
+        try requireConsent(for: .screenRecording)
+        try append(
+            SupportUploadPart(
+                kind: .screenRecording(filename: screenRecording.filename),
+                contentType: "video/mp4",
+                payload: screenRecording.payload
             )
-        case .screenshot(let screenshot):
-            try requireConsent(.screenshots, in: consentedCategories)
-            try append(
-                makeScreenshotPart(screenshot),
-                to: &parts,
-                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
-            )
-        case .screenRecording(let screenRecording):
-            try requireConsent(.screenRecording, in: consentedCategories)
-            try append(
-                SupportUploadPart(
-                    kind: .screenRecording(filename: screenRecording.filename),
-                    contentType: "video/mp4",
-                    payload: screenRecording.payload
-                ),
-                to: &parts,
-                maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
-            )
-        case .finalize:
-            isFinalized = true
+        )
+    }
+
+    public mutating func build() throws -> SupportUploadRequest {
+        try requireOpenBuilder()
+        isBuilt = true
+        return SupportUploadRequest(ticketID: ticketID, parts: parts)
+    }
+
+    private func requireOpenBuilder() throws {
+        guard !isBuilt else {
+            throw SupportUploadRequestError.requestAlreadyBuilt
         }
     }
 
-    private static func requireConsent(
-        _ category: SupportUploadAttachmentCategory,
-        in consentedCategories: Set<SupportUploadAttachmentCategory>
+    private func requireConsent(
+        for category: SupportUploadAttachmentCategory
     ) throws {
+        try requireOpenBuilder()
         guard consentedCategories.contains(category) else {
             throw SupportUploadRequestError.consentRequired(for: category)
         }
     }
 
-    private static func append(
-        _ part: SupportUploadPart,
-        to parts: inout [SupportUploadPart],
-        maximumPayloadSizeInBytes: Int
-    ) throws {
-        let actualSize = payloadSize(of: parts) + part.payload.count
-        try validatePayloadSize(
+    private mutating func append(_ part: SupportUploadPart) throws {
+        let actualSize = parts.reduce(0) { $0 + $1.payload.count }
+            + part.payload.count
+        try Self.validatePayloadSize(
             actualSize,
             maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
         )
         parts.append(part)
-    }
-
-    private static func payloadSize(of parts: [SupportUploadPart]) -> Int {
-        parts.reduce(0) { $0 + $1.payload.count }
-    }
-
-    private static func validatePayloadSize(
-        _ parts: [SupportUploadPart],
-        maximumPayloadSizeInBytes: Int
-    ) throws {
-        try validatePayloadSize(
-            payloadSize(of: parts),
-            maximumPayloadSizeInBytes: maximumPayloadSizeInBytes
-        )
     }
 
     private static func validatePayloadSize(
@@ -230,15 +194,5 @@ public struct SupportUploadRequest: Equatable, Sendable {
                 maximumBytes: maximumPayloadSizeInBytes
             )
         }
-    }
-
-    private static func makeScreenshotPart(
-        _ screenshot: SupportScreenshot
-    ) -> SupportUploadPart {
-        SupportUploadPart(
-            kind: .screenshot(filename: screenshot.filename),
-            contentType: "image/png",
-            payload: screenshot.payload
-        )
     }
 }
