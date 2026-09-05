@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-04
+Last updated: 2026-09-05
 
 ## Outcomes
 
@@ -235,8 +235,10 @@ an editorial guide, not a content quota.
 - [x] **Day 027 — Builder solution.** Implement the smallest useful builder and
   contrast it with a memberwise initializer and default arguments in the
   [canonical Builder guide](Creational%20Patterns/Builder/README.md).
-- [ ] **Day 028 — Weekly review.** Validate both creational examples and inspect
-  their construction APIs for accidental ceremony.
+- [x] **Day 028 — Weekly review.** Validate both creational examples and inspect
+  their construction APIs for accidental ceremony. The [review evidence](Documentation/week-04-review.md)
+  confirms that their construction boundaries remain distinct, warning-free,
+  and no larger than their demonstrated pressures require.
 
 ### Week 5 — Prototype and Observer
 
