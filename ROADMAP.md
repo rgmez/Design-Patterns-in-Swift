@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-05
+Last updated: 2026-09-06
 
 ## Outcomes
 
@@ -242,8 +242,11 @@ an editorial guide, not a content quota.
 
 ### Week 5 — Prototype and Observer
 
-- [ ] **Day 029 — Prototype problem.** Start with Swift value-copy semantics and
-  define a document graph that genuinely requires controlled deep copying.
+- [x] **Day 029 — Prototype problem.** Start with Swift value-copy semantics and
+  define a document graph that genuinely requires controlled deep copying. The
+  [editable-document baseline](Documentation/prototype-problem.md) proves that
+  ordinary assignment already handles value-only configuration, then fixes the
+  identity, subtype, link-remapping, and resource-sharing rules for the graph.
 - [ ] **Day 030 — Prototype pressure.** Demonstrate reference sharing and subtype
   preservation problems that ordinary assignment does not solve.
 - [ ] **Day 031 — Prototype solution.** Implement explicit cloning only at the
