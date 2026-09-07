@@ -108,6 +108,12 @@ If replacing reference-backed blocks with value types keeps editor identity,
 observation, and internal links clear, the explicit pattern should still be
 rejected.
 
+The completed [Day 030 pressure review](prototype-pressure.md) now demonstrates
+that assignment shares the mutable block objects and that a correct direct copy
+needs four centralized subtype branches. It also verifies internal-link
+remapping and deliberate immutable-media sharing without introducing a cloning
+protocol.
+
 ## Initial visual thesis
 
 **Thesis:** Value configurations split cleanly by assignment; an identity-rich
