@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 ## Outcomes
 
@@ -252,8 +252,9 @@ an editorial guide, not a content quota.
   [pressure review](Documentation/prototype-pressure.md) proves that assignment
   shares mutable blocks and records the four-branch centralized copy needed to
   preserve subtype state, remap links, and share immutable media deliberately.
-- [ ] **Day 031 — Prototype solution.** Implement explicit cloning only at the
-  justified reference boundary and document the common no-pattern case.
+- [x] **Day 031 — Prototype solution.** Implement explicit cloning only at the
+  justified reference boundary and document the common no-pattern case in the
+  [canonical Prototype guide](Creational%20Patterns/Prototype/README.md).
 - [ ] **Day 032 — Observer problem.** Define session or connectivity changes with
   multiple real consumers.
 - [ ] **Day 033 — Observer pressure.** Demonstrate the coupling caused by direct

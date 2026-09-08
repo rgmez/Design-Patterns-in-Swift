@@ -126,9 +126,11 @@ media modules reaches a precision duplication gate. Editable nodes exit with
 new warm-red identity marks, internal links stay inside the copied graph, and
 one heavy immutable media cartridge remains connected to both sides.
 
-Day 031 may turn this scene into the final Prototype header under the shared
-[`visual-style.md`](visual-style.md) contract. Until then, no editorial header
-is needed.
+Day 031 turned this thesis into the final
+[`prototype-header.png`](Assets/Patterns/creational/prototype-header.png) under
+the shared [`visual-style.md`](visual-style.md) contract. The image keeps the
+copy gate, fresh editable modules, repaired connections, and single shared
+media cartridge in the approved visual system.
 
 ## Day 029 decision
 

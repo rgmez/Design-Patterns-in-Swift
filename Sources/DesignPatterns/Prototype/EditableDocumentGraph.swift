@@ -10,55 +10,119 @@ public final class DocumentMediaResource {
     }
 }
 
-public class EditableDocumentBlock {
-    public let id: String
+public protocol EditableDocumentBlock: AnyObject {
+    var id: String { get }
 
-    fileprivate init(id: String) {
-        self.id = id
+    func copy(
+        using context: EditableDocumentCopyContext
+    ) throws -> any EditableDocumentBlock
+}
+
+public struct EditableDocumentCopyContext {
+    private let copiedIDs: [String: String]
+
+    fileprivate init(copiedIDs: [String: String]) {
+        self.copiedIDs = copiedIDs
+    }
+
+    public func copiedID(for sourceBlockID: String) -> String? {
+        copiedIDs[sourceBlockID]
     }
 }
 
 public final class EditableTextBlock: EditableDocumentBlock {
+    public let id: String
     public var body: String
 
     public init(id: String, body: String) {
+        self.id = id
         self.body = body
-        super.init(id: id)
+    }
+
+    public func copy(
+        using context: EditableDocumentCopyContext
+    ) throws -> any EditableDocumentBlock {
+        guard let copiedID = context.copiedID(for: id) else {
+            throw EditableDocumentCopyError.missingBlockID(id)
+        }
+
+        return EditableTextBlock(id: copiedID, body: body)
     }
 }
 
 public final class EditableChecklistBlock: EditableDocumentBlock {
+    public let id: String
     public var items: [String]
 
     public init(id: String, items: [String]) {
+        self.id = id
         self.items = items
-        super.init(id: id)
+    }
+
+    public func copy(
+        using context: EditableDocumentCopyContext
+    ) throws -> any EditableDocumentBlock {
+        guard let copiedID = context.copiedID(for: id) else {
+            throw EditableDocumentCopyError.missingBlockID(id)
+        }
+
+        return EditableChecklistBlock(id: copiedID, items: items)
     }
 }
 
 public final class EditableLinkBlock: EditableDocumentBlock {
+    public let id: String
     public var targetBlockID: String
 
     public init(id: String, targetBlockID: String) {
+        self.id = id
         self.targetBlockID = targetBlockID
-        super.init(id: id)
+    }
+
+    public func copy(
+        using context: EditableDocumentCopyContext
+    ) throws -> any EditableDocumentBlock {
+        guard let copiedID = context.copiedID(for: id) else {
+            throw EditableDocumentCopyError.missingBlockID(id)
+        }
+        guard let copiedTargetID = context.copiedID(for: targetBlockID) else {
+            throw EditableDocumentCopyError.missingInternalLinkTarget(
+                targetBlockID
+            )
+        }
+
+        return EditableLinkBlock(
+            id: copiedID,
+            targetBlockID: copiedTargetID
+        )
     }
 }
 
 public final class EditableMediaBlock: EditableDocumentBlock {
+    public let id: String
     public let resource: DocumentMediaResource
 
     public init(id: String, resource: DocumentMediaResource) {
+        self.id = id
         self.resource = resource
-        super.init(id: id)
+    }
+
+    public func copy(
+        using context: EditableDocumentCopyContext
+    ) throws -> any EditableDocumentBlock {
+        guard let copiedID = context.copiedID(for: id) else {
+            throw EditableDocumentCopyError.missingBlockID(id)
+        }
+
+        return EditableMediaBlock(id: copiedID, resource: resource)
     }
 }
 
 public struct EditableDocument {
     public var title: String
-    public var blocks: [EditableDocumentBlock]
+    public var blocks: [any EditableDocumentBlock]
 
-    public init(title: String, blocks: [EditableDocumentBlock]) {
+    public init(title: String, blocks: [any EditableDocumentBlock]) {
         self.title = title
         self.blocks = blocks
     }
@@ -66,15 +130,14 @@ public struct EditableDocument {
 
 public enum EditableDocumentCopyError: Error, Equatable {
     case duplicateBlockID(String)
+    case missingBlockID(String)
     case missingInternalLinkTarget(String)
-    case unsupportedBlockKind(String)
 }
 
 public func duplicateEditableDocument(
     _ source: EditableDocument
 ) throws -> EditableDocument {
     var copiedIDs: [String: String] = [:]
-    var copiedEntries: [(block: EditableDocumentBlock, copiedID: String)] = []
     var allocatedIDs = Set(source.blocks.map(\.id))
 
     for block in source.blocks {
@@ -87,41 +150,11 @@ public func duplicateEditableDocument(
             copiedID = UUID().uuidString
         }
         copiedIDs[block.id] = copiedID
-        copiedEntries.append((block: block, copiedID: copiedID))
     }
 
-    let copiedBlocks = try copiedEntries.map { entry -> EditableDocumentBlock in
-        let block = entry.block
-        let copiedID = entry.copiedID
-
-        switch block {
-        case let textBlock as EditableTextBlock:
-            return EditableTextBlock(id: copiedID, body: textBlock.body)
-        case let checklistBlock as EditableChecklistBlock:
-            return EditableChecklistBlock(
-                id: copiedID,
-                items: checklistBlock.items
-            )
-        case let linkBlock as EditableLinkBlock:
-            guard let copiedTargetID = copiedIDs[linkBlock.targetBlockID] else {
-                throw EditableDocumentCopyError.missingInternalLinkTarget(
-                    linkBlock.targetBlockID
-                )
-            }
-            return EditableLinkBlock(
-                id: copiedID,
-                targetBlockID: copiedTargetID
-            )
-        case let mediaBlock as EditableMediaBlock:
-            return EditableMediaBlock(
-                id: copiedID,
-                resource: mediaBlock.resource
-            )
-        default:
-            throw EditableDocumentCopyError.unsupportedBlockKind(
-                String(reflecting: type(of: block))
-            )
-        }
+    let context = EditableDocumentCopyContext(copiedIDs: copiedIDs)
+    let copiedBlocks = try source.blocks.map {
+        try $0.copy(using: context)
     }
 
     return EditableDocument(title: source.title, blocks: copiedBlocks)

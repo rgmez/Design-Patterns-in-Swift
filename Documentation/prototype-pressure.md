@@ -122,13 +122,15 @@ expressing the graph context or the media-sharing policy.
 The centralized function remains preferable if the four block kinds form a
 small, closed set. Prototype earns consideration only because concrete kinds
 vary independently and each new kind otherwise expands the same reconstruction
-switch.
+switch. The completed [canonical Prototype guide](../Creational%20Patterns/Prototype/README.md)
+shows the smaller extensible boundary and keeps this direct implementation as
+the evidence that justified it.
 
 ## Day 030 decision
 
 Ordinary assignment is rejected at the reference boundary because an edit to a
-supposed copy mutates the source. The direct centralized duplication is correct
-and stays in place for this day, but its four subtype branches identify the
-extension pressure precisely. Day 031 should move only subtype-specific copying
-behind an explicit block capability while retaining one small graph context for
-identity remapping and deliberate media sharing.
+supposed copy mutates the source. The direct centralized duplication was correct
+for this day, and its four subtype branches identified the extension pressure
+precisely. Day 031 moved only subtype-specific copying behind the explicit
+`EditableDocumentBlock.copy(using:)` capability while retaining one small graph
+context for identity remapping and deliberate media sharing.
