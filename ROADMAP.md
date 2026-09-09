@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-08
+Last updated: 2026-09-09
 
 ## Outcomes
 
@@ -255,8 +255,10 @@ an editorial guide, not a content quota.
 - [x] **Day 031 — Prototype solution.** Implement explicit cloning only at the
   justified reference boundary and document the common no-pattern case in the
   [canonical Prototype guide](Creational%20Patterns/Prototype/README.md).
-- [ ] **Day 032 — Observer problem.** Define session or connectivity changes with
-  multiple real consumers.
+- [x] **Day 032 — Observer problem.** Define session or connectivity changes with
+  multiple real consumers. The [authenticated-session baseline](Documentation/observer-problem.md)
+  keeps delivery synchronous and direct while the four consumers share the
+  session owner's lifetime.
 - [ ] **Day 033 — Observer pressure.** Demonstrate the coupling caused by direct
   callbacks and lifecycle-sensitive subscriptions.
 - [ ] **Day 034 — Observer solution.** Prefer Observation or `AsyncStream` where
