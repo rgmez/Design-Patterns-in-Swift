@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "DesignPatternsInSwift",
+    platforms: [.macOS(.v14)],
     products: [
         .library(
             name: "DesignPatterns",

@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 ## Outcomes
 
@@ -262,7 +262,10 @@ an editorial guide, not a content quota.
 - [x] **Day 033 — Observer pressure.** Demonstrate the coupling caused by direct
   callbacks and lifecycle-sensitive subscriptions in the [pressure review](Documentation/observer-pressure.md).
 - [ ] **Day 034 — Observer solution.** Prefer Observation or `AsyncStream` where
-  appropriate and avoid inventing a custom notification framework.
+  appropriate and avoid inventing a custom notification framework. The
+  actor-isolated `AsyncStream` boundary is documented in the [canonical guide](Structural%20Patterns/Observer/README.md)
+  and [solution review](Documentation/observer-solution.md); the editorial
+  header remains pending ImageGen availability.
 - [ ] **Day 035 — Weekly review.** Validate copy ownership and observer lifecycle,
   cancellation, and delivery semantics.
 
