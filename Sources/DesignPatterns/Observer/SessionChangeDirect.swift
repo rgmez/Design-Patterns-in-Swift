@@ -70,6 +70,31 @@ public final class SessionAnalyticsLog {
     }
 }
 
+public enum SessionScreenState: Equatable, Sendable {
+    case hidden
+    case signedOut
+    case signedIn(displayName: String)
+}
+
+public final class SessionScreenModel {
+    public private(set) var state: SessionScreenState = .hidden
+
+    public init() {}
+
+    fileprivate func appear(in session: UserSession) {
+        switch session {
+        case .signedOut:
+            state = .signedOut
+        case let .signedIn(_, displayName):
+            state = .signedIn(displayName: displayName)
+        }
+    }
+
+    public func disappear() {
+        state = .hidden
+    }
+}
+
 public final class SessionController {
     public private(set) var currentSession: UserSession = .signedOut
 
@@ -77,17 +102,20 @@ public final class SessionController {
     private let cartSession: CartSession
     private let syncSchedule: AccountSyncSchedule
     private let analytics: SessionAnalyticsLog
+    private let sessionScreen: SessionScreenModel?
 
     public init(
         accountHeader: AccountHeaderModel,
         cartSession: CartSession,
         syncSchedule: AccountSyncSchedule,
-        analytics: SessionAnalyticsLog
+        analytics: SessionAnalyticsLog,
+        sessionScreen: SessionScreenModel? = nil
     ) {
         self.accountHeader = accountHeader
         self.cartSession = cartSession
         self.syncSchedule = syncSchedule
         self.analytics = analytics
+        self.sessionScreen = sessionScreen
     }
 
     public func transition(to session: UserSession) {
@@ -101,11 +129,13 @@ public final class SessionController {
             cartSession.detachAccount()
             syncSchedule.cancel()
             analytics.record(.signedOut)
+            sessionScreen?.appear(in: session)
         case let .signedIn(userID, displayName):
             accountHeader.showSignedIn(displayName: displayName)
             cartSession.attach(to: userID)
             syncSchedule.schedule(for: userID)
             analytics.record(.signedIn(userID: userID))
+            sessionScreen?.appear(in: session)
         }
     }
 }

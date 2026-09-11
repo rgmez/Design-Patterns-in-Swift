@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-09
+Last updated: 2026-09-10
 
 ## Outcomes
 
@@ -259,8 +259,8 @@ an editorial guide, not a content quota.
   multiple real consumers. The [authenticated-session baseline](Documentation/observer-problem.md)
   keeps delivery synchronous and direct while the four consumers share the
   session owner's lifetime.
-- [ ] **Day 033 — Observer pressure.** Demonstrate the coupling caused by direct
-  callbacks and lifecycle-sensitive subscriptions.
+- [x] **Day 033 — Observer pressure.** Demonstrate the coupling caused by direct
+  callbacks and lifecycle-sensitive subscriptions in the [pressure review](Documentation/observer-pressure.md).
 - [ ] **Day 034 — Observer solution.** Prefer Observation or `AsyncStream` where
   appropriate and avoid inventing a custom notification framework.
 - [ ] **Day 035 — Weekly review.** Validate copy ownership and observer lifecycle,
