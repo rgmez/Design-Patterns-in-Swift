@@ -7,7 +7,9 @@ public actor SessionObservationCenter {
 
     public func stream() -> AsyncStream<UserSession> {
         let subscriptionID = UUID().uuidString
-        let (stream, continuation) = AsyncStream<UserSession>.makeStream()
+        let (stream, continuation) = AsyncStream<UserSession>.makeStream(
+            bufferingPolicy: .bufferingNewest(1)
+        )
         continuations[subscriptionID] = continuation
         continuation.onTermination = { [weak self] _ in
             Task {

@@ -102,6 +102,8 @@ independent cancellation in [`ObserverTests.swift`](../../Tests/DesignPatternsTe
 
 - Delivery becomes asynchronous and requires consumption tasks.
 - Buffering, cancellation, and receiver lifetime are now part of the design.
+- A slow consumer may skip intermediate snapshots because the stream retains
+  only the newest pending value.
 - The center allocates and retains one continuation per active subscriber.
 
 ## 🔀 Alternatives considered

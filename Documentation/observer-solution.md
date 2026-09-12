@@ -28,6 +28,8 @@ needs.
   it is published.
 - Every active subscriber receives the same session value.
 - Equal snapshots produce no event.
+- A slow subscriber keeps only the newest pending value, bounding retained
+  session snapshots to one per subscription.
 - A subscriber can cancel its consuming task without changing other streams.
 - The registry is actor-isolated; no `@unchecked Sendable` escape hatch or
   shared mutable global state is needed.

@@ -39,6 +39,23 @@ struct ObserverTests {
         #expect(await iterator.next() == session)
     }
 
+    @Test("Keeps only the newest pending session for a slow subscriber")
+    func boundsPendingDelivery() async {
+        let center = SessionObservationCenter()
+        let controller = ObservedSessionController(observationCenter: center)
+        let stream = await controller.sessionStream()
+        var iterator = stream.makeAsyncIterator()
+        let signedIn = UserSession.signedIn(
+            userID: "user-42",
+            displayName: "Ava"
+        )
+
+        await controller.transition(to: signedIn)
+        await controller.transition(to: .signedOut)
+
+        #expect(await iterator.next() == .signedOut)
+    }
+
     @Test("Cancelling a subscriber stops its stream")
     func cancelsIndependently() async {
         let center = SessionObservationCenter()
