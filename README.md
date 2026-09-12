@@ -64,7 +64,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 🔁 **Iterator** — Planned · Days 060–062
 - 🤝 **Mediator** — Planned · Days 067–069
 - 📸 **Memento** — Planned · Days 057–059
-- 👀 **Observer** — [Problem baseline](Documentation/observer-problem.md) · Days 032–034 🚧
+- 👀 **Observer** — [Canonical example](Structural%20Patterns/Observer/README.md) · Days 032–034 ✅
 - 🚦 **State** — Planned · Days 036–038
 - ♟️ **Strategy** — [Canonical example](Behavioral%20Patterns/Strategy/README.md) · Days 011–013 ✅
 - 📋 **Template Method** — Planned · Days 071–073

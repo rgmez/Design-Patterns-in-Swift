@@ -1,7 +1,9 @@
 # 👀 Observer
 
-> **Status:** The implementation and documentation are complete; the RG
-> editorial header remains pending because ImageGen usage is currently limited.
+![A central session signal source feeds three active receiver modules while a fourth disconnects independently](../../Documentation/Assets/Patterns/behavioral/observer-header.png)
+
+*One confirmed session change reaches every active receiver while a
+shorter-lived subscriber can detach without disrupting the others.*
 
 **Category:** Behavioral
 

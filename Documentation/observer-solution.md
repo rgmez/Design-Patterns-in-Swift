@@ -22,6 +22,16 @@ protocol. `AsyncStream` provides buffering, iteration, and termination; the
 example adds only the fan-out registry that the multiple-consumer requirement
 needs.
 
+## Visual completion
+
+The final [Observer editorial header](Assets/Patterns/behavioral/observer-header.png)
+keeps the signal-distribution metaphor established on Day 032. One industrial
+source feeds three active receivers through an explicit manifold, while a
+fourth receiver disconnects at its own boundary without interrupting the
+others. The composed image preserves the approved 16:9 layout, closed charcoal
+and warm-red palette, upper-left hierarchy, original RG logo, and restrained
+technical detail.
+
 ## Semantics made explicit
 
 - Delivery is ordered by the controller's actor: a transition is stored before
