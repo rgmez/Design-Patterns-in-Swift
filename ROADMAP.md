@@ -263,11 +263,13 @@ an editorial guide, not a content quota.
   callbacks and lifecycle-sensitive subscriptions in the [pressure review](Documentation/observer-pressure.md).
 - [x] **Day 034 — Observer solution.** Prefer Observation or `AsyncStream` where
   appropriate and avoid inventing a custom notification framework. The
-  actor-isolated `AsyncStream` boundary is documented in the [canonical guide](Structural%20Patterns/Observer/README.md)
+  actor-isolated `AsyncStream` boundary is documented in the [canonical guide](Behavioral%20Patterns/Observer/README.md)
   and [solution review](Documentation/observer-solution.md), with an editorial
   header that makes independent receiver lifetimes visible.
-- [ ] **Day 035 — Weekly review.** Validate copy ownership and observer lifecycle,
-  cancellation, and delivery semantics.
+- [x] **Day 035 — Weekly review.** Validate copy ownership and observer lifecycle,
+  cancellation, and delivery semantics. The [review evidence](Documentation/week-05-review.md)
+  closes Observer's initial-snapshot race, proves independent cancellation, and
+  confirms Prototype's graph-copy ownership remains explicit.
 
 ### Week 6 — State and Command
 

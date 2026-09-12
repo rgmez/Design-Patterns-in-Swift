@@ -8,18 +8,29 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first seven pattern cycles are complete. Abstract Factory,
-Adapter, Bridge, Builder, Factory Method, Prototype, and Strategy provide canonical, tested examples;
-historical playground files remain outside the package until each scheduled
-replacement is tested and documented. The [first pattern review](Documentation/week-02-review.md)
-verifies the shared quality gates and distinguishes Strategy from State and
-Bridge. The [second pattern review](Documentation/week-03-review.md) validates
-Bridge and Factory Method together before the next creational cycle.
+The foundation and the first eight pattern cycles are complete. Abstract
+Factory, Adapter, Bridge, Builder, Factory Method, Observer, Prototype, and
+Strategy provide canonical, tested examples; historical playground files remain
+outside the package until each scheduled replacement is tested and documented.
+The weekly reviews validate each pair's behavior and keep adjacent patterns in
+their proper conceptual lanes.
 
-- [Foundation review](Documentation/foundation-review.md) — evidence and readiness decision for Day 007.
-- [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and conceptual decisions for all 23 patterns.
-- [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios assigned to each pattern.
-- [100-day roadmap](ROADMAP.md) — one problem, pressure, and solution cycle per pattern.
+- [Foundation review](Documentation/foundation-review.md) — evidence and
+  readiness decision for Day 007.
+- [Adapter and Strategy review](Documentation/week-02-review.md) — integration
+  boundaries versus runtime behavior.
+- [Bridge and Factory Method review](Documentation/week-03-review.md) —
+  independent axes versus provider-owned creation.
+- [Abstract Factory and Builder review](Documentation/week-04-review.md) —
+  coherent families versus ordered assembly.
+- [Prototype and Observer review](Documentation/week-05-review.md) — copy
+  ownership versus subscription lifetime.
+- [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
+  conceptual decisions for all 23 patterns.
+- [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios
+  assigned to each pattern.
+- [100-day roadmap](ROADMAP.md) — one problem, pressure, and solution cycle per
+  pattern.
 
 Run the package from the repository root:
 
@@ -64,7 +75,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 🔁 **Iterator** — Planned · Days 060–062
 - 🤝 **Mediator** — Planned · Days 067–069
 - 📸 **Memento** — Planned · Days 057–059
-- 👀 **Observer** — [Canonical example](Structural%20Patterns/Observer/README.md) · Days 032–034 ✅
+- 👀 **Observer** — [Canonical example](Behavioral%20Patterns/Observer/README.md) · Days 032–034 ✅
 - 🚦 **State** — Planned · Days 036–038
 - ♟️ **Strategy** — [Canonical example](Behavioral%20Patterns/Strategy/README.md) · Days 011–013 ✅
 - 📋 **Template Method** — Planned · Days 071–073

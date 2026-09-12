@@ -2,25 +2,22 @@
 
 Solution-definition date: 2026-09-11
 
-Day 034 introduces the smallest subscription boundary justified by the
-pressure review. `SessionObservationCenter` uses Swift's standard
-`AsyncStream`, while an actor owns the mutable continuation registry.
+Day 034 introduced the smallest subscription boundary justified by the pressure
+review. Day 035 closes the initial-snapshot gap by keeping the current session
+and Swift's `AsyncStream` continuation registry inside one actor.
 
 ## Implementation
 
 [`SessionObservation.swift`](../Sources/DesignPatterns/Observer/SessionObservation.swift)
-contains two focused actors:
+contains one `ObservedSessionController` actor. It owns the source-of-truth
+session, registers one continuation per subscriber, enqueues the current value
+when each stream is created, filters equal snapshots, and publishes only actual
+transitions.
 
-- `SessionObservationCenter` stores one continuation per subscriber, yields the
-  same confirmed value to all active subscribers, and removes a subscription
-  when its stream terminates.
-- `ObservedSessionController` owns the source-of-truth session, filters equal
-  snapshots, and publishes only actual transitions.
-
-The center does not invent a notification name system or a custom observer
-protocol. `AsyncStream` provides buffering, iteration, and termination; the
-example adds only the fan-out registry that the multiple-consumer requirement
-needs.
+The subscription method has no suspension point. Registration and initial
+delivery therefore finish in the same actor-isolated operation, so a confirmed
+transition cannot fall into a read-then-subscribe gap. A second actor or custom
+observer protocol would add indirection without improving that guarantee.
 
 ## Visual completion
 
@@ -34,15 +31,19 @@ technical detail.
 
 ## Semantics made explicit
 
-- Delivery is ordered by the controller's actor: a transition is stored before
-  it is published.
+- A subscription is registered and receives the current snapshot before the
+  controller actor accepts another operation.
+- Delivery is ordered by the same actor: a transition is stored before it is
+  published.
 - Every active subscriber receives the same session value.
 - Equal snapshots produce no event.
-- A slow subscriber keeps only the newest pending value, bounding retained
-  session snapshots to one per subscription.
+- A slow subscriber keeps only the newest pending value, including when a newer
+  transition replaces its unconsumed initial snapshot.
 - A subscriber can cancel its consuming task without changing other streams.
-- The registry is actor-isolated; no `@unchecked Sendable` escape hatch or
-  shared mutable global state is needed.
+- Termination removes that continuation; a later publication also prunes a
+  terminated entry defensively.
+- The session and registry share actor isolation; no `@unchecked Sendable`
+  escape hatch or shared mutable global state is needed.
 
 ## Day 034 decision
 
@@ -50,3 +51,7 @@ Observer is appropriate here because receivers have independent lifetimes and
 must cancel without editing the session owner. `AsyncStream` is enough of a
 boundary; a broader event framework would be ceremony without additional
 verified behavior.
+
+Day 035 removed the separate observation-center actor. Keeping state and
+subscriptions together closes the initial-value race and uncertainties about
+cross-actor message ordering while reducing the implementation by one type.
