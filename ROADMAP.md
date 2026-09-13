@@ -273,8 +273,10 @@ an editorial guide, not a content quota.
 
 ### Week 6 — State and Command
 
-- [ ] **Day 036 — State problem.** Define an upload or checkout lifecycle with
-  explicit valid and invalid transitions.
+- [x] **Day 036 — State problem.** Define an upload or checkout lifecycle with
+  explicit valid and invalid transitions. The [encrypted-backup baseline](Documentation/state-problem.md)
+  keeps the lifecycle in one enum and pure reducer until state-specific behavior
+  proves that a broader pattern would reduce branching.
 - [ ] **Day 037 — State pressure.** Demonstrate contradictory booleans and
   branching that allow impossible states.
 - [ ] **Day 038 — State solution.** Model transitions minimally and distinguish
