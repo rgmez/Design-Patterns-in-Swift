@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-12
+Last updated: 2026-09-13
 
 ## Outcomes
 
@@ -277,8 +277,10 @@ an editorial guide, not a content quota.
   explicit valid and invalid transitions. The [encrypted-backup baseline](Documentation/state-problem.md)
   keeps the lifecycle in one enum and pure reducer until state-specific behavior
   proves that a broader pattern would reduce branching.
-- [ ] **Day 037 — State pressure.** Demonstrate contradictory booleans and
-  branching that allow impossible states.
+- [x] **Day 037 — State pressure.** Demonstrate contradictory booleans and
+  branching that allow impossible states. The [pressure review](Documentation/state-pressure.md)
+  proves that six independently persisted flags admit 57 invalid lifecycle
+  combinations and let UI and worker decisions disagree.
 - [ ] **Day 038 — State solution.** Model transitions minimally and distinguish
   state machines from runtime-selected Strategy behavior.
 - [ ] **Day 039 — Command problem.** Define editor operations that need undo,

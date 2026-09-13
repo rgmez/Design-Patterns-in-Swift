@@ -91,13 +91,14 @@ Run the focused suite with:
 swift test -Xswiftc -warnings-as-errors --filter StateProblemTests
 ```
 
-## Evidence required on Day 037
+## Evidence verified on Day 037
 
 State has not earned a protocol merely because the app has seven phases. Day
-037 must introduce a credible requirement that makes state-specific behavior
-or transition ownership harder to maintain in the direct reducer.
+037 introduced a credible requirement that makes state-specific behavior and
+transition ownership harder to maintain around the direct reducer. The
+[pressure review](state-pressure.md) records the executable evidence.
 
-The pressure review must answer:
+The pressure review answers:
 
 - Which new command or side effect repeats phase checks outside the reducer?
 - Can flag-based UI or persistence projections represent contradictory states?
