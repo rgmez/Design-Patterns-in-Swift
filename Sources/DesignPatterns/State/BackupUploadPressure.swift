@@ -23,19 +23,6 @@ public struct BackupUploadFlagSnapshot: Codable, Equatable, Sendable {
     }
 }
 
-public enum BackupUploadPrimaryAction: Equatable, Sendable {
-    case start
-    case pause
-    case resume
-    case retry
-}
-
-public enum BackupUploadBackgroundOperation: Equatable, Sendable {
-    case prepare
-    case encrypt
-    case upload
-}
-
 public func backupUploadPrimaryAction(
     for snapshot: BackupUploadFlagSnapshot
 ) -> BackupUploadPrimaryAction? {

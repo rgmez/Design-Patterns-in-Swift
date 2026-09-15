@@ -96,11 +96,12 @@ the different UI and worker result types. Strategy would inject one
 interchangeable decision policy; it would not model a backup whose accepted
 events and behavior change after each transition.
 
-Day 038 must compare those smaller options with State. The pattern earns its
-types only if putting transition, UI action, and worker behavior beside each
-concrete state removes the parallel flag model and narrows the change boundary.
-It must not retain the flags behind a protocol or add one abstraction per
-consumer.
+Day 038 compared those smaller options with State. The pattern earned private
+types because putting transitions, UI actions, and worker behavior beside each
+concrete state removed the parallel flag model and narrowed the change
+boundary. The [canonical guide](../Behavioral%20Patterns/State/README.md)
+documents why the context remains a value type and why the only all-phase
+switch now belongs to typed persistence restoration.
 
 ## Day 037 decision
 
@@ -109,3 +110,12 @@ Independent booleans are rejected as the lifecycle authority because they admit
 The safe Day 036 enum remains the current source of truth. State is now a
 credible candidate, but Day 038 still has to prove that it improves on enum
 methods rather than merely distributing the existing switch.
+
+## Day 038 resolution
+
+[`BackupUpload`](../Sources/DesignPatterns/State/BackupUpload.swift) owns one
+private state existential. Its seven private implementations keep accepted
+events, primary screen action, and background operation together. `Codable`
+persists the typed `BackupUploadPhase`, so invalid flag combinations never enter
+the canonical model. The original enum reducer remains documented as the
+smaller choice when transitions are the only varying behavior.

@@ -1,8 +1,13 @@
 import Foundation
 
-public struct BackupUploadProgress: Equatable, Sendable {
+public struct BackupUploadProgress: Codable, Equatable, Sendable {
     public let uploadedBytes: Int
     public let totalBytes: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case uploadedBytes
+        case totalBytes
+    }
 
     public init(uploadedBytes: Int, totalBytes: Int) throws {
         guard totalBytes > 0,
@@ -17,21 +22,52 @@ public struct BackupUploadProgress: Equatable, Sendable {
         self.uploadedBytes = uploadedBytes
         self.totalBytes = totalBytes
     }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let uploadedBytes = try container.decode(
+            Int.self,
+            forKey: .uploadedBytes
+        )
+        let totalBytes = try container.decode(
+            Int.self,
+            forKey: .totalBytes
+        )
+
+        do {
+            try self.init(
+                uploadedBytes: uploadedBytes,
+                totalBytes: totalBytes
+            )
+        } catch {
+            throw DecodingError.dataCorruptedError(
+                forKey: .uploadedBytes,
+                in: container,
+                debugDescription: "Invalid persisted upload progress."
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uploadedBytes, forKey: .uploadedBytes)
+        try container.encode(totalBytes, forKey: .totalBytes)
+    }
 }
 
-public enum BackupUploadFailure: Equatable, Sendable {
+public enum BackupUploadFailure: Codable, Equatable, Sendable {
     case insufficientLocalSpace
     case encryptionUnavailable
     case connectionLost
 }
 
-public enum BackupUploadRecoveryPoint: Equatable, Sendable {
+public enum BackupUploadRecoveryPoint: Codable, Equatable, Sendable {
     case preparing
     case encrypting
     case uploading(BackupUploadProgress)
 }
 
-public enum BackupUploadPhase: Equatable, Sendable {
+public enum BackupUploadPhase: Codable, Equatable, Sendable {
     case ready
     case preparing
     case encrypting

@@ -91,12 +91,14 @@ Run the focused suite with:
 swift test -Xswiftc -warnings-as-errors --filter StateProblemTests
 ```
 
-## Evidence verified on Day 037
+## Evidence verified on Days 037–038
 
-State has not earned a protocol merely because the app has seven phases. Day
-037 introduced a credible requirement that makes state-specific behavior and
+State did not earn a protocol merely because the app has seven phases. Day 037
+introduced a credible requirement that made state-specific behavior and
 transition ownership harder to maintain around the direct reducer. The
-[pressure review](state-pressure.md) records the executable evidence.
+[pressure review](state-pressure.md) records the executable evidence, and the
+[canonical guide](../Behavioral%20Patterns/State/README.md) documents the
+smallest accepted State boundary.
 
 The pressure review answers:
 
@@ -106,9 +108,10 @@ The pressure review answers:
 - Can an enum and pure function still keep the lifecycle clearer than dynamic
   state objects?
 
-If the direct value model remains cohesive, it should stay. Day 038 may only
-introduce State when the measured change boundary is narrower than the current
-switch and the additional types remove real branching rather than rename it.
+The direct reducer remains the preferred alternative when transitions are the
+only varying behavior. Day 038 introduced private State types only after screen
+actions, worker operations, and persistence proved that their phase knowledge
+changed together.
 
 ## Initial visual thesis
 
@@ -121,9 +124,9 @@ payload advances along the rail while mechanical interlocks block invalid jumps.
 The upload and recovery chambers share one visible checkpoint marker, making
 resume-without-restart understandable without labels.
 
-The final Day 038 header should keep this gated-lifecycle metaphor. Its Mermaid
-should explain state transitions and rejected commands precisely rather than
-repeat the editorial scene.
+The final Day 038 header keeps this gated-lifecycle metaphor. Its Mermaid
+explains state transitions and rejected commands precisely rather than
+repeating the editorial scene.
 
 ## Day 036 decision
 

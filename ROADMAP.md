@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-13
+Last updated: 2026-09-15
 
 ## Outcomes
 
@@ -281,8 +281,11 @@ an editorial guide, not a content quota.
   branching that allow impossible states. The [pressure review](Documentation/state-pressure.md)
   proves that six independently persisted flags admit 57 invalid lifecycle
   combinations and let UI and worker decisions disagree.
-- [ ] **Day 038 — State solution.** Model transitions minimally and distinguish
-  state machines from runtime-selected Strategy behavior.
+- [x] **Day 038 — State solution.** Model transitions minimally and distinguish
+  state machines from runtime-selected Strategy behavior. The [canonical State
+  guide](Behavioral%20Patterns/State/README.md) keeps its protocol and seven
+  phase implementations private while one value-semantic context owns
+  transitions, UI decisions, background work, and typed persistence.
 - [ ] **Day 039 — Command problem.** Define editor operations that need undo,
   redo, or offline queuing.
 - [ ] **Day 040 — Command pressure.** Demonstrate why direct button actions cannot
