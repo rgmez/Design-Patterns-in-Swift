@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-15
+Last updated: 2026-09-16
 
 ## Outcomes
 
@@ -286,8 +286,10 @@ an editorial guide, not a content quota.
   guide](Behavioral%20Patterns/State/README.md) keeps its protocol and seven
   phase implementations private while one value-semantic context owns
   transitions, UI decisions, background work, and typed persistence.
-- [ ] **Day 039 — Command problem.** Define editor operations that need undo,
-  redo, or offline queuing.
+- [x] **Day 039 — Command problem.** Define editor operations that need undo,
+  redo, or offline queuing. The [video-timeline baseline](Documentation/command-problem.md)
+  keeps trim, move, split, caption, and one-step undo in direct value-based
+  methods until reusable edit intent demonstrates a narrower boundary.
 - [ ] **Day 040 — Command pressure.** Demonstrate why direct button actions cannot
   preserve reversible intent.
 - [ ] **Day 041 — Command solution.** Implement commands with focused state and

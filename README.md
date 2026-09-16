@@ -70,7 +70,7 @@ Patterns that compose types behind focused, stable interfaces.
 Patterns that distribute responsibilities and coordinate behavior.
 
 - 🔗 **Chain of Responsibility** — Planned · Days 053–055
-- 🎮 **Command** — Planned · Days 039–041
+- 🎮 **Command** — [Problem baseline](Documentation/command-problem.md) · Days 039–041 🚧
 - 🗣️ **Interpreter** — Planned · Days 081–083
 - 🔁 **Iterator** — Planned · Days 060–062
 - 🤝 **Mediator** — Planned · Days 067–069
