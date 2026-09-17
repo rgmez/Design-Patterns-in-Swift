@@ -119,7 +119,7 @@ public struct VideoTimeline: Equatable, Sendable {
         self.clips = clips
     }
 
-    fileprivate mutating func trimClip(
+    mutating func trimClip(
         id: String,
         toStartFrame startFrame: Int,
         durationFrames: Int
@@ -131,7 +131,7 @@ public struct VideoTimeline: Equatable, Sendable {
         )
     }
 
-    fileprivate mutating func moveClip(
+    mutating func moveClip(
         id: String,
         toTimelineStartFrame startFrame: Int
     ) throws {
@@ -139,7 +139,7 @@ public struct VideoTimeline: Equatable, Sendable {
         try clips[index].move(to: startFrame)
     }
 
-    fileprivate mutating func updateCaption(
+    mutating func updateCaption(
         _ caption: String?,
         onClip id: String
     ) throws {
@@ -147,7 +147,7 @@ public struct VideoTimeline: Equatable, Sendable {
         clips[index].updateCaption(caption)
     }
 
-    fileprivate mutating func splitClip(
+    mutating func splitClip(
         id: String,
         atSourceFrame splitFrame: Int,
         newClipID: String

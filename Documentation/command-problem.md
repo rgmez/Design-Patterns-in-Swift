@@ -95,6 +95,11 @@ no need to replay intent, the direct design should stay. Day 041 may introduce
 Command only if edit-owned execution and reversal reduce the demonstrated
 branching or retained-state cost.
 
+The implemented evidence is recorded in the
+[Command pressure review](command-pressure.md). It keeps the Day 039 editor
+unchanged, then adds a separate bounded snapshot history and three direct input
+routes so their retention and duplication costs remain explicit.
+
 ## Initial visual thesis
 
 **Thesis:** A timeline edit is easy to apply directly; reusable history requires

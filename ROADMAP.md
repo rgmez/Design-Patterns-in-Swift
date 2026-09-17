@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-16
+Last updated: 2026-09-17
 
 ## Outcomes
 
@@ -290,8 +290,10 @@ an editorial guide, not a content quota.
   redo, or offline queuing. The [video-timeline baseline](Documentation/command-problem.md)
   keeps trim, move, split, caption, and one-step undo in direct value-based
   methods until reusable edit intent demonstrates a narrower boundary.
-- [ ] **Day 040 — Command pressure.** Demonstrate why direct button actions cannot
-  preserve reversible intent.
+- [x] **Day 040 — Command pressure.** Demonstrate why direct button actions cannot
+  preserve reversible intent. The [pressure review](Documentation/command-pressure.md)
+  measures bounded full-timeline snapshots and 12 duplicated toolbar, keyboard,
+  and replay branches before any Command abstraction is introduced.
 - [ ] **Day 041 — Command solution.** Implement commands with focused state and
   tests for execution and reversal.
 - [ ] **Day 042 — Weekly review.** Validate invalid transitions, undo ownership,
