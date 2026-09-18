@@ -217,7 +217,9 @@ struct CommandProblemTests {
             #expect(secondUndo == false)
         }
     }
+}
 
+extension CommandProblemTests {
     @Suite("Rejected edits")
     struct RejectedEdits {
         @Test(

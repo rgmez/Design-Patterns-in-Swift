@@ -8,9 +8,9 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first nine pattern cycles are complete. Abstract
-Factory, Adapter, Bridge, Builder, Factory Method, Observer, Prototype, State,
-and Strategy provide canonical, tested examples; historical playground files
+The foundation and the first ten pattern cycles are complete. Abstract
+Factory, Adapter, Bridge, Builder, Command, Factory Method, Observer, Prototype,
+State, and Strategy provide canonical, tested examples; historical playground files
 remain outside the package until each scheduled replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
 their proper conceptual lanes.
@@ -70,7 +70,7 @@ Patterns that compose types behind focused, stable interfaces.
 Patterns that distribute responsibilities and coordinate behavior.
 
 - 🔗 **Chain of Responsibility** — Planned · Days 053–055
-- 🎮 **Command** — [Problem baseline](Documentation/command-problem.md) · [Pressure review](Documentation/command-pressure.md) · Days 039–041 🚧
+- 🎮 **Command** — [Canonical example](Behavioral%20Patterns/Command/README.md) · [Problem baseline](Documentation/command-problem.md) · [Pressure review](Documentation/command-pressure.md) · Days 039–041 ✅
 - 🗣️ **Interpreter** — Planned · Days 081–083
 - 🔁 **Iterator** — Planned · Days 060–062
 - 🤝 **Mediator** — Planned · Days 067–069

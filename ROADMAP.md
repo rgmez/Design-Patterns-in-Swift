@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-17
+Last updated: 2026-09-18
 
 ## Outcomes
 
@@ -294,8 +294,10 @@ an editorial guide, not a content quota.
   preserve reversible intent. The [pressure review](Documentation/command-pressure.md)
   measures bounded full-timeline snapshots and 12 duplicated toolbar, keyboard,
   and replay branches before any Command abstraction is introduced.
-- [ ] **Day 041 — Command solution.** Implement commands with focused state and
-  tests for execution and reversal.
+- [x] **Day 041 — Command solution.** Implement commands with focused state and
+  tests for execution and reversal. The [canonical Command guide](Behavioral%20Patterns/Command/README.md)
+  keeps one codable edit vocabulary while local history retains only the state
+  each accepted edit needs to reverse.
 - [ ] **Day 042 — Weekly review.** Validate invalid transitions, undo ownership,
   and retained-state costs.
 

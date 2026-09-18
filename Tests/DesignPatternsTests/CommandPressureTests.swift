@@ -237,7 +237,9 @@ struct CommandPressureTests {
             #expect(editor.redoDepth == redoDepthBeforeRejection)
         }
     }
+}
 
+extension CommandPressureTests {
     @Suite("Duplicated input routes")
     struct DuplicatedInputRoutes {
         @Test("Toolbar, keyboard, and replay duplicate the same four edits")
