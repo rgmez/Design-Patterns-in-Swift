@@ -63,7 +63,7 @@ Patterns that compose types behind focused, stable interfaces.
 - 🌁 **Bridge** — [Canonical example](Structural%20Patterns/Bridge/README.md) · [Problem baseline](Documentation/bridge-problem.md) · [Pressure review](Documentation/bridge-pressure.md) · [Historical draft](Structural%20Patterns/Bridge/Bridge.md) · Days 015–017 ✅
 - 🧱 **Composite** — Planned · Days 064–066
 - 🎨 **Decorator** — Planned · Days 046–048
-- 🏢 **Facade** — Planned · Days 043–045
+- 🏢 **Facade** — [Problem baseline](Documentation/facade-problem.md) · Days 043–045 🚧
 - 🪶 **Flyweight** — Planned · Days 074–076
 - 🛡️ **Proxy** — Planned · Days 050–052
 

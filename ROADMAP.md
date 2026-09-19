@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-18
+Last updated: 2026-09-19
 
 ## Outcomes
 
@@ -305,8 +305,11 @@ an editorial guide, not a content quota.
 
 ### Week 7 — Facade and Decorator
 
-- [ ] **Day 043 — Facade problem.** Define a checkout use case spanning inventory,
-  payment, order creation, and analytics.
+- [x] **Day 043 — Facade problem.** Define a checkout use case spanning inventory,
+  payment, order creation, and analytics. The [direct checkout baseline](Documentation/facade-problem.md)
+  keeps reservation, authorization, compensation, order creation, and terminal
+  analytics visible in one screen client until repeated orchestration proves a
+  narrower Facade boundary.
 - [ ] **Day 044 — Facade pressure.** Show client orchestration leakage without
   turning the replacement into a god object.
 - [ ] **Day 045 — Facade solution.** Implement a narrow use-case facade and retain
