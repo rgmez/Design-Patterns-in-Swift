@@ -25,6 +25,8 @@ their proper conceptual lanes.
   coherent families versus ordered assembly.
 - [Prototype and Observer review](Documentation/week-05-review.md) — copy
   ownership versus subscription lifetime.
+- [State and Command review](Documentation/week-06-review.md) — lifecycle
+  behavior versus reversible intent and history ownership.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
   conceptual decisions for all 23 patterns.
 - [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios

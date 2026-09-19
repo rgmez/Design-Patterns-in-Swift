@@ -298,8 +298,10 @@ an editorial guide, not a content quota.
   tests for execution and reversal. The [canonical Command guide](Behavioral%20Patterns/Command/README.md)
   keeps one codable edit vocabulary while local history retains only the state
   each accepted edit needs to reverse.
-- [ ] **Day 042 — Weekly review.** Validate invalid transitions, undo ownership,
-  and retained-state costs.
+- [x] **Day 042 — Weekly review.** Validate invalid transitions, undo ownership,
+  and retained-state costs. The [review evidence](Documentation/week-06-review.md)
+  confirms State and Command keep distinct mutation boundaries, explicit
+  rejection semantics, and proportionate retained state.
 
 ### Week 7 — Facade and Decorator
 
