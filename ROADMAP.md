@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-19
+Last updated: 2026-09-20
 
 ## Outcomes
 
@@ -310,8 +310,10 @@ an editorial guide, not a content quota.
   keeps reservation, authorization, compensation, order creation, and terminal
   analytics visible in one screen client until repeated orchestration proves a
   narrower Facade boundary.
-- [ ] **Day 044 — Facade pressure.** Show client orchestration leakage without
-  turning the replacement into a god object.
+- [x] **Day 044 — Facade pressure.** Show client orchestration leakage without
+  turning the replacement into a god object. The [pressure review](Documentation/facade-pressure.md)
+  measures three direct clients, 12 subsystem dependency slots, and three
+  duplicated compensation branches before introducing a Facade.
 - [ ] **Day 045 — Facade solution.** Implement a narrow use-case facade and retain
   access to lower-level components where appropriate.
 - [ ] **Day 046 — Decorator problem.** Define composable HTTP client behavior such
