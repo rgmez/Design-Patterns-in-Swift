@@ -314,8 +314,10 @@ an editorial guide, not a content quota.
   turning the replacement into a god object. The [pressure review](Documentation/facade-pressure.md)
   measures three direct clients, 12 subsystem dependency slots, and three
   duplicated compensation branches before introducing a Facade.
-- [ ] **Day 045 — Facade solution.** Implement a narrow use-case facade and retain
-  access to lower-level components where appropriate.
+- [x] **Day 045 — Facade solution.** Implement a narrow use-case facade and retain
+  access to lower-level components where appropriate. The [canonical Facade guide](Structural%20Patterns/Facade/README.md)
+  gives checkout placement one orchestration and compensation owner while the
+  focused subsystem types remain independently available.
 - [ ] **Day 046 — Decorator problem.** Define composable HTTP client behavior such
   as authentication, metrics, or retry.
 - [ ] **Day 047 — Decorator pressure.** Demonstrate optional feature combinations
