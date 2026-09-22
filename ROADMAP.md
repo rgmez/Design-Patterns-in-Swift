@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-20
+Last updated: 2026-09-22
 
 ## Outcomes
 
@@ -318,8 +318,10 @@ an editorial guide, not a content quota.
   access to lower-level components where appropriate. The [canonical Facade guide](Structural%20Patterns/Facade/README.md)
   gives checkout placement one orchestration and compensation owner while the
   focused subsystem types remain independently available.
-- [ ] **Day 046 — Decorator problem.** Define composable HTTP client behavior such
-  as authentication, metrics, or retry.
+- [x] **Day 046 — Decorator problem.** Define composable HTTP client behavior such
+  as authentication, metrics, or retry. The [fixed media-upload baseline](Documentation/decorator-problem.md)
+  keeps authentication, bounded retry, and one terminal metric inside a direct
+  client until independently optional behavior proves a composition boundary.
 - [ ] **Day 047 — Decorator pressure.** Demonstrate optional feature combinations
   that inheritance or flags make difficult to compose.
 - [ ] **Day 048 — Decorator solution.** Implement ordered wrappers and document
