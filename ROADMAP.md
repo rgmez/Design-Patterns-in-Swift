@@ -322,8 +322,10 @@ an editorial guide, not a content quota.
   as authentication, metrics, or retry. The [fixed media-upload baseline](Documentation/decorator-problem.md)
   keeps authentication, bounded retry, and one terminal metric inside a direct
   client until independently optional behavior proves a composition boundary.
-- [ ] **Day 047 — Decorator pressure.** Demonstrate optional feature combinations
-  that inheritance or flags make difficult to compose.
+- [x] **Day 047 — Decorator pressure.** Demonstrate optional feature combinations
+  that inheritance or flags make difficult to compose. The [pressure review](Documentation/decorator-pressure.md)
+  measures eight possible pipelines, five required profiles, conditional
+  dependencies, and one hidden behavior order in a direct flag-based client.
 - [ ] **Day 048 — Decorator solution.** Implement ordered wrappers and document
   the behavioral consequences of decorator order.
 - [ ] **Day 049 — Weekly review.** Validate facade scope and decorator composition
