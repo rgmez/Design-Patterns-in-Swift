@@ -8,11 +8,11 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first eleven pattern cycles are complete. Abstract
-Factory, Adapter, Bridge, Builder, Command, Facade, Factory Method, Observer,
-Prototype, State, and Strategy provide canonical, tested examples; historical
-playground files remain outside the package until each scheduled replacement is
-tested and documented.
+The foundation and the first twelve pattern cycles are complete. Abstract
+Factory, Adapter, Bridge, Builder, Command, Decorator, Facade, Factory Method,
+Observer, Prototype, State, and Strategy provide canonical, tested examples;
+historical playground files remain outside the package until each scheduled
+replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
 their proper conceptual lanes.
 
@@ -63,7 +63,7 @@ Patterns that compose types behind focused, stable interfaces.
 - 🔌 **Adapter** — [Canonical example](Structural%20Patterns/Adapter/README.md) · [Historical draft](Structural%20Patterns/Adapter/Adapter.md) · Days 008–010 ✅
 - 🌁 **Bridge** — [Canonical example](Structural%20Patterns/Bridge/README.md) · [Problem baseline](Documentation/bridge-problem.md) · [Pressure review](Documentation/bridge-pressure.md) · [Historical draft](Structural%20Patterns/Bridge/Bridge.md) · Days 015–017 ✅
 - 🧱 **Composite** — Planned · Days 064–066
-- 🎨 **Decorator** — [Problem baseline](Documentation/decorator-problem.md) · [Pressure review](Documentation/decorator-pressure.md) · Days 046–048 🚧
+- 🎨 **Decorator** — [Canonical example](Structural%20Patterns/Decorator/README.md) · [Problem baseline](Documentation/decorator-problem.md) · [Pressure review](Documentation/decorator-pressure.md) · Days 046–048 ✅
 - 🏢 **Facade** — [Canonical example](Structural%20Patterns/Facade/README.md) · [Problem baseline](Documentation/facade-problem.md) · [Pressure review](Documentation/facade-pressure.md) · Days 043–045 ✅
 - 🪶 **Flyweight** — Planned · Days 074–076
 - 🛡️ **Proxy** — Planned · Days 050–052

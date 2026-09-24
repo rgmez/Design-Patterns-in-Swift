@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 ## Outcomes
 
@@ -326,8 +326,9 @@ an editorial guide, not a content quota.
   that inheritance or flags make difficult to compose. The [pressure review](Documentation/decorator-pressure.md)
   measures eight possible pipelines, five required profiles, conditional
   dependencies, and one hidden behavior order in a direct flag-based client.
-- [ ] **Day 048 — Decorator solution.** Implement ordered wrappers and document
-  the behavioral consequences of decorator order.
+- [x] **Day 048 — Decorator solution.** Implement ordered wrappers and document
+  the behavioral consequences of decorator order in the [canonical Decorator
+  guide](Structural%20Patterns/Decorator/README.md).
 - [ ] **Day 049 — Weekly review.** Validate facade scope and decorator composition
   without hiding errors or ownership.
 
