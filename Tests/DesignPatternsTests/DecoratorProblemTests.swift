@@ -202,18 +202,19 @@ struct DecoratorProblemTests {
 }
 
 extension DecoratorProblemTests {
+    struct InvalidUploadScenario: Sendable, CustomTestStringConvertible {
+        let name: String
+        let id: String
+        let path: String
+        let payload: [UInt8]
+        let contentType: String
+        let expectedError: MediaUploadError
+
+        var testDescription: String { name }
+    }
+
     @Suite("Input validation")
     struct InputValidation {
-        struct InvalidUploadScenario: Sendable, CustomTestStringConvertible {
-            let name: String
-            let id: String
-            let path: String
-            let payload: [UInt8]
-            let contentType: String
-            let expectedError: MediaUploadError
-
-            var testDescription: String { name }
-        }
 
         private static let scenarios = [
             InvalidUploadScenario(

@@ -329,8 +329,10 @@ an editorial guide, not a content quota.
 - [x] **Day 048 — Decorator solution.** Implement ordered wrappers and document
   the behavioral consequences of decorator order in the [canonical Decorator
   guide](Structural%20Patterns/Decorator/README.md).
-- [ ] **Day 049 — Weekly review.** Validate facade scope and decorator composition
-  without hiding errors or ownership.
+- [x] **Day 049 — Weekly review.** Validate facade scope and decorator composition
+  without hiding errors or ownership. The [joint review](Documentation/week-07-review.md)
+  records compensation ownership, independently bounded retries, regression
+  coverage, and the complete build, test, lint, and documentation checks.
 
 ### Week 8 — Proxy and Chain of Responsibility
 

@@ -110,13 +110,15 @@ public struct RetryingMediaUpload<Wrapped: MediaUploadClient>:
         _ media: CreatorMediaUpload,
         call: inout MediaUploadCall
     ) throws -> MediaUploadReceipt {
+        var remainingRetries = retryLimit
         while true {
             do {
                 return try wrapped.upload(media, call: &call)
             } catch MediaUploadError.transportUnavailable {
-                guard call.attemptCount <= retryLimit else {
+                guard remainingRetries > 0 else {
                     throw MediaUploadError.transportUnavailable
                 }
+                remainingRetries -= 1
             }
         }
     }

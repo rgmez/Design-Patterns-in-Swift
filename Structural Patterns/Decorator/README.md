@@ -101,6 +101,9 @@ deployment profiles in this example.
    propagates a typed `MediaUploadError`.
 4. Retry catches only `transportUnavailable`. Rejections and malformed 2xx
    responses cross it unchanged.
+   The retry wrapper owns a fresh local budget for each invocation. It does not
+   use the shared transport-attempt count to decide whether to forward again:
+   a wrapped client can fail before any transport send.
 5. The outer metrics wrapper sees the final receipt or error and records one
    event with the total number of attempts.
 
@@ -131,7 +134,11 @@ flowchart LR
     Auth --> Retry["RetryingMediaUpload<br/>connection loss only"]
     Retry --> Transport["TransportMediaUploadClient<br/>one attempt"]
     Transport --> API["Media API"]
-    API -. "receipt or typed error" .-> App
+    API -. "response or connection loss" .-> Transport
+    Transport -. "receipt or typed error" .-> Retry
+    Retry -. "terminal result" .-> Auth
+    Auth -. "terminal result" .-> Metrics
+    Metrics -. "measured result" .-> App
 ```
 
 Observe that every box keeps the same upload direction, while nesting defines
@@ -177,6 +184,10 @@ proves:
 - telemetry opt-out omits the metrics wrapper while retaining retry;
 - preview uses the transport component without optional wrappers;
 - an HTTP rejection is terminal even when a retry wrapper is present.
+
+[`DecoratorBoundaryTests.swift`](../../Tests/DesignPatternsTests/DecoratorBoundaryTests.swift)
+additionally verifies bounded failures before transport, fresh retry budgets and
+metric counts across uploads, and terminal malformed-success propagation.
 
 The problem and pressure suites retain the verified direct baselines that
 earned the pattern; the final suite verifies the smaller composed replacement.

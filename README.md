@@ -28,6 +28,8 @@ their proper conceptual lanes.
   ownership versus subscription lifetime.
 - [State and Command review](Documentation/week-06-review.md) — lifecycle
   behavior versus reversible intent and history ownership.
+- [Facade and Decorator review](Documentation/week-07-review.md) — checkout
+  compensation ownership versus ordered upload policies and bounded retry.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
   conceptual decisions for all 23 patterns.
 - [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios

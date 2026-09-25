@@ -243,16 +243,17 @@ struct FacadeProblemTests {
 }
 
 extension FacadeProblemTests {
+    struct InvalidItemScenario: Sendable, CustomTestStringConvertible {
+        let name: String
+        let sku: String
+        let quantity: Int
+        let price: Int
+
+        var testDescription: String { name }
+    }
+
     @Suite("Input validation")
     struct InputValidation {
-        struct InvalidItemScenario: Sendable, CustomTestStringConvertible {
-            let name: String
-            let sku: String
-            let quantity: Int
-            let price: Int
-
-            var testDescription: String { name }
-        }
 
         private static let invalidItemScenarios = [
             InvalidItemScenario(

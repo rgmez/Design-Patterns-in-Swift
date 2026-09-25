@@ -111,7 +111,8 @@ flowchart LR
     Payments -->|"authorization"| Facade
     Facade -->|"3. create linked order"| Orders["CheckoutOrders"]
     Facade -->|"4. record outcome"| Analytics["CheckoutAnalytics"]
-    Payments -. "decline: release reservation" .-> Inventory
+    Payments -. "decline" .-> Facade
+    Facade -. "compensate: release reservation" .-> Inventory
 ```
 
 Notice that all three product entry points stop at the same operation. The
