@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Outcomes
 
@@ -336,8 +336,10 @@ an editorial guide, not a content quota.
 
 ### Week 8 — Proxy and Chain of Responsibility
 
-- [ ] **Day 050 — Proxy problem.** Define lazy loading, access control, or caching
-  behind the same remote-resource interface.
+- [x] **Day 050 — Proxy problem.** Define lazy loading, access control, or caching
+  behind the same remote-resource interface. The [expiring lesson media baseline](Documentation/proxy-problem.md)
+  keeps entitlement checks and one bounded URL refresh in a concrete playback
+  model until multiple clients prove a shared substitute is worthwhile.
 - [ ] **Day 051 — Proxy pressure.** Demonstrate why every client should not own
   access and lifecycle policy.
 - [ ] **Day 052 — Proxy solution.** Implement the smallest proxy and contrast it

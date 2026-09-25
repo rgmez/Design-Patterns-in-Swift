@@ -14,7 +14,9 @@ Observer, Prototype, State, and Strategy provide canonical, tested examples;
 historical playground files remain outside the package until each scheduled
 replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
-their proper conceptual lanes.
+their proper conceptual lanes. The Proxy cycle has started with a direct,
+tested baseline for entitlement-gated lesson playback and one bounded URL
+refresh.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and
   readiness decision for Day 007.
@@ -68,7 +70,7 @@ Patterns that compose types behind focused, stable interfaces.
 - 🎨 **Decorator** — [Canonical example](Structural%20Patterns/Decorator/README.md) · [Problem baseline](Documentation/decorator-problem.md) · [Pressure review](Documentation/decorator-pressure.md) · Days 046–048 ✅
 - 🏢 **Facade** — [Canonical example](Structural%20Patterns/Facade/README.md) · [Problem baseline](Documentation/facade-problem.md) · [Pressure review](Documentation/facade-pressure.md) · Days 043–045 ✅
 - 🪶 **Flyweight** — Planned · Days 074–076
-- 🛡️ **Proxy** — Planned · Days 050–052
+- 🛡️ **Proxy** — [Problem baseline](Documentation/proxy-problem.md) · Days 050–052 🚧
 
 ### 🧠 Behavioral patterns
 
