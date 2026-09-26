@@ -340,8 +340,11 @@ an editorial guide, not a content quota.
   behind the same remote-resource interface. The [expiring lesson media baseline](Documentation/proxy-problem.md)
   keeps entitlement checks and one bounded URL refresh in a concrete playback
   model until multiple clients prove a shared substitute is worthwhile.
-- [ ] **Day 051 — Proxy pressure.** Demonstrate why every client should not own
-  access and lifecycle policy.
+- [x] **Day 051 — Proxy pressure.** Demonstrate why every client should not own
+  access and lifecycle policy. The [pressure review](Documentation/proxy-pressure.md)
+  measures three client-owned policy copies and verifies consistent entitlement
+  gates, bounded URL renewal, and terminal player failures across the two new
+  entry points.
 - [ ] **Day 052 — Proxy solution.** Implement the smallest proxy and contrast it
   with Decorator's behavior composition.
 - [ ] **Day 053 — Chain problem.** Define deep-link or request handlers that may
