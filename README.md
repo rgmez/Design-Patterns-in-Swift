@@ -8,15 +8,15 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first twelve pattern cycles are complete. Abstract
+The foundation and the first thirteen pattern cycles are complete. Abstract
 Factory, Adapter, Bridge, Builder, Command, Decorator, Facade, Factory Method,
-Observer, Prototype, State, and Strategy provide canonical, tested examples;
-historical playground files remain outside the package until each scheduled
-replacement is tested and documented.
+Observer, Prototype, Proxy, State, and Strategy provide canonical, tested
+examples; historical playground files remain outside the package until each
+scheduled replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
-their proper conceptual lanes. The Proxy cycle now has executable evidence that
-three playback entry points repeat the same entitlement gate and bounded URL
-refresh around one lesson resource.
+their proper conceptual lanes. Proxy now centralizes one mandatory entitlement
+gate and bounded URL refresh behind the same operation as its remote lesson
+subject; Chain of Responsibility is the next cycle.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and
   readiness decision for Day 007.
@@ -70,7 +70,7 @@ Patterns that compose types behind focused, stable interfaces.
 - 🎨 **Decorator** — [Canonical example](Structural%20Patterns/Decorator/README.md) · [Problem baseline](Documentation/decorator-problem.md) · [Pressure review](Documentation/decorator-pressure.md) · Days 046–048 ✅
 - 🏢 **Facade** — [Canonical example](Structural%20Patterns/Facade/README.md) · [Problem baseline](Documentation/facade-problem.md) · [Pressure review](Documentation/facade-pressure.md) · Days 043–045 ✅
 - 🪶 **Flyweight** — Planned · Days 074–076
-- 🛡️ **Proxy** — [Problem baseline](Documentation/proxy-problem.md) · [Pressure review](Documentation/proxy-pressure.md) · Days 050–052 🚧
+- 🛡️ **Proxy** — [Canonical example](Structural%20Patterns/Proxy/README.md) · [Problem baseline](Documentation/proxy-problem.md) · [Pressure review](Documentation/proxy-pressure.md) · Days 050–052 ✅
 
 ### 🧠 Behavioral patterns
 

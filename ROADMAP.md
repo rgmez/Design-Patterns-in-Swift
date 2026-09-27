@@ -345,8 +345,9 @@ an editorial guide, not a content quota.
   measures three client-owned policy copies and verifies consistent entitlement
   gates, bounded URL renewal, and terminal player failures across the two new
   entry points.
-- [ ] **Day 052 — Proxy solution.** Implement the smallest proxy and contrast it
-  with Decorator's behavior composition.
+- [x] **Day 052 — Proxy solution.** Implement the smallest proxy and contrast it
+  with Decorator's behavior composition in the [canonical Proxy
+  guide](Structural%20Patterns/Proxy/README.md).
 - [ ] **Day 053 — Chain problem.** Define deep-link or request handlers that may
   handle or pass work onward.
 - [ ] **Day 054 — Chain pressure.** Show growing centralized branching and the
