@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-28
+Last updated: 2026-09-29
 
 ## Outcomes
 
@@ -352,8 +352,10 @@ an editorial guide, not a content quota.
   handle or pass work onward. The [universal-link routing baseline](Documentation/chain-of-responsibility-problem.md)
   keeps the closed route set in one exhaustive switch with explicit handled,
   unhandled, and authentication-gated outcomes.
-- [ ] **Day 054 — Chain pressure.** Show growing centralized branching and the
-  importance of deterministic handler order.
+- [x] **Day 054 — Chain pressure.** Show growing centralized branching and the
+  importance of deterministic handler order. The [pressure review](Documentation/chain-of-responsibility-pressure.md)
+  measures five feature families at one switch and proves two
+  specialized-before-generic precedence constraints.
 - [ ] **Day 055 — Chain solution.** Implement explicit pass/handle semantics and
   distinguish the chain from Decorator and middleware pipelines.
 - [ ] **Day 056 — Weekly review.** Validate ordering, error propagation, caching,

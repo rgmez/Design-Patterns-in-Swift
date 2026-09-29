@@ -6,8 +6,11 @@ public enum AuthenticatedCommerceLink: Equatable, Sendable {
 
 public enum CommerceLinkDestination: Equatable, Sendable {
     case product(slug: String)
+    case featuredProducts
     case order(id: String)
     case campaign(slug: String)
+    case campaignReferral(code: String)
+    case store(slug: String)
     case accountRecovery(token: String)
     case signIn(resume: AuthenticatedCommerceLink)
 }
