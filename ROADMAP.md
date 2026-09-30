@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-09-29
+Last updated: 2026-09-30
 
 ## Outcomes
 
@@ -356,8 +356,9 @@ an editorial guide, not a content quota.
   importance of deterministic handler order. The [pressure review](Documentation/chain-of-responsibility-pressure.md)
   measures five feature families at one switch and proves two
   specialized-before-generic precedence constraints.
-- [ ] **Day 055 — Chain solution.** Implement explicit pass/handle semantics and
-  distinguish the chain from Decorator and middleware pipelines.
+- [x] **Day 055 — Chain solution.** Implement explicit pass/handle semantics and
+  distinguish the chain from Decorator and middleware pipelines in the
+  [canonical Chain of Responsibility guide](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md).
 - [ ] **Day 056 — Weekly review.** Validate ordering, error propagation, caching,
   and access decisions.
 

@@ -8,16 +8,15 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first thirteen pattern cycles are complete. Abstract
-Factory, Adapter, Bridge, Builder, Command, Decorator, Facade, Factory Method,
-Observer, Prototype, Proxy, State, and Strategy provide canonical, tested
-examples; historical playground files remain outside the package until each
-scheduled replacement is tested and documented.
+The foundation and the first fourteen pattern cycles are complete. Abstract
+Factory, Adapter, Bridge, Builder, Chain of Responsibility, Command, Decorator,
+Facade, Factory Method, Observer, Prototype, Proxy, State, and Strategy provide
+canonical, tested examples; historical playground files remain outside the
+package until each scheduled replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
-their proper conceptual lanes. The Chain of Responsibility cycle now shows how
-independently owned universal-link routes and specialized-before-generic
-precedence put measurable pressure on one exhaustive switch before any handler
-chain exists.
+their proper conceptual lanes. The completed Chain of Responsibility example
+makes universal-link ownership, specialized-before-generic precedence, and
+terminal rejection explicit in one ordered feature composition.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and
   readiness decision for Day 007.
@@ -77,7 +76,7 @@ Patterns that compose types behind focused, stable interfaces.
 
 Patterns that distribute responsibilities and coordinate behavior.
 
-- 🔗 **Chain of Responsibility** — [Problem baseline](Documentation/chain-of-responsibility-problem.md) · [Pressure review](Documentation/chain-of-responsibility-pressure.md) · Days 053–055 🚧
+- 🔗 **Chain of Responsibility** — [Canonical example](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) · [Problem baseline](Documentation/chain-of-responsibility-problem.md) · [Pressure review](Documentation/chain-of-responsibility-pressure.md) · Days 053–055 ✅
 - 🎮 **Command** — [Canonical example](Behavioral%20Patterns/Command/README.md) · [Problem baseline](Documentation/command-problem.md) · [Pressure review](Documentation/command-pressure.md) · Days 039–041 ✅
 - 🗣️ **Interpreter** — Planned · Days 081–083
 - 🔁 **Iterator** — Planned · Days 060–062
