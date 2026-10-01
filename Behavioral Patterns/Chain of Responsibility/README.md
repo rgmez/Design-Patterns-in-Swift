@@ -194,8 +194,9 @@ swift test -Xswiftc -warnings-as-errors --filter ChainPressureTests
 - specialized handlers win when they precede generic siblings;
 - an ordinary product or campaign advances after a specialized handler passes;
 - reversing handler order changes the observable result;
+- a handled decision prevents later handlers from running;
 - malformed owned referrals reject before generic fallback;
-- unknown and foreign-host links remain unhandled;
+- unknown, insecure, and foreign-host links remain unhandled;
 - authenticated orders open directly; and
 - signed-out orders retain their destination through sign-in.
 

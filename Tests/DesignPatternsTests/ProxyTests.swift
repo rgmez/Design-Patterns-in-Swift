@@ -116,6 +116,39 @@ struct ProxyTests {
             #expect(playback.subject.mediaService.requestedLessonIDs.isEmpty)
             #expect(playback.subject.player.attemptedURLs.isEmpty)
         }
+
+        @Test("Rechecks access and requests a fresh URL for every playback")
+        func doesNotCacheAccessOrPlaybackURL() throws {
+            let firstURL = try ProxyTests.makeURL()
+            let secondURL = try ProxyTests.makeURL(
+                ProxyTests.refreshedURLValue
+            )
+            var playback = ProxyTests.makeProxy(
+                serviceOutcomes: [
+                    .playbackURL(firstURL),
+                    .playbackURL(secondURL)
+                ],
+                playerOutcomes: [.started, .started]
+            )
+
+            let firstSession = try playback.play(ProxyTests.makeLesson())
+            let secondSession = try playback.play(ProxyTests.makeLesson())
+
+            #expect(firstSession.playbackURL == firstURL)
+            #expect(secondSession.playbackURL == secondURL)
+            #expect(
+                playback.entitlements.accessChecks
+                    == [ProxyTests.lessonID, ProxyTests.lessonID]
+            )
+            #expect(
+                playback.subject.mediaService.requestedLessonIDs
+                    == [ProxyTests.lessonID, ProxyTests.lessonID]
+            )
+            #expect(
+                playback.subject.player.attemptedURLs
+                    == [firstURL, secondURL]
+            )
+        }
     }
 
     @Suite("URL lifecycle")
@@ -209,6 +242,29 @@ struct ProxyTests {
                     == [ProxyTests.lessonID]
             )
             #expect(playback.subject.player.attemptedURLs == [playbackURL])
+        }
+
+        @Test("A media failure during replacement remains terminal")
+        func preservesReplacementMediaFailure() throws {
+            let expiredURL = try ProxyTests.makeURL()
+            var playback = ProxyTests.makeProxy(
+                serviceOutcomes: [
+                    .playbackURL(expiredURL),
+                    .unavailable
+                ],
+                playerOutcomes: [.expiredURL]
+            )
+
+            #expect(throws: LessonPlaybackError.mediaUnavailable) {
+                try playback.play(ProxyTests.makeLesson())
+            }
+            #expect(
+                playback.subject.mediaService.requestedLessonIDs
+                    == [ProxyTests.lessonID, ProxyTests.lessonID]
+            )
+            #expect(
+                playback.subject.player.attemptedURLs == [expiredURL]
+            )
         }
     }
 }

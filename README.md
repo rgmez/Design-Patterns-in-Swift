@@ -32,6 +32,8 @@ terminal rejection explicit in one ordered feature composition.
   behavior versus reversible intent and history ownership.
 - [Facade and Decorator review](Documentation/week-07-review.md) — checkout
   compensation ownership versus ordered upload policies and bounded retry.
+- [Proxy and Chain of Responsibility review](Documentation/week-08-review.md) —
+  guarded resource substitution versus ordered request ownership.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
   conceptual decisions for all 23 patterns.
 - [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios

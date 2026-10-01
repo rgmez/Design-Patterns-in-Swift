@@ -164,9 +164,12 @@ swift test -Xswiftc -warnings-as-errors --filter ProxyPressureTests
 - the real subject performs exactly one URL request and player attempt;
 - the proxy substitutes on the same playback operation;
 - denied access never reaches the real subject;
+- every playback request rechecks access and requests a fresh URL rather than
+  caching either decision;
 - one expiration causes exactly one additional subject invocation;
 - a second expiration remains terminal; and
-- media-service and non-expiration player failures are not retried.
+- media-service and non-expiration player failures are not retried, including
+  media failure while replacing an expired URL.
 
 The problem and pressure suites retain the executable direct baseline and the
 three-client evidence that earned the boundary.

@@ -12,6 +12,17 @@ struct ChainTests {
     private static let recoveryToken = "recovery-token-84"
     private static let storeSlug = "madrid-centro"
 
+    private struct UnexpectedHandler: CommerceLinkHandler {
+        func handle(
+            _ request: CommerceLinkRequest
+        ) -> CommerceLinkHandlerDecision {
+            Issue.record(
+                "A handler after a terminal decision must not run"
+            )
+            return .pass
+        }
+    }
+
     struct RouteScenario: Sendable, CustomTestStringConvertible {
         let name: String
         let path: String
@@ -102,6 +113,24 @@ struct ChainTests {
 
             #expect(result == .handled(.product(slug: "featured")))
         }
+
+        @Test("Does not consult handlers after a handled decision")
+        func handledDecisionStopsLaterHandlers() throws {
+            let router = CommerceLinkRouter(
+                supportedHost: ChainTests.supportedHost,
+                handlers: [
+                    FeaturedProductsLinkHandler(),
+                    UnexpectedHandler()
+                ]
+            )
+
+            let result = router.route(
+                try ChainTests.makeURL(path: "/products/featured"),
+                isAuthenticated: false
+            )
+
+            #expect(result == .handled(.featuredProducts))
+        }
     }
 
     @Suite("Terminal decisions")
@@ -142,6 +171,24 @@ struct ChainTests {
 
             let result = ChainTests.makeRouter().route(
                 foreignURL,
+                isAuthenticated: true
+            )
+
+            #expect(result == .unhandled)
+        }
+
+        @Test("Rejects an insecure scheme before consulting the chain")
+        func rejectsInsecureScheme() throws {
+            let insecureURL = try #require(
+                URL(string: "http://shop.example.com/products/featured")
+            )
+            let router = CommerceLinkRouter(
+                supportedHost: ChainTests.supportedHost,
+                handlers: [UnexpectedHandler()]
+            )
+
+            let result = router.route(
+                insecureURL,
                 isAuthenticated: true
             )
 
