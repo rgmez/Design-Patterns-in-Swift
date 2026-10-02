@@ -366,8 +366,10 @@ an editorial guide, not a content quota.
 
 ### Week 9 — Memento and Iterator
 
-- [ ] **Day 057 — Memento problem.** Define editor draft snapshots without
-  exposing mutable internal representation.
+- [x] **Day 057 — Memento problem.** Define editor draft snapshots without
+  exposing mutable internal representation. The [route-planning baseline](Documentation/memento-problem.md)
+  keeps small restore points as private, bounded value copies until external
+  history ownership or compatibility pressure justifies Memento participants.
 - [ ] **Day 058 — Memento pressure.** Demonstrate restoration requirements and
   snapshot size or versioning costs.
 - [ ] **Day 059 — Memento solution.** Implement bounded restoration and document
