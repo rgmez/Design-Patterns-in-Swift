@@ -1,4 +1,4 @@
-public struct ItineraryStop: Equatable, Sendable {
+public struct ItineraryStop: Codable, Equatable, Sendable {
     public let city: String
     public let nights: Int
 
@@ -9,7 +9,7 @@ public struct ItineraryStop: Equatable, Sendable {
     }
 }
 
-public enum ItineraryTransport: Equatable, Sendable {
+public enum ItineraryTransport: Codable, Equatable, Sendable {
     case rail
     case driving
     case flight
@@ -28,6 +28,37 @@ public struct ItineraryDraftPreview: Equatable, Sendable {
     public let stops: [ItineraryStop]
     public let transport: ItineraryTransport
     public let routeProfile: ItineraryRouteProfile
+}
+
+public enum ItineraryDraftSnapshotError: Error, Equatable, Sendable {
+    case unsupportedVersion(Int)
+}
+
+public struct DirectItineraryDraftSnapshotV1: Codable, Equatable, Sendable {
+    public static let currentSchemaVersion = 1
+
+    public let schemaVersion: Int
+    public let title: String
+    public let stops: [ItineraryStop]
+    public let transport: ItineraryTransport
+    public let prefersScenicRoutes: Bool
+    public let avoidsTolls: Bool
+
+    public init(
+        schemaVersion: Int = currentSchemaVersion,
+        title: String,
+        stops: [ItineraryStop],
+        transport: ItineraryTransport,
+        prefersScenicRoutes: Bool,
+        avoidsTolls: Bool
+    ) {
+        self.schemaVersion = schemaVersion
+        self.title = title
+        self.stops = stops
+        self.transport = transport
+        self.prefersScenicRoutes = prefersScenicRoutes
+        self.avoidsTolls = avoidsTolls
+    }
 }
 
 public struct DirectItineraryDraftEditor: Sendable {
@@ -77,6 +108,17 @@ public struct DirectItineraryDraftEditor: Sendable {
         restorePoints.count
     }
 
+    public func makeVersionedSnapshot() -> DirectItineraryDraftSnapshotV1 {
+        DirectItineraryDraftSnapshotV1(
+            title: draft.title,
+            stops: draft.stops,
+            transport: draft.transport,
+            prefersScenicRoutes:
+                draft.routingPreferences.prefersScenicRoutes,
+            avoidsTolls: draft.routingPreferences.avoidsTolls
+        )
+    }
+
     public mutating func rename(to title: String) {
         draft.title = title
     }
@@ -111,6 +153,29 @@ public struct DirectItineraryDraftEditor: Sendable {
         }
         draft = savedDraft
         return true
+    }
+
+    public mutating func restore(
+        _ snapshot: DirectItineraryDraftSnapshotV1
+    ) throws {
+        guard
+            snapshot.schemaVersion
+                == DirectItineraryDraftSnapshotV1.currentSchemaVersion
+        else {
+            throw ItineraryDraftSnapshotError.unsupportedVersion(
+                snapshot.schemaVersion
+            )
+        }
+
+        draft = DraftState(
+            title: snapshot.title,
+            stops: snapshot.stops,
+            transport: snapshot.transport,
+            routingPreferences: RoutingPreferences(
+                prefersScenicRoutes: snapshot.prefersScenicRoutes,
+                avoidsTolls: snapshot.avoidsTolls
+            )
+        )
     }
 
     private func routeProfile(

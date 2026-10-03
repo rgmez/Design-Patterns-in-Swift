@@ -49,11 +49,12 @@ The direct editor also preserves these constraints:
 
 ## Direct Swift first
 
+At the Day 057 baseline,
 [`ItineraryDraftDirect.swift`](../Sources/DesignPatterns/Memento/ItineraryDraftDirect.swift)
-uses one value-semantic `DirectItineraryDraftEditor`. Its private `DraftState`
-contains the complete mutable representation, while a private array retains a
-bounded stack of earlier values. Swift's copy-on-write arrays keep the visible
-model simple: mutating a later list of stops does not mutate a saved draft.
+used one value-semantic `DirectItineraryDraftEditor`. Its private `DraftState`
+contained the complete mutable representation, while a private array retained
+a bounded stack of earlier values. Swift's copy-on-write arrays kept the visible
+model simple: mutating a later list of stops did not mutate a saved draft.
 
 `ItineraryDraftPreview` is a read-only projection for UI or tests. Callers edit
 through domain operations such as `appendStop(_:)` and
@@ -61,10 +62,11 @@ through domain operations such as `appendStop(_:)` and
 state type. `saveRestorePoint()` copies the current value, and
 `restoreLatest()` replaces it as one assignment.
 
-This is deliberately not a formal Memento implementation. There is no memento
-protocol, caretaker, snapshot hierarchy, encoder, version envelope, repository,
-or type erasure. While one editor owns a small in-memory history, those types
-would rename simple value copies without reducing coupling or risk.
+That baseline deliberately had no memento protocol, caretaker, snapshot
+hierarchy, encoder, version envelope, repository, or type erasure. While one
+editor owned a small in-memory history, those types would only have renamed
+simple value copies. Day 058 extends the same source with the versioned direct
+API evaluated in the [pressure review](memento-pressure.md).
 
 ## Acceptance tests
 
@@ -112,25 +114,25 @@ copies the entire private draft into a bounded stack; later edits affect only
 the current draft; restore pops the newest copy and atomically replaces all
 current fields before returning a read-only preview.
 
-## Evidence required on Day 058
+## Evidence evaluated on Day 058
 
-Memento has not earned an external snapshot type merely because undo-like
-behavior exists. Day 058 must add credible restoration pressure and quantify
-the cost of continuing with editor-owned full copies:
+Memento did not earn an external snapshot type merely because undo-like
+behavior existed. Day 058 added credible restoration pressure and quantified
+the cost of continuing with full copies across an external owner:
 
-- Which component must retain checkpoints when the editor is recreated?
-- Which private derived values must be restored together to keep the route
-  internally consistent?
-- How large is one full snapshot, and what memory does the bounded history use?
-- What happens when a saved snapshot comes from an older state version?
-- Can a smaller reversible operation preserve the same behavior more clearly?
-- Is persistence the real requirement, making a versioned document format more
-  appropriate than Memento?
+- The direct JSON archive retains checkpoints when the editor is recreated.
+- Both routing-preference booleans must return together to derive a consistent
+  route profile.
+- A 250-stop fixture occupies 8,774 encoded bytes; four checkpoints retain
+  35,096 bytes.
+- Unsupported versions fail without mutating the editor or consuming history.
+- Smaller reversible operations remain unjustified at the measured depth.
+- Durable user data would still require a versioned document format rather
+  than Memento terminology.
 
-If state stays small, public, and local to one value-semantic editor, the direct
-array should remain. Day 059 may introduce Memento only if an external history
-owner needs an opaque restore token and the originator must retain exclusive
-knowledge of how private state is captured and restored.
+The [pressure evidence](memento-pressure.md) concludes that full copies remain
+acceptable, while the external owner's dependency on a concrete V1 schema is
+the coupling Day 059 must address.
 
 ## Initial editorial thesis
 
