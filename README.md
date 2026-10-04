@@ -8,17 +8,17 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first fourteen pattern cycles are complete. Abstract
+The foundation and the first fifteen pattern cycles are complete. Abstract
 Factory, Adapter, Bridge, Builder, Chain of Responsibility, Command, Decorator,
-Facade, Factory Method, Observer, Prototype, Proxy, State, and Strategy provide
+Facade, Factory Method, Memento, Observer, Prototype, Proxy, State, and Strategy provide
 canonical, tested examples; historical playground files remain outside the
 package until each scheduled replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
 their proper conceptual lanes. The completed Chain of Responsibility example
 makes universal-link ownership, specialized-before-generic precedence, and
-terminal rejection explicit in one ordered feature composition. The Memento
-cycle now demonstrates why external, versioned itinerary history puts pressure
-on an otherwise simple editor-owned value stack.
+terminal rejection explicit in one ordered feature composition. The completed
+Memento example keeps versioned itinerary state opaque while a bounded external
+history owns only retention order and measurable storage cost.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and
   readiness decision for Day 007.
@@ -85,7 +85,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 🗣️ **Interpreter** — Planned · Days 081–083
 - 🔁 **Iterator** — Planned · Days 060–062
 - 🤝 **Mediator** — Planned · Days 067–069
-- 📸 **Memento** — [Problem baseline](Documentation/memento-problem.md) · [Pressure review](Documentation/memento-pressure.md) · Days 057–059 🚧
+- 📸 **Memento** — [Canonical example](Behavioral%20Patterns/Memento/README.md) · [Problem baseline](Documentation/memento-problem.md) · [Pressure review](Documentation/memento-pressure.md) · Days 057–059 ✅
 - 👀 **Observer** — [Canonical example](Behavioral%20Patterns/Observer/README.md) · Days 032–034 ✅
 - 🚦 **State** — [Canonical example](Behavioral%20Patterns/State/README.md) · [Problem baseline](Documentation/state-problem.md) · [Pressure review](Documentation/state-pressure.md) · Days 036–038 ✅
 - ♟️ **Strategy** — [Canonical example](Behavioral%20Patterns/Strategy/README.md) · Days 011–013 ✅

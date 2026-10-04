@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 ## Outcomes
 
@@ -374,8 +374,9 @@ an editorial guide, not a content quota.
   snapshot size or versioning costs. The [pressure review](Documentation/memento-pressure.md)
   measures bounded full-snapshot storage and exposes the schema coupling caused
   by an external JSON history owner.
-- [ ] **Day 059 — Memento solution.** Implement bounded restoration and document
-  persistence and compatibility trade-offs.
+- [x] **Day 059 — Memento solution.** Implement bounded restoration and document
+  persistence and compatibility trade-offs in the [canonical Memento guide](Behavioral%20Patterns/Memento/README.md),
+  where an opaque restore point keeps schema ownership inside the editor.
 - [ ] **Day 060 — Iterator problem.** Define a paginated API whose consumers
   should not manage page tokens.
 - [ ] **Day 061 — Iterator pressure.** Demonstrate duplicated pagination state,
