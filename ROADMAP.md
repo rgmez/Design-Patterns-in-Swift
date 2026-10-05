@@ -377,8 +377,10 @@ an editorial guide, not a content quota.
 - [x] **Day 059 — Memento solution.** Implement bounded restoration and document
   persistence and compatibility trade-offs in the [canonical Memento guide](Behavioral%20Patterns/Memento/README.md),
   where an opaque restore point keeps schema ownership inside the editor.
-- [ ] **Day 060 — Iterator problem.** Define a paginated API whose consumers
-  should not manage page tokens.
+- [x] **Day 060 — Iterator problem.** Define a paginated API whose consumers
+  should not manage page tokens. The [photo-library baseline](Documentation/iterator-problem.md)
+  keeps one opaque cursor in the consuming screen until additional traversal
+  clients demonstrate shared pagination, termination, and cancellation policy.
 - [ ] **Day 061 — Iterator pressure.** Demonstrate duplicated pagination state,
   cancellation, and termination logic.
 - [ ] **Day 062 — Iterator solution.** Expose iteration through `AsyncSequence`
