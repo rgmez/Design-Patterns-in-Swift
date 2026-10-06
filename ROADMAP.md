@@ -381,8 +381,10 @@ an editorial guide, not a content quota.
   should not manage page tokens. The [photo-library baseline](Documentation/iterator-problem.md)
   keeps one opaque cursor in the consuming screen until additional traversal
   clients demonstrate shared pagination, termination, and cancellation policy.
-- [ ] **Day 061 — Iterator pressure.** Demonstrate duplicated pagination state,
-  cancellation, and termination logic.
+- [x] **Day 061 — Iterator pressure.** Demonstrate duplicated pagination state,
+  cancellation, and termination logic. The [pressure review](Documentation/iterator-pressure.md)
+  measures three consumer-owned cursors and termination decisions while
+  preserving distinct indexing, retry, early-exit, and cancellation policies.
 - [ ] **Day 062 — Iterator solution.** Expose iteration through `AsyncSequence`
   and document why an array is sufficient for already-loaded data.
 - [ ] **Day 063 — Weekly review.** Validate snapshot ownership and asynchronous
