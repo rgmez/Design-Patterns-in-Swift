@@ -8,9 +8,10 @@ Every canonical example starts with the simplest direct solution, shows the requ
 
 ## 🚧 Current status
 
-The foundation and the first fifteen pattern cycles are complete. Abstract
+The foundation and the first sixteen pattern cycles are complete. Abstract
 Factory, Adapter, Bridge, Builder, Chain of Responsibility, Command, Decorator,
-Facade, Factory Method, Memento, Observer, Prototype, Proxy, State, and Strategy provide
+Facade, Factory Method, Iterator, Memento, Observer, Prototype, Proxy, State,
+and Strategy provide
 canonical, tested examples; historical playground files remain outside the
 package until each scheduled replacement is tested and documented.
 The weekly reviews validate each pair's behavior and keep adjacent patterns in
@@ -18,10 +19,9 @@ their proper conceptual lanes. The completed Chain of Responsibility example
 makes universal-link ownership, specialized-before-generic precedence, and
 terminal rejection explicit in one ordered feature composition. The completed
 Memento example keeps versioned itinerary state opaque while a bounded external
-history owns only retention order and measurable storage cost. The Iterator
-cycle now demonstrates three photo-library consumers repeating opaque cursor
-advancement and termination while retaining distinct retry and early-exit
-policies.
+history owns only retention order and measurable storage cost. The completed
+Iterator example turns cursor-paginated photo pages into one lazy
+`AsyncSequence` while retry, accumulation, and early exit remain consumer-owned.
 
 - [Foundation review](Documentation/foundation-review.md) — evidence and
   readiness decision for Day 007.
@@ -86,7 +86,7 @@ Patterns that distribute responsibilities and coordinate behavior.
 - 🔗 **Chain of Responsibility** — [Canonical example](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) · [Problem baseline](Documentation/chain-of-responsibility-problem.md) · [Pressure review](Documentation/chain-of-responsibility-pressure.md) · Days 053–055 ✅
 - 🎮 **Command** — [Canonical example](Behavioral%20Patterns/Command/README.md) · [Problem baseline](Documentation/command-problem.md) · [Pressure review](Documentation/command-pressure.md) · Days 039–041 ✅
 - 🗣️ **Interpreter** — Planned · Days 081–083
-- 🔁 **Iterator** — [Problem baseline](Documentation/iterator-problem.md) · [Pressure review](Documentation/iterator-pressure.md) · Days 060–062 🚧
+- 🔁 **Iterator** — [Canonical example](Behavioral%20Patterns/Iterator/README.md) · [Problem baseline](Documentation/iterator-problem.md) · [Pressure review](Documentation/iterator-pressure.md) · Days 060–062 ✅
 - 🤝 **Mediator** — Planned · Days 067–069
 - 📸 **Memento** — [Canonical example](Behavioral%20Patterns/Memento/README.md) · [Problem baseline](Documentation/memento-problem.md) · [Pressure review](Documentation/memento-pressure.md) · Days 057–059 ✅
 - 👀 **Observer** — [Canonical example](Behavioral%20Patterns/Observer/README.md) · Days 032–034 ✅
