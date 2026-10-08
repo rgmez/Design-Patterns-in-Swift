@@ -184,7 +184,9 @@ proves:
 - repeated calls after the terminal value issue no more requests;
 - a rate-limit error leaves the cursor available for an explicit consumer retry;
 - exiting after three photos avoids the unneeded final page; and
-- an already-cancelled task records no remote request.
+- an already-cancelled task records no remote request; and
+- cancellation after one delivery prevents a buffered photo from escaping and
+  does not request the next page.
 
 The earlier problem and pressure suites remain executable. They preserve the
 single-page direct solution and the measured duplication that earned this

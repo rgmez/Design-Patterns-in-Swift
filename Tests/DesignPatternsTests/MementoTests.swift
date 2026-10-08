@@ -85,6 +85,25 @@ struct MementoTests {
             #expect(history.availableRestorePointCount == 0)
         }
 
+        @Test("Keeps a checkpoint independent from later editor mutations")
+        func preservesCapturedState() throws {
+            var editor = MementoTests.makeEditor()
+            let capturedPreview = editor.preview
+            var history = ItineraryDraftHistory()
+            try history.save(editor)
+
+            editor.rename(to: MementoTests.replacementTitle)
+            editor.appendStop(MementoTests.porto)
+            editor.selectTransport(.flight)
+            editor.preferScenicRoutes(false)
+            editor.avoidTolls(false)
+
+            #expect(editor.preview != capturedPreview)
+            #expect(try history.restoreLatest(into: &editor))
+            #expect(editor.preview == capturedPreview)
+            #expect(history.availableRestorePointCount == 0)
+        }
+
         @Test("Restores newest checkpoints first and evicts the oldest")
         func boundsHistory() throws {
             var editor = MementoTests.makeEditor()

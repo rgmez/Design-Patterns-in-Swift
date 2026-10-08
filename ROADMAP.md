@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-04
+Last updated: 2026-10-08
 
 ## Outcomes
 
@@ -388,8 +388,11 @@ an editorial guide, not a content quota.
 - [x] **Day 062 — Iterator solution.** Expose iteration through `AsyncSequence`
   and document why an array is sufficient for already-loaded data in the
   [canonical Iterator guide](Behavioral%20Patterns/Iterator/README.md).
-- [ ] **Day 063 — Weekly review.** Validate snapshot ownership and asynchronous
-  iteration termination, error, and cancellation behavior.
+- [x] **Day 063 — Weekly review.** Validate snapshot ownership and asynchronous
+  iteration termination, error, and cancellation behavior. The
+  [review evidence](Documentation/week-09-review.md) confirms independent
+  captured state, atomic restoration, terminal iteration, same-cursor retry,
+  and cancellation before buffered delivery or new remote work.
 
 ### Week 10 — Composite and Mediator
 

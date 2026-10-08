@@ -185,4 +185,44 @@ struct IteratorTests {
 
         #expect(requestedCursors.isEmpty)
     }
+
+    @Test("Checks cancellation before returning a buffered photo")
+    func checksCancellationBeforeBufferedDelivery() async throws {
+        let sequence = PhotoLibrarySequence(
+            api: ScriptedPhotoLibraryAPI(
+                outcomes: [
+                    Self.page(
+                        [Self.sunrise, Self.harbour],
+                        nextCursor: Self.firstCursor
+                    ),
+                    Self.page([Self.market], nextCursor: nil)
+                ]
+            )
+        )
+        let task = Task {
+            var iterator = sequence.makeAsyncIterator()
+            let firstPhoto = try await iterator.next()
+            withUnsafeCurrentTask { currentTask in
+                currentTask?.cancel()
+            }
+
+            do {
+                _ = try await iterator.next()
+                Issue.record(
+                    "A cancelled iterator delivered a buffered photo"
+                )
+            } catch is CancellationError {
+                // Cancellation is the expected terminal result.
+            } catch {
+                Issue.record("Unexpected error: \(error)")
+            }
+
+            return (firstPhoto, iterator.requestedCursors)
+        }
+
+        let (firstPhoto, requestedCursors) = try await task.value
+
+        #expect(firstPhoto == Self.sunrise)
+        #expect(requestedCursors == [nil])
+    }
 }

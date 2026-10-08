@@ -144,6 +144,7 @@ history as ordinary values and compare immutable previews.
 proves:
 
 - a complete checkpoint restores after the original editor is discarded;
+- later editor mutations cannot change an already captured checkpoint;
 - a two-entry history restores newest first and evicts the oldest;
 - four equal full snapshots retain exactly four times one snapshot's bytes;
 - past and future schema versions do not mutate the editor or consume history;
@@ -212,7 +213,7 @@ log would solve a different requirement rather than becoming a richer memento.
 - [`ItineraryDraftMemento.swift`](../../Sources/DesignPatterns/Memento/ItineraryDraftMemento.swift) — opaque memento, originator, and bounded caretaker.
 - [`ItineraryDraftDirect.swift`](../../Sources/DesignPatterns/Memento/ItineraryDraftDirect.swift) — domain values and editor-owned direct baseline.
 - [`ItineraryDraftPressure.swift`](../../Sources/DesignPatterns/Memento/ItineraryDraftPressure.swift) — concrete JSON archive that exposes the coupling.
-- [`MementoTests.swift`](../../Tests/DesignPatternsTests/MementoTests.swift) — restoration, bounds, storage, compatibility, and atomicity.
+- [`MementoTests.swift`](../../Tests/DesignPatternsTests/MementoTests.swift) — capture ownership, restoration, bounds, storage, compatibility, and atomicity.
 - [`MementoProblemTests.swift`](../../Tests/DesignPatternsTests/MementoProblemTests.swift) — direct baseline acceptance tests.
 - [`MementoPressureTests.swift`](../../Tests/DesignPatternsTests/MementoPressureTests.swift) — external-history pressure and V1 coupling evidence.
 - [`memento-problem.md`](../../Documentation/memento-problem.md) — requirements and initial no-pattern decision.

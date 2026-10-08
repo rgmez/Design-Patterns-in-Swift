@@ -39,6 +39,8 @@ Iterator example turns cursor-paginated photo pages into one lazy
   compensation ownership versus ordered upload policies and bounded retry.
 - [Proxy and Chain of Responsibility review](Documentation/week-08-review.md) —
   guarded resource substitution versus ordered request ownership.
+- [Memento and Iterator review](Documentation/week-09-review.md) — opaque
+  snapshot ownership versus lazy asynchronous traversal.
 - [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
   conceptual decisions for all 23 patterns.
 - [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios
