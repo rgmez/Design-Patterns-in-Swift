@@ -1,114 +1,179 @@
-# 📘 Design Patterns in Swift
+# Design Patterns in Swift
 
-This repository is a pragmatic, executable guide to the 23 Gang of Four design patterns in Swift. The catalogue is being rebuilt around one rule:
+Learn design patterns by following the app problems that make them useful.
 
-> A pattern earns its place only when it solves a concrete app problem more clearly than Swift's direct language and platform features.
+This guide explores the 23 Gang of Four patterns through concrete Swift examples:
+checkout payments, video editing, file uploads, session changes, and more.
+**16 examples are implemented and tested; 7 are planned.**
 
-Every canonical example starts with the simplest direct solution, shows the requirement that puts pressure on it, and documents the trade-offs of the smallest justified pattern. A documented decision to use no pattern is also a valid outcome.
+The central question is simple:
 
-## 🚧 Current status
+> What changed in the app that makes this pattern worth introducing?
 
-The foundation and the first sixteen pattern cycles are complete. Abstract
-Factory, Adapter, Bridge, Builder, Chain of Responsibility, Command, Decorator,
-Facade, Factory Method, Iterator, Memento, Observer, Prototype, Proxy, State,
-and Strategy provide
-canonical, tested examples; historical playground files remain outside the
-package until each scheduled replacement is tested and documented.
-The weekly reviews validate each pair's behavior and keep adjacent patterns in
-their proper conceptual lanes. The completed Chain of Responsibility example
-makes universal-link ownership, specialized-before-generic precedence, and
-terminal rejection explicit in one ordered feature composition. The completed
-Memento example keeps versioned itinerary state opaque while a bounded external
-history owns only retention order and measurable storage cost. The completed
-Iterator example turns cursor-paginated photo pages into one lazy
-`AsyncSequence` while retry, accumulation, and early exit remain consumer-owned.
+Each example begins with a direct Swift solution. A new requirement reveals its
+limits, then a pattern introduces a focused way to handle that change. You will
+see what improves, what complexity it adds, and when to keep the simpler design.
 
-- [Foundation review](Documentation/foundation-review.md) — evidence and
-  readiness decision for Day 007.
-- [Adapter and Strategy review](Documentation/week-02-review.md) — integration
-  boundaries versus runtime behavior.
-- [Bridge and Factory Method review](Documentation/week-03-review.md) —
-  independent axes versus provider-owned creation.
-- [Abstract Factory and Builder review](Documentation/week-04-review.md) —
-  coherent families versus ordered assembly.
-- [Prototype and Observer review](Documentation/week-05-review.md) — copy
-  ownership versus subscription lifetime.
-- [State and Command review](Documentation/week-06-review.md) — lifecycle
-  behavior versus reversible intent and history ownership.
-- [Facade and Decorator review](Documentation/week-07-review.md) — checkout
-  compensation ownership versus ordered upload policies and bounded retry.
-- [Proxy and Chain of Responsibility review](Documentation/week-08-review.md) —
-  guarded resource substitution versus ordered request ownership.
-- [Memento and Iterator review](Documentation/week-09-review.md) — opaque
-  snapshot ownership versus lazy asynchronous traversal.
-- [Catalogue audit](Documentation/catalogue-audit.md) — baseline status and
-  conceptual decisions for all 23 patterns.
-- [Real-app domain map](Documentation/app-domain-map.md) — concrete scenarios
-  assigned to each pattern.
-- [100-day roadmap](ROADMAP.md) — one problem, pressure, and solution cycle per
-  pattern.
+## Start here
 
-Run the package from the repository root:
+You can read each example independently. If you are new to patterns, start with
+these three:
+
+| Example | The question it answers | What you will learn |
+| --- | --- | --- |
+| [Adapter](Structural%20Patterns/Adapter/README.md) | How can checkout work with two incompatible payment SDKs? | Translate each provider's requests, results, and errors into one app-owned contract. |
+| [Strategy](Behavioral%20Patterns/Strategy/README.md) | How can checkout change the way it ranks delivery options? | Keep interchangeable ranking rules and their inputs together. |
+| [Observer](Behavioral%20Patterns/Observer/README.md) | How can screens react to session changes for only as long as they need to? | Separate a session change from the lifetime of its subscribers. |
+
+Together, they show three different reasons to introduce a pattern: integrating
+an external API, varying a business rule, and coordinating independent consumers.
+
+## How to read an example
+
+Follow the same story in every pattern README:
+
+1. **Understand the app problem.** What does the user need, and which rules must
+   the implementation preserve?
+2. **Look at the direct solution.** Start with ordinary Swift: a value type, a
+   function, an enum, or a small service.
+3. **Find the turning point.** A concrete requirement changes. Identify what the
+   direct solution now has to know, repeat, or coordinate.
+4. **Follow the pattern.** Read the responsibilities, implementation walkthrough,
+   and diagram to see where that knowledge moves.
+5. **Judge the trade-off.** Check the tests, alternatives, and “When not to use
+   it” section before deciding whether the pattern fits your own app.
+
+For example, the first payment SDK can be called directly from checkout. Adding
+a second SDK brings different request formats, success responses, and errors.
+Adapter moves those translations into one adapter per provider, so checkout can
+work with a stable payment operation. That earns a boundary, but also adds types
+and mappings to maintain. With one simple integration, the direct approach may
+still be enough.
+
+A pattern describes how responsibilities fit together. In Swift, the example
+may use structs, closures, protocols, or an `AsyncSequence`; it does not need to
+reproduce a class hierarchy from a textbook.
+
+## Run the examples
+
+The implemented examples live in one Swift Package. You need **Swift 6.0 or
+later**; the package declares **macOS 14 or later** as its supported platform.
+From the repository root, run:
 
 ```sh
 swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors
 ```
 
-## 🗂️ Pattern catalogue
+The first command compiles the examples together. The second runs their
+behavioral tests. Both treat compiler warnings as errors, matching CI.
 
-The catalogue distinguishes historical material from canonical, tested examples. A pattern is complete only when its replacement is tested and documented. See the [catalogue audit](Documentation/catalogue-audit.md) for the decisions behind all 23 patterns.
+To focus on the Adapter suites:
 
-### 🏗️ Creational patterns
+```sh
+swift test -Xswiftc -warnings-as-errors --filter Adapter
+```
 
-Patterns that control how values and object graphs are created.
+These are library examples exercised through tests. Each pattern README links
+to its implementation and test files, and explains which behaviors to inspect.
 
-- 🧰 **Abstract Factory** — [Canonical example](Creational%20Patterns/Abstract%20Factory/README.md) · [Problem baseline](Documentation/abstract-factory-problem.md) · [Pressure review](Documentation/abstract-factory-pressure.md) · [Historical draft](Creational%20Patterns/Abstract%20Factory/TaskAbstractFactory.md) · Days 022–024 ✅
-- 🛠️ **Builder** — [Canonical example](Creational%20Patterns/Builder/README.md) · [Problem baseline](Documentation/builder-problem.md) · [Pressure review](Documentation/builder-pressure.md) · [Historical draft](Creational%20Patterns/Builder/Builder.md) · Days 025–027 ✅
-- 🏭 **Factory Method** — [Canonical example](Creational%20Patterns/Factory%20Method/README.md) · [Problem baseline](Documentation/factory-method-problem.md) · [Pressure review](Documentation/factory-method-pressure.md) · [Historical draft](Creational%20Patterns/Factory/TaskFactory.md) · Days 018–020 ✅
-- 🧬 **Prototype** — [Canonical example](Creational%20Patterns/Prototype/README.md) · [Problem baseline](Documentation/prototype-problem.md) · [Pressure review](Documentation/prototype-pressure.md) · [Historical draft](Creational%20Patterns/Prototype/Prototype.md) · Days 029–031 ✅
-- 1️⃣ **Singleton** — Planned · Days 085–087
+## Find a pattern by its problem
 
-### 🌉 Structural patterns
+The tables below link to the implemented guides. Pick the app problem closest
+to yours; the category helps explain what kind of responsibility changes.
 
-Patterns that compose types behind focused, stable interfaces.
+### Creating values and objects
 
-- 🔌 **Adapter** — [Canonical example](Structural%20Patterns/Adapter/README.md) · [Historical draft](Structural%20Patterns/Adapter/Adapter.md) · Days 008–010 ✅
-- 🌁 **Bridge** — [Canonical example](Structural%20Patterns/Bridge/README.md) · [Problem baseline](Documentation/bridge-problem.md) · [Pressure review](Documentation/bridge-pressure.md) · [Historical draft](Structural%20Patterns/Bridge/Bridge.md) · Days 015–017 ✅
-- 🧱 **Composite** — Planned · Days 064–066
-- 🎨 **Decorator** — [Canonical example](Structural%20Patterns/Decorator/README.md) · [Problem baseline](Documentation/decorator-problem.md) · [Pressure review](Documentation/decorator-pressure.md) · Days 046–048 ✅
-- 🏢 **Facade** — [Canonical example](Structural%20Patterns/Facade/README.md) · [Problem baseline](Documentation/facade-problem.md) · [Pressure review](Documentation/facade-pressure.md) · Days 043–045 ✅
-- 🪶 **Flyweight** — Planned · Days 074–076
-- 🛡️ **Proxy** — [Canonical example](Structural%20Patterns/Proxy/README.md) · [Problem baseline](Documentation/proxy-problem.md) · [Pressure review](Documentation/proxy-pressure.md) · Days 050–052 ✅
+Creational patterns help when creation itself has rules: selecting related
+services, assembling a request over time, or duplicating an editable object graph.
 
-### 🧠 Behavioral patterns
+| Pattern | App problem explored |
+| --- | --- |
+| [Abstract Factory](Creational%20Patterns/Abstract%20Factory/README.md) | Select tax, payment, and receipt policies as one consistent regional checkout family. |
+| [Builder](Creational%20Patterns/Builder/README.md) | Assemble a support request across screens while enforcing attachment consent and size limits. |
+| [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import within a shared workflow. |
+| [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document, reconnect its internal links, and share only the resources that should remain shared. |
 
-Patterns that distribute responsibilities and coordinate behavior.
+**Planned:** Singleton.
 
-- 🔗 **Chain of Responsibility** — [Canonical example](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) · [Problem baseline](Documentation/chain-of-responsibility-problem.md) · [Pressure review](Documentation/chain-of-responsibility-pressure.md) · Days 053–055 ✅
-- 🎮 **Command** — [Canonical example](Behavioral%20Patterns/Command/README.md) · [Problem baseline](Documentation/command-problem.md) · [Pressure review](Documentation/command-pressure.md) · Days 039–041 ✅
-- 🗣️ **Interpreter** — Planned · Days 081–083
-- 🔁 **Iterator** — [Canonical example](Behavioral%20Patterns/Iterator/README.md) · [Problem baseline](Documentation/iterator-problem.md) · [Pressure review](Documentation/iterator-pressure.md) · Days 060–062 ✅
-- 🤝 **Mediator** — Planned · Days 067–069
-- 📸 **Memento** — [Canonical example](Behavioral%20Patterns/Memento/README.md) · [Problem baseline](Documentation/memento-problem.md) · [Pressure review](Documentation/memento-pressure.md) · Days 057–059 ✅
-- 👀 **Observer** — [Canonical example](Behavioral%20Patterns/Observer/README.md) · Days 032–034 ✅
-- 🚦 **State** — [Canonical example](Behavioral%20Patterns/State/README.md) · [Problem baseline](Documentation/state-problem.md) · [Pressure review](Documentation/state-pressure.md) · Days 036–038 ✅
-- ♟️ **Strategy** — [Canonical example](Behavioral%20Patterns/Strategy/README.md) · Days 011–013 ✅
-- 📋 **Template Method** — Planned · Days 071–073
-- 🚪 **Visitor** — Planned · Days 078–080
+### Connecting and composing types
 
-## 📐 Documentation contracts
+Structural patterns help when existing parts need to work together through a
+clear boundary, or when their combinations need to change independently.
 
-- [Pattern README template](Documentation/pattern-readme-template.md) defines the problem-first teaching unit, tests, alternatives, and the ‘When not to use it’ section.
-- [Visual style](Documentation/visual-style.md) defines the shared editorial header and Mermaid diagram contract.
-- [Quality gates](Documentation/quality-gates.md) defines the local and CI commands.
-- [Package boundary](Documentation/package-boundary.md) explains why canonical examples share one module.
+| Pattern | App problem explored |
+| --- | --- |
+| [Adapter](Structural%20Patterns/Adapter/README.md) | Give checkout one payment contract despite incompatible provider SDKs. |
+| [Bridge](Structural%20Patterns/Bridge/README.md) | Add notification purposes and delivery channels independently. |
+| [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
+| [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
+| [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
 
-## 📚 Resources
+**Planned:** Composite, Flyweight.
+
+### Coordinating behavior and change
+
+Behavioral patterns help decide who handles an event, how behavior varies, and
+who owns subscriptions, traversal, or history.
+
+| Pattern | App problem explored |
+| --- | --- |
+| [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers, stopping when one handles or rejects the request. |
+| [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
+| [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
+| [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
+| [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
+| [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
+| [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
+
+**Planned:** Interpreter, Mediator, Template Method, Visitor.
+
+## Where to find things
+
+| Location | What it contains |
+| --- | --- |
+| `Creational Patterns/`, `Structural Patterns/`, `Behavioral Patterns/` | The pattern READMEs linked above, alongside historical material. Start with a README. |
+| [`Sources/DesignPatterns/`](Sources/DesignPatterns/) | The implemented examples compiled by the package, organized by pattern. |
+| [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify the examples' behavior. |
+| [`Documentation/`](Documentation/) | Supporting problem analyses, design decisions, and progress reviews. |
+
+Some older `.md` examples and playground files remain for reference. They are
+outside the Swift Package. The linked pattern READMEs describe the current,
+tested implementations; a planned pattern does not yet have a tested replacement.
+
+## Follow the series or contribute
+
+The learning guides above are the entry point. Use these supporting documents
+when you want to understand the series plan or add an example:
+
+- [100-day roadmap](ROADMAP.md): the sequence of problem, changing requirement,
+  and solution work for all 23 patterns, with review milestones.
+- [Catalogue audit](Documentation/catalogue-audit.md): the starting assessment
+  of the historical examples and the decisions behind their replacements.
+- [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
+  each pattern.
+- [Pattern README template](Documentation/pattern-readme-template.md): the
+  structure used to explain and evaluate an example.
+- [Quality gates](Documentation/quality-gates.md) and
+  [package boundary](Documentation/package-boundary.md): how examples are
+  compiled, tested, and organized.
+- [Visual style](Documentation/visual-style.md): conventions for headers and
+  diagrams.
+
+Review evidence is available in the [foundation review](Documentation/foundation-review.md)
+and the weekly reviews:
+[02](Documentation/week-02-review.md) ·
+[03](Documentation/week-03-review.md) ·
+[04](Documentation/week-04-review.md) ·
+[05](Documentation/week-05-review.md) ·
+[06](Documentation/week-06-review.md) ·
+[07](Documentation/week-07-review.md) ·
+[08](Documentation/week-08-review.md) ·
+[09](Documentation/week-09-review.md).
+
+## Resources and license
 
 - [Swift documentation](https://swift.org/documentation/)
-- [LinkedIn](https://www.linkedin.com/in/rgmez)
+- [Roberto Gómez on LinkedIn](https://www.linkedin.com/in/rgmez)
 
-## 📜 License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+Licensed under the [MIT License](LICENSE).
