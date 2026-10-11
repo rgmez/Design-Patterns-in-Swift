@@ -1,10 +1,10 @@
-# Design Patterns in Swift
+# 📘 Design Patterns in Swift
 
 Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-**16 examples are implemented and tested; 7 are planned.**
+✅ **16 examples are implemented and tested** · 🚧 **7 are planned.**
 
 The central question is simple:
 
@@ -14,21 +14,21 @@ Each example begins with a direct Swift solution. A new requirement reveals its
 limits, then a pattern introduces a focused way to handle that change. You will
 see what improves, what complexity it adds, and when to keep the simpler design.
 
-## Start here
+## 🧭 Start here
 
 You can read each example independently. If you are new to patterns, start with
 these three:
 
 | Example | The question it answers | What you will learn |
 | --- | --- | --- |
-| [Adapter](Structural%20Patterns/Adapter/README.md) | How can checkout work with two incompatible payment SDKs? | Translate each provider's requests, results, and errors into one app-owned contract. |
-| [Strategy](Behavioral%20Patterns/Strategy/README.md) | How can checkout change the way it ranks delivery options? | Keep interchangeable ranking rules and their inputs together. |
-| [Observer](Behavioral%20Patterns/Observer/README.md) | How can screens react to session changes for only as long as they need to? | Separate a session change from the lifetime of its subscribers. |
+| 🔌 [Adapter](Structural%20Patterns/Adapter/README.md) | How can checkout work with two incompatible payment SDKs? | Translate each provider's requests, results, and errors into one app-owned contract. |
+| ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | How can checkout change the way it ranks delivery options? | Keep interchangeable ranking rules and their inputs together. |
+| 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | How can screens react to session changes for only as long as they need to? | Separate a session change from the lifetime of its subscribers. |
 
 Together, they show three different reasons to introduce a pattern: integrating
 an external API, varying a business rule, and coordinating independent consumers.
 
-## How to read an example
+## 📖 How to read an example
 
 Follow the same story in every pattern README:
 
@@ -54,7 +54,7 @@ A pattern describes how responsibilities fit together. In Swift, the example
 may use structs, closures, protocols, or an `AsyncSequence`; it does not need to
 reproduce a class hierarchy from a textbook.
 
-## Run the examples
+## ▶️ Run the examples
 
 The implemented examples live in one Swift Package. You need **Swift 6.0 or
 later**; the package declares **macOS 14 or later** as its supported platform.
@@ -77,58 +77,58 @@ swift test -Xswiftc -warnings-as-errors --filter Adapter
 These are library examples exercised through tests. Each pattern README links
 to its implementation and test files, and explains which behaviors to inspect.
 
-## Find a pattern by its problem
+## 🗂️ Find a pattern by its problem
 
 The tables below link to the implemented guides. Pick the app problem closest
 to yours; the category helps explain what kind of responsibility changes.
 
-### Creating values and objects
+### 🏗️ Creating values and objects
 
 Creational patterns help when creation itself has rules: selecting related
 services, assembling a request over time, or duplicating an editable object graph.
 
 | Pattern | App problem explored |
 | --- | --- |
-| [Abstract Factory](Creational%20Patterns/Abstract%20Factory/README.md) | Select tax, payment, and receipt policies as one consistent regional checkout family. |
-| [Builder](Creational%20Patterns/Builder/README.md) | Assemble a support request across screens while enforcing attachment consent and size limits. |
-| [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import within a shared workflow. |
-| [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document, reconnect its internal links, and share only the resources that should remain shared. |
+| 🧰 [Abstract Factory](Creational%20Patterns/Abstract%20Factory/README.md) | Select tax, payment, and receipt policies as one consistent regional checkout family. |
+| 🛠️ [Builder](Creational%20Patterns/Builder/README.md) | Assemble a support request across screens while enforcing attachment consent and size limits. |
+| 🏭 [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import within a shared workflow. |
+| 🧬 [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document, reconnect its internal links, and share only the resources that should remain shared. |
 
-**Planned:** Singleton.
+🚧 **Planned:** Singleton.
 
-### Connecting and composing types
+### 🌉 Connecting and composing types
 
 Structural patterns help when existing parts need to work together through a
 clear boundary, or when their combinations need to change independently.
 
 | Pattern | App problem explored |
 | --- | --- |
-| [Adapter](Structural%20Patterns/Adapter/README.md) | Give checkout one payment contract despite incompatible provider SDKs. |
-| [Bridge](Structural%20Patterns/Bridge/README.md) | Add notification purposes and delivery channels independently. |
-| [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
-| [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
-| [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
+| 🔌 [Adapter](Structural%20Patterns/Adapter/README.md) | Give checkout one payment contract despite incompatible provider SDKs. |
+| 🌁 [Bridge](Structural%20Patterns/Bridge/README.md) | Add notification purposes and delivery channels independently. |
+| 🎨 [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
+| 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
+| 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
 
-**Planned:** Composite, Flyweight.
+🚧 **Planned:** Composite, Flyweight.
 
-### Coordinating behavior and change
+### 🧠 Coordinating behavior and change
 
 Behavioral patterns help decide who handles an event, how behavior varies, and
 who owns subscriptions, traversal, or history.
 
 | Pattern | App problem explored |
 | --- | --- |
-| [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers, stopping when one handles or rejects the request. |
-| [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
-| [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
-| [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
-| [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
-| [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
-| [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
+| 🔗 [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers, stopping when one handles or rejects the request. |
+| 🎮 [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
+| 🔁 [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
+| 📸 [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
+| 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
+| 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
+| ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 
-**Planned:** Interpreter, Mediator, Template Method, Visitor.
+🚧 **Planned:** Interpreter, Mediator, Template Method, Visitor.
 
-## Where to find things
+## 📁 Where to find things
 
 | Location | What it contains |
 | --- | --- |
@@ -141,7 +141,7 @@ Some older `.md` examples and playground files remain for reference. They are
 outside the Swift Package. The linked pattern READMEs describe the current,
 tested implementations; a planned pattern does not yet have a tested replacement.
 
-## Follow the series or contribute
+## 🛤️ Follow the series or contribute
 
 The learning guides above are the entry point. Use these supporting documents
 when you want to understand the series plan or add an example:
@@ -171,7 +171,7 @@ and the weekly reviews:
 [08](Documentation/week-08-review.md) ·
 [09](Documentation/week-09-review.md).
 
-## Resources and license
+## 📚 Resources and license
 
 - [Swift documentation](https://swift.org/documentation/)
 - [Roberto Gómez on LinkedIn](https://www.linkedin.com/in/rgmez)
