@@ -28,7 +28,7 @@ struct CompositeProblemTests {
         isDownloadable: false
     )
     private static let briefingFolder = DirectWorkspaceEntry.folder(
-        WorkspaceFolder(
+        DirectWorkspaceFolder(
             name: "Briefing",
             entries: [
                 .file(inspectionPlan),
@@ -37,7 +37,7 @@ struct CompositeProblemTests {
         )
     )
     private static let siteVisitFolder = DirectWorkspaceEntry.folder(
-        WorkspaceFolder(
+        DirectWorkspaceFolder(
             name: "Site visit",
             entries: [
                 briefingFolder,
@@ -88,7 +88,7 @@ struct CompositeProblemTests {
         @Test("Propagates one restricted file through the complete folder")
         func propagatesRestrictedFile() {
             let folder = DirectWorkspaceEntry.folder(
-                WorkspaceFolder(
+                DirectWorkspaceFolder(
                     name: "Complete visit pack",
                     entries: [
                         CompositeProblemTests.siteVisitFolder,
@@ -114,7 +114,7 @@ struct CompositeProblemTests {
         @Test("Treats an empty folder as unavailable for offline selection")
         func rejectsEmptyFolder() {
             let emptyFolder = DirectWorkspaceEntry.folder(
-                WorkspaceFolder(
+                DirectWorkspaceFolder(
                     name: "Coming soon",
                     entries: []
                 )

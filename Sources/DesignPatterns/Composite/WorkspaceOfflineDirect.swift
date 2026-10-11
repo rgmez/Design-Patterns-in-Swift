@@ -24,7 +24,7 @@ public struct WorkspaceFile: Equatable, Sendable {
     }
 }
 
-public struct WorkspaceFolder: Equatable, Sendable {
+public struct DirectWorkspaceFolder: Equatable, Sendable {
     public let name: String
     public let entries: [DirectWorkspaceEntry]
 
@@ -41,7 +41,20 @@ public struct WorkspaceFolder: Equatable, Sendable {
 
 public indirect enum DirectWorkspaceEntry: Equatable, Sendable {
     case file(WorkspaceFile)
-    case folder(WorkspaceFolder)
+    case folder(DirectWorkspaceFolder)
+}
+
+public struct WorkspaceSearchRecord: Equatable, Sendable {
+    public let fileID: String
+    public let displayPath: String
+
+    public init(
+        fileID: String,
+        displayPath: String
+    ) {
+        self.fileID = fileID
+        self.displayPath = displayPath
+    }
 }
 
 public struct OfflineSelectionSummary: Equatable, Sendable {

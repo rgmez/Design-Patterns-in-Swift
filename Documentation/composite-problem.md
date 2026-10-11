@@ -53,7 +53,7 @@ The direct hierarchy also preserves these constraints:
 ## Direct Swift first
 
 [`WorkspaceOfflineDirect.swift`](../Sources/DesignPatterns/Composite/WorkspaceOfflineDirect.swift)
-uses `WorkspaceFile` and `WorkspaceFolder` as domain values. The recursive
+uses `WorkspaceFile` and `DirectWorkspaceFolder` as domain values. The recursive
 `DirectWorkspaceEntry` enum closes the hierarchy to exactly two cases. That
 choice gives the compiler an exhaustive switch and allows folders to contain
 other entries without reference semantics.

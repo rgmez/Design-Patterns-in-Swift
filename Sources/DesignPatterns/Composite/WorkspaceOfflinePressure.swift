@@ -1,16 +1,3 @@
-public struct WorkspaceSearchRecord: Equatable, Sendable {
-    public let fileID: String
-    public let displayPath: String
-
-    public init(
-        fileID: String,
-        displayPath: String
-    ) {
-        self.fileID = fileID
-        self.displayPath = displayPath
-    }
-}
-
 public struct DirectWorkspaceSearchIndexer: Sendable {
     public init() {}
 

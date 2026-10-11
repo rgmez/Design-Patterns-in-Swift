@@ -32,11 +32,11 @@ struct CompositePressureTests {
         isStoredOffline: true
     )
     private static let visitFolder = DirectWorkspaceEntry.folder(
-        WorkspaceFolder(
+        DirectWorkspaceFolder(
             name: "Site visit",
             entries: [
                 .folder(
-                    WorkspaceFolder(
+                    DirectWorkspaceFolder(
                         name: "Briefing",
                         entries: [
                             .file(inspectionPlan),

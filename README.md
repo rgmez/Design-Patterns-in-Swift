@@ -4,7 +4,7 @@ Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-✅ **16 examples are complete** · 🚧 **1 is in progress** · ⏳ **6 are planned.**
+✅ **17 examples are complete** · ⏳ **6 are planned.**
 
 The central question is simple:
 
@@ -105,13 +105,10 @@ clear boundary, or when their combinations need to change independently.
 | --- | --- |
 | 🔌 [Adapter](Structural%20Patterns/Adapter/README.md) | Give checkout one payment contract despite incompatible provider SDKs. |
 | 🌁 [Bridge](Structural%20Patterns/Bridge/README.md) | Add notification purposes and delivery channels independently. |
+| 🗂️ [Composite](Structural%20Patterns/Composite/README.md) | Traverse one file or a nested workspace folder without repeating client-side branching. |
 | 🎨 [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
 | 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
 | 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
-
-🚧 **In progress:** Composite starts with an [offline workspace baseline](Documentation/composite-problem.md),
-then measures [three repeated recursive clients](Documentation/composite-pressure.md)
-before introducing a shared component boundary.
 
 ⏳ **Planned:** Flyweight.
 

@@ -405,8 +405,11 @@ an editorial guide, not a content quota.
   across leaves and containers. The [pressure review](Documentation/composite-pressure.md)
   measures three client-owned file-or-folder switches and recursive walks while
   keeping offline, search, and cleanup policies independent.
-- [ ] **Day 066 — Composite solution.** Implement uniform traversal while keeping
-  leaf-only operations explicit.
+- [x] **Day 066 — Composite solution.** Implement uniform traversal while keeping
+  leaf-only operations explicit. The [canonical Composite guide](Structural%20Patterns/Composite/README.md)
+  centralizes file discovery behind `WorkspaceComponent.fileLocations` while
+  keeping offline, search, cleanup, and concrete-file opening responsibilities
+  separate.
 - [ ] **Day 067 — Mediator problem.** Define checkout form modules that otherwise
   reference and update one another directly.
 - [ ] **Day 068 — Mediator pressure.** Show coordination coupling and feedback-loop
