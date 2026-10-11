@@ -4,7 +4,7 @@ Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-✅ **16 examples are implemented and tested** · 🚧 **7 are planned.**
+✅ **16 examples are complete** · 🚧 **1 is in progress** · ⏳ **6 are planned.**
 
 The central question is simple:
 
@@ -109,7 +109,10 @@ clear boundary, or when their combinations need to change independently.
 | 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
 | 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
 
-🚧 **Planned:** Composite, Flyweight.
+🚧 **In progress:** [Composite problem baseline](Documentation/composite-problem.md)
+starts with an offline workspace hierarchy and one direct recursive preview.
+
+⏳ **Planned:** Flyweight.
 
 ### 🧠 Coordinating behavior and change
 

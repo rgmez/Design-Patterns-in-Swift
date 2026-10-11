@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-08
+Last updated: 2026-10-11
 
 ## Outcomes
 
@@ -396,8 +396,11 @@ an editorial guide, not a content quota.
 
 ### Week 10 — Composite and Mediator
 
-- [ ] **Day 064 — Composite problem.** Define a real file-and-folder or document
-  hierarchy requiring uniform operations.
+- [x] **Day 064 — Composite problem.** Define a real file-and-folder or document
+  hierarchy requiring uniform operations. The [offline workspace baseline](Documentation/composite-problem.md)
+  keeps the closed file-or-folder hierarchy in an `indirect enum` and one
+  recursive selection preview until additional clients prove a uniform component
+  boundary would reduce branching.
 - [ ] **Day 065 — Composite pressure.** Demonstrate recursive client branching
   across leaves and containers.
 - [ ] **Day 066 — Composite solution.** Implement uniform traversal while keeping

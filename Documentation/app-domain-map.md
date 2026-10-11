@@ -155,13 +155,13 @@ all supported combinations explicit without duplication.
 
 **Scheduled cycle:** Days 015–017.
 
-### Composite — nested merchandise bundles
+### Composite — offline workspace hierarchy
 
-**App problem:** A marketplace sells individual items and nested curated
-bundles. Cart previews need subtotal, availability, and item-count operations
-over either a leaf product or an arbitrarily nested bundle.
+**App problem:** A field-service workspace stores files inside arbitrarily
+nested folders. Offline selection, search indexing, and storage cleanup need to
+operate over either one file or a complete folder hierarchy.
 
-**Direct Swift first:** Represent products and bundles with an indirect enum and
+**Direct Swift first:** Represent files and folders with an indirect enum and
 implement recursive functions over it.
 
 **Pattern earns its place when:** Clients repeatedly branch between leaf and
