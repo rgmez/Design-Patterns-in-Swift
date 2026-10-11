@@ -109,8 +109,9 @@ clear boundary, or when their combinations need to change independently.
 | 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
 | 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
 
-🚧 **In progress:** [Composite problem baseline](Documentation/composite-problem.md)
-starts with an offline workspace hierarchy and one direct recursive preview.
+🚧 **In progress:** Composite starts with an [offline workspace baseline](Documentation/composite-problem.md),
+then measures [three repeated recursive clients](Documentation/composite-pressure.md)
+before introducing a shared component boundary.
 
 ⏳ **Planned:** Flyweight.
 

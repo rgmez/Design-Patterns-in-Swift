@@ -401,8 +401,10 @@ an editorial guide, not a content quota.
   keeps the closed file-or-folder hierarchy in an `indirect enum` and one
   recursive selection preview until additional clients prove a uniform component
   boundary would reduce branching.
-- [ ] **Day 065 — Composite pressure.** Demonstrate recursive client branching
-  across leaves and containers.
+- [x] **Day 065 — Composite pressure.** Demonstrate recursive client branching
+  across leaves and containers. The [pressure review](Documentation/composite-pressure.md)
+  measures three client-owned file-or-folder switches and recursive walks while
+  keeping offline, search, and cleanup policies independent.
 - [ ] **Day 066 — Composite solution.** Implement uniform traversal while keeping
   leaf-only operations explicit.
 - [ ] **Day 067 — Mediator problem.** Define checkout form modules that otherwise

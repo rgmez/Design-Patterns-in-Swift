@@ -3,12 +3,14 @@ public struct WorkspaceFile: Equatable, Sendable {
     public let name: String
     public let byteCount: Int
     public let isDownloadable: Bool
+    public let isStoredOffline: Bool
 
     public init(
         id: String,
         name: String,
         byteCount: Int,
-        isDownloadable: Bool
+        isDownloadable: Bool,
+        isStoredOffline: Bool = false
     ) {
         precondition(!id.isEmpty, "A workspace file needs an identifier")
         precondition(!name.isEmpty, "A workspace file needs a name")
@@ -18,6 +20,7 @@ public struct WorkspaceFile: Equatable, Sendable {
         self.name = name
         self.byteCount = byteCount
         self.isDownloadable = isDownloadable
+        self.isStoredOffline = isStoredOffline
     }
 }
 
