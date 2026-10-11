@@ -4,7 +4,7 @@ Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-✅ **17 examples are complete** · ⏳ **6 are planned.**
+✅ **17 examples are complete** · 🚧 **1 is in progress** · ⏳ **5 are planned.**
 
 The central question is simple:
 
@@ -127,7 +127,11 @@ who owns subscriptions, traversal, or history.
 | 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 
-🚧 **Planned:** Interpreter, Mediator, Template Method, Visitor.
+🚧 **In progress:** [Mediator problem baseline](Documentation/mediator-problem.md)
+keeps delivery checkout coordination in one direct form model before adding an
+interaction boundary.
+
+⏳ **Planned:** Interpreter, Template Method, Visitor.
 
 ## 📁 Where to find things
 

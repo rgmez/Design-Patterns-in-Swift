@@ -410,8 +410,10 @@ an editorial guide, not a content quota.
   centralizes file discovery behind `WorkspaceComponent.fileLocations` while
   keeping offline, search, cleanup, and concrete-file opening responsibilities
   separate.
-- [ ] **Day 067 — Mediator problem.** Define checkout form modules that otherwise
-  reference and update one another directly.
+- [x] **Day 067 — Mediator problem.** Define checkout form modules that otherwise
+  reference and update one another directly. The [delivery checkout baseline](Documentation/mediator-problem.md)
+  keeps address, slot, promotion, and payment interaction inside one direct form
+  model until independently owned modules demonstrate real coordination risk.
 - [ ] **Day 068 — Mediator pressure.** Show coordination coupling and feedback-loop
   risks without centralizing all business logic.
 - [ ] **Day 069 — Mediator solution.** Implement a focused interaction mediator
