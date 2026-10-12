@@ -123,14 +123,10 @@ who owns subscriptions, traversal, or history.
 | 🎮 [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
 | 🔁 [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
 | 📸 [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
+| 🔀 [Mediator](Behavioral%20Patterns/Mediator/README.md) | Resolve promotion-driven delivery corrections before validating payment across independent checkout sections. |
 | 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
 | 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
-
-🚧 **In progress:** [Mediator problem baseline](Documentation/mediator-problem.md)
-keeps a small delivery checkout in one direct form. The [pressure review](Documentation/mediator-pressure.md)
-adds independently owned sections and a promotion-driven callback cycle before
-introducing a focused interaction boundary.
 
 ⏳ **Planned:** Interpreter, Template Method, Visitor.
 

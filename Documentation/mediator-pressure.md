@@ -87,13 +87,13 @@ sequenceDiagram
     participant Payment
     participant Promotion
     Customer->>Delivery: select express
-    Delivery->>Payment: expose card; discard cash
+    Delivery->>Payment: expose card, discard cash
     Delivery->>Promotion: refresh with express
     Promotion->>Delivery: request eligible evening window
     Delivery->>Payment: expose card and cash
     Delivery->>Promotion: refresh with evening
     Promotion->>Delivery: request evening again
-    Delivery-->>Promotion: unchanged; no notification
+    Delivery-->>Promotion: unchanged, no notification
 ```
 
 An accessible equivalent is: express selection first invalidates cash, then
