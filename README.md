@@ -128,8 +128,9 @@ who owns subscriptions, traversal, or history.
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 
 🚧 **In progress:** [Mediator problem baseline](Documentation/mediator-problem.md)
-keeps delivery checkout coordination in one direct form model before adding an
-interaction boundary.
+keeps a small delivery checkout in one direct form. The [pressure review](Documentation/mediator-pressure.md)
+adds independently owned sections and a promotion-driven callback cycle before
+introducing a focused interaction boundary.
 
 ⏳ **Planned:** Interpreter, Template Method, Visitor.
 

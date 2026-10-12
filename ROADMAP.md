@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Outcomes
 
@@ -414,8 +414,10 @@ an editorial guide, not a content quota.
   reference and update one another directly. The [delivery checkout baseline](Documentation/mediator-problem.md)
   keeps address, slot, promotion, and payment interaction inside one direct form
   model until independently owned modules demonstrate real coordination risk.
-- [ ] **Day 068 — Mediator pressure.** Show coordination coupling and feedback-loop
-  risks without centralizing all business logic.
+- [x] **Day 068 — Mediator pressure.** Show coordination coupling and feedback-loop
+  risks without centralizing all business logic. The [pressure review](Documentation/mediator-pressure.md)
+  demonstrates four direct module dependencies, a delivery/promotion callback
+  cycle, and verified reentry guards while keeping validation in each participant.
 - [ ] **Day 069 — Mediator solution.** Implement a focused interaction mediator
   and document its boundary against a god coordinator.
 - [ ] **Day 070 — Weekly review.** Validate recursive behavior, ownership, and
