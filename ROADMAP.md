@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Outcomes
 
@@ -423,8 +423,10 @@ an editorial guide, not a content quota.
   guide](Behavioral%20Patterns/Mediator/README.md) routes participant events through
   one interaction owner and resolves promotion-driven delivery corrections before
   validating payment, preserving a method accepted by the final window.
-- [ ] **Day 070 — Weekly review.** Validate recursive behavior, ownership, and
-  mediator responsibility.
+- [x] **Day 070 — Weekly review.** Validate recursive behavior, ownership, and
+  mediator responsibility. The [review evidence](Documentation/week-10-review.md)
+  confirms contextual value traversal, explicit promotion opt-in, bounded
+  coordination, and a warning-free full suite before Template Method.
 
 ### Week 11 — Template Method and Flyweight
 

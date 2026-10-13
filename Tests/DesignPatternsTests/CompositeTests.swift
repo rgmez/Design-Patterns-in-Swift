@@ -99,6 +99,37 @@ struct CompositeTests {
                     )
             )
         }
+
+        @Test("Keeps a reused subtree contextual to each parent")
+        func reusesSubtreeWithoutParentState() {
+            let northVisit = WorkspaceFolder(
+                name: "North visit",
+                children: [CompositeTests.briefingFolder]
+            )
+            let southVisit = WorkspaceFolder(
+                name: "South visit",
+                children: [CompositeTests.briefingFolder]
+            )
+
+            #expect(
+                northVisit.fileLocations.map(\.displayPath) == [
+                    "North visit / Briefing / Inspection plan.pdf",
+                    "North visit / Briefing / Safety briefing.mov"
+                ]
+            )
+            #expect(
+                southVisit.fileLocations.map(\.displayPath) == [
+                    "South visit / Briefing / Inspection plan.pdf",
+                    "South visit / Briefing / Safety briefing.mov"
+                ]
+            )
+            #expect(
+                CompositeTests.briefingFolder.fileLocations.map(\.displayPath) == [
+                    "Briefing / Inspection plan.pdf",
+                    "Briefing / Safety briefing.mov"
+                ]
+            )
+        }
     }
 
     @Suite("Consumer policies")

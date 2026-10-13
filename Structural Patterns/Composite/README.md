@@ -190,6 +190,8 @@ proves:
 
 - one file and one nested folder substitute through the same component boundary;
 - nested files preserve depth-first order and complete display paths;
+- one shared subtree derives independent paths under two parents without storing
+  parent state;
 - restricted leaves propagate through offline-selection policy;
 - cleanup includes stored restricted data but ignores unstored files;
 - an empty folder yields no locations and remains unavailable offline; and

@@ -72,6 +72,22 @@ struct MediatorTests {
                 code: MediatorTests.unknownCode, issue: .unknownCode
             ))
         }
+
+        @Test("Applying a promotion does not opt into a delivery change")
+        func promotionApplicationKeepsDeliveryChoice() throws {
+            let checkout = MediatorTests.makeCheckout()
+            checkout.address.update(MediatorTests.central)
+            try #require(checkout.delivery.select(id: MediatorTests.express.id))
+            try #require(checkout.payment.select(.card))
+
+            checkout.promotion.apply(code: MediatorTests.code)
+
+            #expect(checkout.snapshot.selectedSlotID == MediatorTests.express.id)
+            #expect(checkout.snapshot.selectedPaymentMethod == .card)
+            #expect(checkout.snapshot.promotionStatus == .unavailable(
+                code: MediatorTests.code, issue: .deliverySlotNotEligible
+            ))
+        }
     }
 
     @Suite("Corrective callbacks")

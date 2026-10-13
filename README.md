@@ -171,7 +171,8 @@ and the weekly reviews:
 [06](Documentation/week-06-review.md) ·
 [07](Documentation/week-07-review.md) ·
 [08](Documentation/week-08-review.md) ·
-[09](Documentation/week-09-review.md).
+[09](Documentation/week-09-review.md) ·
+[10](Documentation/week-10-review.md).
 
 ## 📚 Resources and license
 

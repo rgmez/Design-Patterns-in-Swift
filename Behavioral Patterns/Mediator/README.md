@@ -176,9 +176,10 @@ inspect snapshots; there is no executable app or console-output demonstration.
 
 [`MediatorTests.swift`](../../Tests/DesignPatternsTests/MediatorTests.swift)
 verifies final-window payment preservation, address invalidation, unavailable
-choices, unknown codes, promotion-driven correction, preference across zones,
-preference clearing and replacement, no eligible window, and module/mediator
-release. Every test creates its own checkout.
+choices, unknown codes, inert promotion application until explicit opt-in,
+promotion-driven correction, preference across zones, preference clearing and
+replacement, no eligible window, and module/mediator release. Every test
+creates its own checkout.
 
 The same filter also runs
 [`MediatorProblemTests.swift`](../../Tests/DesignPatternsTests/MediatorProblemTests.swift)
