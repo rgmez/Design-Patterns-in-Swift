@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Outcomes
 
@@ -430,8 +430,10 @@ an editorial guide, not a content quota.
 
 ### Week 11 — Template Method and Flyweight
 
-- [ ] **Day 071 — Template Method problem.** Define a stable import pipeline with
-  a small number of provider-specific steps.
+- [x] **Day 071 — Template Method problem.** Define a stable import pipeline with
+  a small number of provider-specific steps. The [reading-list import baseline](Documentation/template-method-problem.md)
+  keeps Safari and Pocket decoding explicit while normalization, deduplication,
+  atomic persistence, and reporting follow one verified order.
 - [ ] **Day 072 — Template Method pressure.** Demonstrate duplicated algorithm
   order and compare inheritance with protocol composition.
 - [ ] **Day 073 — Template Method solution.** Implement the stable skeleton only
