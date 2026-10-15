@@ -128,9 +128,9 @@ who owns subscriptions, traversal, or history.
 | 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 
-🚧 **In progress:** [Template Method problem baseline](Documentation/template-method-problem.md)
-keeps Safari and Pocket imports explicit while their stable pipeline order is
-measured against composition and inheritance.
+🚧 **In progress:** [Template Method pressure](Documentation/template-method-pressure.md)
+adds Raindrop beside Safari and Pocket, exposing three copies of the stable
+import safety rails while inheritance and composition remain under comparison.
 
 ⏳ **Planned:** Interpreter, Visitor.
 

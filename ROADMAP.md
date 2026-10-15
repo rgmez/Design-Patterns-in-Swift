@@ -434,8 +434,11 @@ an editorial guide, not a content quota.
   a small number of provider-specific steps. The [reading-list import baseline](Documentation/template-method-problem.md)
   keeps Safari and Pocket decoding explicit while normalization, deduplication,
   atomic persistence, and reporting follow one verified order.
-- [ ] **Day 072 — Template Method pressure.** Demonstrate duplicated algorithm
-  order and compare inheritance with protocol composition.
+- [x] **Day 072 — Template Method pressure.** Demonstrate duplicated algorithm
+  order and compare inheritance with protocol composition. The [pressure
+  evidence](Documentation/template-method-pressure.md) adds a third provider,
+  counts six repeated safety-rail decisions, and keeps an ordinary composed
+  function as the benchmark for a module-controlled skeleton.
 - [ ] **Day 073 — Template Method solution.** Implement the stable skeleton only
   if subclass variation remains the clearest trade-off.
 - [ ] **Day 074 — Flyweight problem.** Define thousands of map annotations sharing

@@ -3,6 +3,7 @@ import Foundation
 public enum ReadingListImportSource: Equatable, Sendable {
     case safari
     case pocket
+    case raindrop
 }
 
 public enum ReadingListImportError: Error, Equatable, Sendable {
@@ -149,6 +150,46 @@ public struct DirectReadingListImporter: Sendable {
         )
     }
 
+    public func importRaindropExport(
+        _ payload: Data,
+        into library: inout ReadingListLibrary
+    ) throws -> ReadingListImportReport {
+        try validate(payload, source: .raindrop)
+
+        let export: RaindropReadingListExport
+        do {
+            export = try JSONDecoder().decode(
+                RaindropReadingListExport.self,
+                from: payload
+            )
+        } catch {
+            throw ReadingListImportError.unreadablePayload(source: .raindrop)
+        }
+
+        let candidates = export.items
+            .filter { $0.type == .article && !$0.removed }
+            .map {
+                ReadingListCandidate(
+                    title: $0.title,
+                    urlString: $0.link
+                )
+            }
+        let normalizedEntries = try candidates.map(normalize)
+        let uniqueEntries = entriesNotAlreadyStored(
+            normalizedEntries,
+            in: library
+        )
+        library.append(contentsOf: uniqueEntries)
+
+        return ReadingListImportReport(
+            source: .raindrop,
+            decodedRecordCount: export.items.count,
+            eligibleRecordCount: candidates.count,
+            insertedCount: uniqueEntries.count,
+            duplicateCount: normalizedEntries.count - uniqueEntries.count
+        )
+    }
+
     private func validate(
         _ payload: Data,
         source: ReadingListImportSource
@@ -244,4 +285,20 @@ private struct PocketItem: Decodable {
         case resolvedURL = "resolved_url"
         case status
     }
+}
+
+private struct RaindropReadingListExport: Decodable {
+    let items: [RaindropItem]
+}
+
+private struct RaindropItem: Decodable {
+    enum ItemType: String, Decodable {
+        case article
+        case link
+    }
+
+    let title: String
+    let link: String
+    let type: ItemType
+    let removed: Bool
 }
