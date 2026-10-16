@@ -439,8 +439,11 @@ an editorial guide, not a content quota.
   evidence](Documentation/template-method-pressure.md) adds a third provider,
   counts six repeated safety-rail decisions, and keeps an ordinary composed
   function as the benchmark for a module-controlled skeleton.
-- [ ] **Day 073 — Template Method solution.** Implement the stable skeleton only
-  if subclass variation remains the clearest trade-off.
+- [x] **Day 073 — Template Method solution.** Implement the stable skeleton only
+  if subclass variation remains the clearest trade-off. The [canonical Template
+  Method guide](Behavioral%20Patterns/Template%20Method/README.md) closes
+  construction within the module, makes the import sequence final, and varies
+  only provider decoding and candidate selection without abstract-method traps.
 - [ ] **Day 074 — Flyweight problem.** Define thousands of map annotations sharing
   immutable styles or icons.
 - [ ] **Day 075 — Flyweight pressure.** Measure or calculate the repeated-memory

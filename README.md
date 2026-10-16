@@ -127,10 +127,7 @@ who owns subscriptions, traversal, or history.
 | 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
 | 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
-
-🚧 **In progress:** [Template Method pressure](Documentation/template-method-pressure.md)
-adds Raindrop beside Safari and Pocket, exposing three copies of the stable
-import safety rails while inheritance and composition remain under comparison.
+| 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep reading-list validation, normalization, deduplication, atomic persistence, and reporting in one fixed order while provider decoding varies. |
 
 ⏳ **Planned:** Interpreter, Visitor.
 
