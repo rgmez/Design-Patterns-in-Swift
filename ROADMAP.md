@@ -444,8 +444,10 @@ an editorial guide, not a content quota.
   Method guide](Behavioral%20Patterns/Template%20Method/README.md) closes
   construction within the module, makes the import sequence final, and varies
   only provider decoding and candidate selection without abstract-method traps.
-- [ ] **Day 074 — Flyweight problem.** Define thousands of map annotations sharing
-  immutable styles or icons.
+- [x] **Day 074 — Flyweight problem.** Define thousands of map annotations sharing
+  immutable styles or icons. The [festival map baseline](Documentation/flyweight-problem.md)
+  deliberately rebuilds complete category artwork per annotation so the next
+  day can measure repeated intrinsic memory before introducing shared storage.
 - [ ] **Day 075 — Flyweight pressure.** Measure or calculate the repeated-memory
   cost before adding shared representation.
 - [ ] **Day 076 — Flyweight solution.** Implement shared intrinsic data and record
