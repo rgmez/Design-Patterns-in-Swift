@@ -145,3 +145,8 @@ category. It has not been implemented today. Day 076 must prove that a tiny,
 category-keyed shared representation removes that pressure without obscuring
 the per-location state or inventing cache infrastructure the example does not
 need.
+
+Day 076 resolves that boundary in the [canonical Flyweight guide](../Structural%20Patterns/Flyweight/README.md):
+one request-scoped category catalogue reduces the representative result to four
+artwork objects and 16,384 pixel bytes while keeping every location's map and
+accessibility state separate.

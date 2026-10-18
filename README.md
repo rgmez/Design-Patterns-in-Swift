@@ -108,9 +108,8 @@ clear boundary, or when their combinations need to change independently.
 | 🗂️ [Composite](Structural%20Patterns/Composite/README.md) | Traverse one file or a nested workspace folder without repeating client-side branching. |
 | 🎨 [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
 | 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
+| 🪶 [Flyweight](Structural%20Patterns/Flyweight/README.md) | Share four immutable marker resources across 20,000 unique festival-map locations. |
 | 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
-
-⏳ **Planned:** Flyweight.
 
 ### 🧠 Coordinating behavior and change
 

@@ -452,8 +452,10 @@ an editorial guide, not a content quota.
   cost before adding shared representation. The [pressure review](Documentation/flyweight-pressure.md)
   exercises 20,000 locations and finds 81,903,616 avoidable repeated pixel
   bytes while deliberately keeping the direct ownership model.
-- [ ] **Day 076 — Flyweight solution.** Implement shared intrinsic data and record
-  the measured benefit and lookup cost.
+- [x] **Day 076 — Flyweight solution.** Implement shared intrinsic data and record
+  the measured benefit and lookup cost. The [canonical Flyweight guide](Structural%20Patterns/Flyweight/README.md)
+  uses one request-scoped category catalogue to reduce 20,000 artwork objects
+  to four while keeping every location's map and accessibility state unique.
 - [ ] **Day 077 — Weekly review.** Reassess whether composition beats inheritance
   and whether Flyweight has quantitative justification.
 

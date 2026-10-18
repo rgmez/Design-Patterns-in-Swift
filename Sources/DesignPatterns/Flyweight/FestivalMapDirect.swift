@@ -169,21 +169,21 @@ public struct DirectFestivalMapBuilder: Sendable {
     private func makeArtwork(
         for category: FestivalVenueCategory
     ) -> DirectFestivalMarkerArtwork {
-        let descriptor = descriptor(for: category)
+        let descriptor = category.markerDescriptor
 
         return DirectFestivalMarkerArtwork(
-            iconRGBABytes: makeDecodedIcon(seed: descriptor.iconSeed),
+            iconRGBABytes: decodeFestivalMarkerIcon(seed: descriptor.iconSeed),
             fillColor: descriptor.fillColor,
             borderColor: descriptor.borderColor,
             categoryLabel: descriptor.categoryLabel,
             accessibilityHint: descriptor.accessibilityHint
         )
     }
+}
 
-    private func descriptor(
-        for category: FestivalVenueCategory
-    ) -> FestivalMarkerDescriptor {
-        switch category {
+extension FestivalVenueCategory {
+    var markerDescriptor: FestivalMarkerDescriptor {
+        switch self {
         case .mainStage:
             FestivalMarkerDescriptor(
                 iconSeed: 17,
@@ -218,17 +218,17 @@ public struct DirectFestivalMapBuilder: Sendable {
             )
         }
     }
+}
 
-    private func makeDecodedIcon(seed: UInt8) -> [UInt8] {
-        let byteCount = 32 * 32 * 4
+func decodeFestivalMarkerIcon(seed: UInt8) -> [UInt8] {
+    let byteCount = 32 * 32 * 4
 
-        return (0..<byteCount).map { offset in
-            UInt8(truncatingIfNeeded: Int(seed) + (offset * 31))
-        }
+    return (0..<byteCount).map { offset in
+        UInt8(truncatingIfNeeded: Int(seed) + (offset * 31))
     }
 }
 
-private struct FestivalMarkerDescriptor {
+struct FestivalMarkerDescriptor {
     let iconSeed: UInt8
     let fillColor: FestivalMarkerColor
     let borderColor: FestivalMarkerColor
