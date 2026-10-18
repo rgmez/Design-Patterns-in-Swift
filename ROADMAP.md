@@ -448,8 +448,10 @@ an editorial guide, not a content quota.
   immutable styles or icons. The [festival map baseline](Documentation/flyweight-problem.md)
   deliberately rebuilds complete category artwork per annotation so the next
   day can measure repeated intrinsic memory before introducing shared storage.
-- [ ] **Day 075 — Flyweight pressure.** Measure or calculate the repeated-memory
-  cost before adding shared representation.
+- [x] **Day 075 — Flyweight pressure.** Measure or calculate the repeated-memory
+  cost before adding shared representation. The [pressure review](Documentation/flyweight-pressure.md)
+  exercises 20,000 locations and finds 81,903,616 avoidable repeated pixel
+  bytes while deliberately keeping the direct ownership model.
 - [ ] **Day 076 — Flyweight solution.** Implement shared intrinsic data and record
   the measured benefit and lookup cost.
 - [ ] **Day 077 — Weekly review.** Reassess whether composition beats inheritance

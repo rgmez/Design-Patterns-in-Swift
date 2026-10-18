@@ -20,7 +20,7 @@ public struct FestivalCoordinate: Equatable, Sendable {
     }
 }
 
-public enum FestivalVenueCategory: CaseIterable, Equatable, Sendable {
+public enum FestivalVenueCategory: CaseIterable, Equatable, Hashable, Sendable {
     case mainStage
     case foodCourt
     case restroom

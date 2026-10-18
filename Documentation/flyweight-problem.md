@@ -109,10 +109,15 @@ enters the direct builder; North Stage and Sunset Stage leave with unique
 coordinates and statuses, and each independently owns a complete copy of the
 same stage artwork.
 
-## Evidence to gather on Day 075
+## Evidence measured on Day 075
 
-Visible repetition is not enough to earn Flyweight. Day 075 will exercise a
-representative large data set and distinguish the heavy intrinsic category
+The completed [pressure review](flyweight-pressure.md) measures the direct
+builder with 20,000 locations: 20,000 distinct artwork objects retain
+81,920,000 pixel bytes, of which 81,903,616 bytes repeat content beyond one
+buffer for each of the four categories.
+
+Visible repetition was not enough to earn Flyweight. Day 075 exercised a
+representative large data set and distinguished the heavy intrinsic category
 resource from the small per-location state:
 
 - Build a deterministic feed containing tens of thousands of annotations.
@@ -124,9 +129,9 @@ resource from the small per-location state:
 - Reject Flyweight if the saving is immaterial or if the real UI framework
   already shares the decoded resources.
 
-The pressure day must use explicit counts rather than a vague claim that many
-objects are expensive. Cache lookup, lifecycle, thread safety, and eviction are
-costs to consider only after the memory evidence exists.
+The pressure review uses explicit counts rather than a vague claim that many
+objects are expensive. Cache lookup, lifecycle, thread safety, and eviction
+remain costs to consider only after the memory evidence exists.
 
 ## Initial editorial thesis
 
