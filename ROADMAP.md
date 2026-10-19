@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
 
 ## Outcomes
 
@@ -456,8 +456,10 @@ an editorial guide, not a content quota.
   the measured benefit and lookup cost. The [canonical Flyweight guide](Structural%20Patterns/Flyweight/README.md)
   uses one request-scoped category catalogue to reduce 20,000 artwork objects
   to four while keeping every location's map and accessibility state unique.
-- [ ] **Day 077 — Weekly review.** Reassess whether composition beats inheritance
-  and whether Flyweight has quantitative justification.
+- [x] **Day 077 — Weekly review.** Reassess whether composition beats inheritance
+  and whether Flyweight has quantitative justification. The [review evidence](Documentation/week-11-review.md)
+  keeps composition as the default, confines inheritance to one closed import
+  sequence, and confirms the measured 81,903,616-byte Flyweight reduction.
 
 ### Week 12 — Visitor and Interpreter
 
