@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Outcomes
 
@@ -463,8 +463,10 @@ an editorial guide, not a content quota.
 
 ### Week 12 — Visitor and Interpreter
 
-- [ ] **Day 078 — Visitor problem.** Define a stable document node hierarchy with
-  a growing set of export or validation operations.
+- [x] **Day 078 — Visitor problem.** Define a stable document node hierarchy with
+  a growing set of export or validation operations. The [publishing document
+  baseline](Documentation/visitor-problem.md) keeps one accessibility audit in
+  an exhaustive enum switch until additional operations justify double dispatch.
 - [ ] **Day 079 — Visitor pressure.** Demonstrate operation scattering and the
   trade-off between stable nodes and new node types.
 - [ ] **Day 080 — Visitor solution.** Implement double dispatch only if the
