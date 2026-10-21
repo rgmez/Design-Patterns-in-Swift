@@ -467,8 +467,10 @@ an editorial guide, not a content quota.
   a growing set of export or validation operations. The [publishing document
   baseline](Documentation/visitor-problem.md) keeps one accessibility audit in
   an exhaustive enum switch until additional operations justify double dispatch.
-- [ ] **Day 079 — Visitor pressure.** Demonstrate operation scattering and the
-  trade-off between stable nodes and new node types.
+- [x] **Day 079 — Visitor pressure.** Demonstrate operation scattering and the
+  trade-off between stable nodes and new node types. The [pressure review](Documentation/visitor-pressure.md)
+  adds plain-text extraction and localization inventory, exposing three
+  traversals and twelve concrete branches across four unchanged node kinds.
 - [ ] **Day 080 — Visitor solution.** Implement double dispatch only if the
   hierarchy and operation growth justify it.
 - [ ] **Day 081 — Interpreter problem.** Define a deliberately small filter DSL,
