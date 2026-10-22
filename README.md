@@ -4,7 +4,7 @@ Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-✅ **18 examples are complete** · 🚧 **1 is in progress** · ⏳ **4 are planned.**
+✅ **21 examples are complete** · 🚧 **0 are in progress** · ⏳ **2 are planned.**
 
 The central question is simple:
 
@@ -127,8 +127,9 @@ who owns subscriptions, traversal, or history.
 | 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 | 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep reading-list validation, normalization, deduplication, atomic persistence, and reporting in one fixed order while provider decoding varies. |
+| 🔎 [Visitor](Behavioral%20Patterns/Visitor/README.md) | Add accessibility, plain-text, and localization operations across four stable publishing elements without repeating concrete-type switches. |
 
-⏳ **Planned:** Interpreter, Visitor.
+⏳ **Planned:** Interpreter.
 
 ## 📁 Where to find things
 

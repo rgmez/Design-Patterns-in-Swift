@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-22
 
 ## Outcomes
 
@@ -471,8 +471,10 @@ an editorial guide, not a content quota.
   trade-off between stable nodes and new node types. The [pressure review](Documentation/visitor-pressure.md)
   adds plain-text extraction and localization inventory, exposing three
   traversals and twelve concrete branches across four unchanged node kinds.
-- [ ] **Day 080 — Visitor solution.** Implement double dispatch only if the
-  hierarchy and operation growth justify it.
+- [x] **Day 080 — Visitor solution.** Implement double dispatch only if the
+  hierarchy and operation growth justify it. The [canonical Visitor guide](Behavioral%20Patterns/Visitor/README.md)
+  keeps four document elements stable while accessibility, plain-text, and
+  localization visitors own their distinct state and results.
 - [ ] **Day 081 — Interpreter problem.** Define a deliberately small filter DSL,
   such as `status:open assignee:me`.
 - [ ] **Day 082 — Interpreter pressure.** Define grammar limits, parsing errors,
