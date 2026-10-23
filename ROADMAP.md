@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 ## Outcomes
 
@@ -475,8 +475,10 @@ an editorial guide, not a content quota.
   hierarchy and operation growth justify it. The [canonical Visitor guide](Behavioral%20Patterns/Visitor/README.md)
   keeps four document elements stable while accessibility, plain-text, and
   localization visitors own their distinct state and results.
-- [ ] **Day 081 — Interpreter problem.** Define a deliberately small filter DSL,
-  such as `status:open assignee:me`.
+- [x] **Day 081 — Interpreter problem.** Define a deliberately small filter DSL,
+  such as `status:open assignee:me`. The [support inbox baseline](Documentation/interpreter-problem.md)
+  keeps the two-field grammar in one direct loop until composition or diagnostic
+  pressure justifies explicit language structure.
 - [ ] **Day 082 — Interpreter pressure.** Define grammar limits, parsing errors,
   and the point where a parser library becomes preferable.
 - [ ] **Day 083 — Interpreter solution.** Implement the bounded grammar with
