@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 ## Outcomes
 
@@ -479,8 +479,12 @@ an editorial guide, not a content quota.
   such as `status:open assignee:me`. The [support inbox baseline](Documentation/interpreter-problem.md)
   keeps the two-field grammar in one direct loop until composition or diagnostic
   pressure justifies explicit language structure.
-- [ ] **Day 082 — Interpreter pressure.** Define grammar limits, parsing errors,
-  and the point where a parser library becomes preferable.
+- [x] **Day 082 — Interpreter pressure.** Define grammar limits, parsing errors,
+  and the point where a parser library becomes preferable. The [pressure
+  review](Documentation/interpreter-pressure.md) adds one positioned,
+  non-nested status alternative while keeping the parser direct and records
+  the exact recursion, precedence, escaping, and recovery threshold for a
+  maintained parsing library.
 - [ ] **Day 083 — Interpreter solution.** Implement the bounded grammar with
   readable diagnostics and no speculative language features.
 - [ ] **Day 084 — Weekly review.** Validate extensibility direction and reject
