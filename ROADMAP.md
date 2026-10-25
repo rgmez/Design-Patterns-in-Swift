@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 ## Outcomes
 
@@ -485,8 +485,12 @@ an editorial guide, not a content quota.
   non-nested status alternative while keeping the parser direct and records
   the exact recursion, precedence, escaping, and recovery threshold for a
   maintained parsing library.
-- [ ] **Day 083 — Interpreter solution.** Implement the bounded grammar with
-  readable diagnostics and no speculative language features.
+- [x] **Day 083 — Interpreter solution.** Implement the bounded grammar with
+  readable diagnostics and no speculative language features. The [canonical
+  Interpreter guide](Behavioral%20Patterns/Interpreter/README.md) separates one
+  positioned parser from a value-semantic expression vocabulary while keeping
+  local status OR, outer AND, stable ordering, and the parser-library threshold
+  explicit.
 - [ ] **Day 084 — Weekly review.** Validate extensibility direction and reject
   unnecessary AST or grammar complexity.
 

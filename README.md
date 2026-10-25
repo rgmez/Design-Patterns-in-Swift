@@ -121,6 +121,7 @@ who owns subscriptions, traversal, or history.
 | 🔗 [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers, stopping when one handles or rejects the request. |
 | 🎮 [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
 | 🔁 [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
+| 🧩 [Interpreter](Behavioral%20Patterns/Interpreter/README.md) | Parse a bounded support-inbox language once, then interpret explicit status and assignee expressions with positioned diagnostics. |
 | 📸 [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
 | 🔀 [Mediator](Behavioral%20Patterns/Mediator/README.md) | Resolve promotion-driven delivery corrections before validating payment across independent checkout sections. |
 | 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
@@ -128,8 +129,6 @@ who owns subscriptions, traversal, or history.
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 | 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep reading-list validation, normalization, deduplication, atomic persistence, and reporting in one fixed order while provider decoding varies. |
 | 🔎 [Visitor](Behavioral%20Patterns/Visitor/README.md) | Add accessibility, plain-text, and localization operations across four stable publishing elements without repeating concrete-type switches. |
-
-⏳ **Planned:** Interpreter.
 
 ## 📁 Where to find things
 
