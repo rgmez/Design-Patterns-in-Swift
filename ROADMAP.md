@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 ## Outcomes
 
@@ -491,8 +491,10 @@ an editorial guide, not a content quota.
   positioned parser from a value-semantic expression vocabulary while keeping
   local status OR, outer AND, stable ordering, and the parser-library threshold
   explicit.
-- [ ] **Day 084 — Weekly review.** Validate extensibility direction and reject
-  unnecessary AST or grammar complexity.
+- [x] **Day 084 — Weekly review.** Validate extensibility direction and reject
+  unnecessary AST or grammar complexity. The [review evidence](Documentation/week-12-review.md)
+  keeps Visitor aligned with operation growth over stable elements and confines
+  Interpreter to one non-recursive, positioned support-query grammar.
 
 ### Week 13 — Singleton and the no-pattern decision
 
