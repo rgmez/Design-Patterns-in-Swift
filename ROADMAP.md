@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ## Outcomes
 
@@ -498,8 +498,10 @@ an editorial guide, not a content quota.
 
 ### Week 13 — Singleton and the no-pattern decision
 
-- [ ] **Day 085 — Singleton problem.** Define a genuinely process-unique platform
-  resource with explicit ownership.
+- [x] **Day 085 — Singleton problem.** Define a genuinely process-unique platform
+  resource with explicit ownership. The [audio session baseline](Documentation/singleton-problem.md)
+  keeps one controller injected from the composition root and proves exclusive,
+  recoverable ownership before any shared instance exists.
 - [ ] **Day 086 — Singleton pressure.** Demonstrate uniqueness requirements while
   preserving dependency injection and test isolation.
 - [ ] **Day 087 — Singleton solution.** Implement the smallest controlled shared
