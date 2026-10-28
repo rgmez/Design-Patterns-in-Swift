@@ -502,8 +502,10 @@ an editorial guide, not a content quota.
   resource with explicit ownership. The [audio session baseline](Documentation/singleton-problem.md)
   keeps one controller injected from the composition root and proves exclusive,
   recoverable ownership before any shared instance exists.
-- [ ] **Day 086 — Singleton pressure.** Demonstrate uniqueness requirements while
-  preserving dependency injection and test isolation.
+- [x] **Day 086 — Singleton pressure.** Demonstrate uniqueness requirements while
+  preserving dependency injection and test isolation. The [pressure evidence](Documentation/singleton-pressure.md)
+  proves that one injected controller rejects competing owners while two
+  independent construction roots can each activate the same process resource.
 - [ ] **Day 087 — Singleton solution.** Implement the smallest controlled shared
   instance and document why ordinary services should not copy it.
 - [ ] **Day 088 — No-pattern problem.** Define a plausible refactor request where

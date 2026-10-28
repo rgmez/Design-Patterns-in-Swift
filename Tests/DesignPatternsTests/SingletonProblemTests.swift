@@ -139,6 +139,71 @@ struct SingletonProblemTests {
         }
     }
 
+    @Suite("Independent composition roots")
+    struct IndependentCompositionRoots {
+        @Test("One injected controller protects the process resource")
+        func sharedReferenceRejectsCompetingRoot() async throws {
+            let systemSession = AudioSessionPlatformSpy()
+            let appController = DirectAudioSessionController(
+                systemSession: systemSession
+            )
+            let callbackController = appController
+
+            try await appController.acquire(
+                SingletonProblemTests.recorderRequest
+            )
+
+            await #expect(
+                throws: DirectAudioSessionError.occupied(
+                    activeOwnerID: SingletonProblemTests.recorderID,
+                    requestedOwnerID: SingletonProblemTests.previewID
+                )
+            ) {
+                try await callbackController.acquire(
+                    SingletonProblemTests.previewRequest
+                )
+            }
+            #expect(
+                await systemSession.operations()
+                    == [.activate(.recording)]
+            )
+        }
+
+        @Test("Two roots can unknowingly activate the same process resource")
+        func separateControllersBypassExclusiveOwnership() async throws {
+            let systemSession = AudioSessionPlatformSpy()
+            let appController = DirectAudioSessionController(
+                systemSession: systemSession
+            )
+            let callbackController = DirectAudioSessionController(
+                systemSession: systemSession
+            )
+
+            try await appController.acquire(
+                SingletonProblemTests.recorderRequest
+            )
+            try await callbackController.acquire(
+                SingletonProblemTests.previewRequest
+            )
+
+            #expect(
+                await appController.activeRequest()
+                    == SingletonProblemTests.recorderRequest
+            )
+            #expect(
+                await callbackController.activeRequest()
+                    == SingletonProblemTests.previewRequest
+            )
+            #expect(
+                await systemSession.operations()
+                    == [
+                        .activate(.recording),
+                        .activate(.previewPlayback)
+                    ]
+            )
+        }
+    }
+
     @Suite("Platform failures")
     struct PlatformFailures {
         @Test("Releases its reservation when system activation fails")
