@@ -53,9 +53,9 @@ The baseline also preserves these constraints:
 
 ## Direct Swift first
 
-[`AudioSessionControllerDirect.swift`](../Sources/DesignPatterns/Singleton/AudioSessionControllerDirect.swift)
+[`AudioSessionController.swift`](../Sources/DesignPatterns/Singleton/AudioSessionController.swift)
 defines two audio purposes, an explicit request value, the platform seam, and
-`DirectAudioSessionController`. The controller is an actor because ownership is
+`AudioSessionController`. The controller is an actor because ownership is
 mutable process coordination that can be requested from concurrent feature
 tasks. It is not main-actor isolated because the resource is not UI state.
 
@@ -70,6 +70,11 @@ This is deliberately not the Singleton pattern. There is no `shared` property,
 private initializer, service locator, global actor, static mutable storage,
 reset hook, or hidden lookup. The operating system supplies resource uniqueness;
 ordinary dependency injection supplies application ownership and test seams.
+
+This paragraph records the Day 085 baseline. Day 087 evolved the same actor with
+one immutable production identity and a package-only isolated factory; the
+[canonical guide](../Creational%20Patterns/Singleton/README.md) explains the
+final boundary and the Git history preserves the direct implementation.
 
 ## Acceptance tests
 

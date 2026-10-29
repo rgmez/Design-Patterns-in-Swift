@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 ## Outcomes
 
@@ -506,8 +506,9 @@ an editorial guide, not a content quota.
   preserving dependency injection and test isolation. The [pressure evidence](Documentation/singleton-pressure.md)
   proves that one injected controller rejects competing owners while two
   independent construction roots can each activate the same process resource.
-- [ ] **Day 087 — Singleton solution.** Implement the smallest controlled shared
-  instance and document why ordinary services should not copy it.
+- [x] **Day 087 — Singleton solution.** Implement the smallest controlled shared
+  instance and document why ordinary services should not copy it in the
+  [canonical Singleton guide](Creational%20Patterns/Singleton/README.md).
 - [ ] **Day 088 — No-pattern problem.** Define a plausible refactor request where
   a named pattern appears attractive.
 - [ ] **Day 089 — No-pattern evidence.** Compare the pattern's types and

@@ -27,7 +27,7 @@ app should inject the controller there and remove the shared entry point.
 
 ## Direct implementation under pressure
 
-[`DirectAudioSessionController`](../Sources/DesignPatterns/Singleton/AudioSessionControllerDirect.swift)
+[`AudioSessionController`](../Sources/DesignPatterns/Singleton/AudioSessionController.swift)
 is still the complete production implementation. Its actor-isolated state
 machine reserves one owner before suspending at the platform boundary and
 recovers coherently from activation and deactivation failures.
@@ -130,6 +130,10 @@ callback may cross through the controlled shared entry point.
 That excludes a mutable `static var`, an `installForTests` API, teardown-based
 reset logic, and a locator. Day 087 must keep the shared production identity
 separate from the initializer used by isolated tests and injected clients.
+
+Day 087 implemented that boundary with an immutable `shared` identity and a
+package-only isolated factory. The [canonical guide](../Creational%20Patterns/Singleton/README.md)
+documents the resulting API; this file retains the pressure that justified it.
 
 ## Verification
 

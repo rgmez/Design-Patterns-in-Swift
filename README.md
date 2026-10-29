@@ -4,7 +4,7 @@ Learn design patterns by following the app problems that make them useful.
 
 This guide explores the 23 Gang of Four patterns through concrete Swift examples:
 checkout payments, video editing, file uploads, session changes, and more.
-✅ **21 examples are complete** · 🚧 **0 are in progress** · ⏳ **2 are planned.**
+✅ **23 examples are complete** · 🚧 **0 are in progress** · ⏳ **0 are planned.**
 
 The central question is simple:
 
@@ -93,8 +93,7 @@ services, assembling a request over time, or duplicating an editable object grap
 | 🛠️ [Builder](Creational%20Patterns/Builder/README.md) | Assemble a support request across screens while enforcing attachment consent and size limits. |
 | 🏭 [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import within a shared workflow. |
 | 🧬 [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document, reconnect its internal links, and share only the resources that should remain shared. |
-
-🚧 **Planned:** Singleton.
+| 🎙️ [Singleton](Creational%20Patterns/Singleton/README.md) | Keep one accountable owner for a process-wide audio session while confining shared lookup to a runtime-created callback. |
 
 ### 🌉 Connecting and composing types
 

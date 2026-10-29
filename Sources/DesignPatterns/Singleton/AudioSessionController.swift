@@ -23,13 +23,17 @@ public protocol SystemAudioSessionApplying: Actor {
     func deactivate() async throws
 }
 
-public enum DirectAudioSessionError: Error, Equatable, Sendable {
+public enum AudioSessionControllerError: Error, Equatable, Sendable {
     case occupied(activeOwnerID: String, requestedOwnerID: String)
     case inactive
     case notOwner(activeOwnerID: String, requestedOwnerID: String)
 }
 
-public actor DirectAudioSessionController {
+public actor AudioSessionController {
+    public static let shared = AudioSessionController(
+        systemSession: ProcessSystemAudioSession()
+    )
+
     private enum State {
         case inactive
         case activating(AudioSessionRequest)
@@ -51,8 +55,14 @@ public actor DirectAudioSessionController {
     private let systemSession: any SystemAudioSessionApplying
     private var state = State.inactive
 
-    public init(systemSession: any SystemAudioSessionApplying) {
+    private init(systemSession: any SystemAudioSessionApplying) {
         self.systemSession = systemSession
+    }
+
+    package static func isolated(
+        systemSession: any SystemAudioSessionApplying
+    ) -> AudioSessionController {
+        AudioSessionController(systemSession: systemSession)
     }
 
     public func acquire(_ request: AudioSessionRequest) async throws {
@@ -74,12 +84,12 @@ public actor DirectAudioSessionController {
     public func release(ownerID: String) async throws {
         guard case let .active(request) = state else {
             if case .inactive = state {
-                throw DirectAudioSessionError.inactive
+                throw AudioSessionControllerError.inactive
             }
             throw occupiedError(for: ownerID)
         }
         guard request.ownerID == ownerID else {
-            throw DirectAudioSessionError.notOwner(
+            throw AudioSessionControllerError.notOwner(
                 activeOwnerID: request.ownerID,
                 requestedOwnerID: ownerID
             )
@@ -105,7 +115,7 @@ public actor DirectAudioSessionController {
 
     private func occupiedError(
         for requestedOwnerID: String
-    ) -> DirectAudioSessionError {
+    ) -> AudioSessionControllerError {
         guard let activeOwnerID = state.request?.ownerID else {
             preconditionFailure("Only a reserved session can be occupied")
         }
@@ -113,5 +123,38 @@ public actor DirectAudioSessionController {
             activeOwnerID: activeOwnerID,
             requestedOwnerID: requestedOwnerID
         )
+    }
+}
+
+public struct LegacyPreviewResumeCallback: Sendable {
+    package let controller: AudioSessionController
+
+    public init() {
+        controller = .shared
+    }
+
+    package init(controller: AudioSessionController) {
+        self.controller = controller
+    }
+
+    public func resumePreview(ownerID: String) async throws {
+        try await controller.acquire(
+            AudioSessionRequest(
+                ownerID: ownerID,
+                purpose: .previewPlayback
+            )
+        )
+    }
+}
+
+private actor ProcessSystemAudioSession: SystemAudioSessionApplying {
+    private var activePurpose: AudioSessionPurpose?
+
+    func activate(for purpose: AudioSessionPurpose) {
+        activePurpose = purpose
+    }
+
+    func deactivate() {
+        activePurpose = nil
     }
 }

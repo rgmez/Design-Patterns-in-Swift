@@ -19,7 +19,7 @@ struct SingletonProblemTests {
         @Test("Configures and releases one injected process resource")
         func activatesAndDeactivates() async throws {
             let systemSession = AudioSessionPlatformSpy()
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -50,7 +50,7 @@ struct SingletonProblemTests {
         @Test("Rejects another feature while recording owns the session")
         func rejectsCompetingOwner() async throws {
             let systemSession = AudioSessionPlatformSpy()
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -59,7 +59,7 @@ struct SingletonProblemTests {
             )
 
             await #expect(
-                throws: DirectAudioSessionError.occupied(
+                throws: AudioSessionControllerError.occupied(
                     activeOwnerID: SingletonProblemTests.recorderID,
                     requestedOwnerID: SingletonProblemTests.previewID
                 )
@@ -77,7 +77,7 @@ struct SingletonProblemTests {
         @Test("Only the active feature can release the session")
         func rejectsReleaseFromAnotherOwner() async throws {
             let systemSession = AudioSessionPlatformSpy()
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -86,7 +86,7 @@ struct SingletonProblemTests {
             )
 
             await #expect(
-                throws: DirectAudioSessionError.notOwner(
+                throws: AudioSessionControllerError.notOwner(
                     activeOwnerID: SingletonProblemTests.recorderID,
                     requestedOwnerID: SingletonProblemTests.previewID
                 )
@@ -109,7 +109,7 @@ struct SingletonProblemTests {
             let systemSession = AudioSessionPlatformSpy(
                 suspendsActivation: true
             )
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -119,7 +119,7 @@ struct SingletonProblemTests {
             await systemSession.waitUntilActivationStarts()
 
             await #expect(
-                throws: DirectAudioSessionError.occupied(
+                throws: AudioSessionControllerError.occupied(
                     activeOwnerID: SingletonProblemTests.recorderID,
                     requestedOwnerID: SingletonProblemTests.previewID
                 )
@@ -144,7 +144,7 @@ struct SingletonProblemTests {
         @Test("One injected controller protects the process resource")
         func sharedReferenceRejectsCompetingRoot() async throws {
             let systemSession = AudioSessionPlatformSpy()
-            let appController = DirectAudioSessionController(
+            let appController = AudioSessionController.isolated(
                 systemSession: systemSession
             )
             let callbackController = appController
@@ -154,7 +154,7 @@ struct SingletonProblemTests {
             )
 
             await #expect(
-                throws: DirectAudioSessionError.occupied(
+                throws: AudioSessionControllerError.occupied(
                     activeOwnerID: SingletonProblemTests.recorderID,
                     requestedOwnerID: SingletonProblemTests.previewID
                 )
@@ -172,10 +172,10 @@ struct SingletonProblemTests {
         @Test("Two roots can unknowingly activate the same process resource")
         func separateControllersBypassExclusiveOwnership() async throws {
             let systemSession = AudioSessionPlatformSpy()
-            let appController = DirectAudioSessionController(
+            let appController = AudioSessionController.isolated(
                 systemSession: systemSession
             )
-            let callbackController = DirectAudioSessionController(
+            let callbackController = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -211,7 +211,7 @@ struct SingletonProblemTests {
             let systemSession = AudioSessionPlatformSpy(
                 activationFailures: 1
             )
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
 
@@ -236,7 +236,7 @@ struct SingletonProblemTests {
             let systemSession = AudioSessionPlatformSpy(
                 deactivationFailures: 1
             )
-            let controller = DirectAudioSessionController(
+            let controller = AudioSessionController.isolated(
                 systemSession: systemSession
             )
             try await controller.acquire(
