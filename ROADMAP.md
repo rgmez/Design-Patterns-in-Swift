@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-29
+Last updated: 2026-10-30
 
 ## Outcomes
 
@@ -509,8 +509,10 @@ an editorial guide, not a content quota.
 - [x] **Day 087 — Singleton solution.** Implement the smallest controlled shared
   instance and document why ordinary services should not copy it in the
   [canonical Singleton guide](Creational%20Patterns/Singleton/README.md).
-- [ ] **Day 088 — No-pattern problem.** Define a plausible refactor request where
-  a named pattern appears attractive.
+- [x] **Day 088 — No-pattern problem.** Define a plausible refactor request where
+  a named pattern appears attractive. The [product-share baseline](Documentation/no-pattern-problem.md)
+  tests an immutable request and `URLComponents` before a custom Builder earns
+  any construction state.
 - [ ] **Day 089 — No-pattern evidence.** Compare the pattern's types and
   indirection with a function, enum, initializer, or platform API.
 - [ ] **Day 090 — No-pattern decision.** Keep the direct solution and document the
