@@ -175,3 +175,6 @@ The Builder proposal is plausible but unearned. One immutable request plus a
 pure function and `URLComponents` expresses every current valid combination,
 keeps calls independent, and avoids inventing mutable construction state. The
 named pattern remains a hypothesis for Day 089, not an implementation goal.
+
+Day 089 tests that hypothesis with an optional storefront locale in the
+[no-pattern evidence review](no-pattern-evidence.md).

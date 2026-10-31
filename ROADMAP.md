@@ -513,8 +513,11 @@ an editorial guide, not a content quota.
   a named pattern appears attractive. The [product-share baseline](Documentation/no-pattern-problem.md)
   tests an immutable request and `URLComponents` before a custom Builder earns
   any construction state.
-- [ ] **Day 089 — No-pattern evidence.** Compare the pattern's types and
-  indirection with a function, enum, initializer, or platform API.
+- [x] **Day 089 — No-pattern evidence.** Compare the pattern's types and
+  indirection with a function, enum, initializer, or platform API. The
+  [evidence review](Documentation/no-pattern-evidence.md) adds one typed
+  storefront locale without introducing construction order, reusable state,
+  or mechanics beyond the immutable request and `URLComponents`.
 - [ ] **Day 090 — No-pattern decision.** Keep the direct solution and document the
   concrete signal that would justify revisiting it.
 - [ ] **Day 091 — Catalogue review.** Validate all 23 patterns, status links,

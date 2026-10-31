@@ -6,17 +6,26 @@ public enum ProductShareSurface: String, CaseIterable, Sendable {
     case productDetails = "product_details"
 }
 
+public enum ProductShareLocale: String, CaseIterable, Sendable {
+    case englishUnitedStates = "en-us"
+    case portugueseBrazil = "pt-br"
+    case spanishMexico = "es-mx"
+}
+
 public struct ProductShareRequest: Equatable, Sendable {
     public let productID: UUID
+    public let destinationLocale: ProductShareLocale?
     public let source: ProductShareSurface?
     public let campaignID: UUID?
 
     public init(
         productID: UUID,
+        destinationLocale: ProductShareLocale? = nil,
         source: ProductShareSurface? = nil,
         campaignID: UUID? = nil
     ) {
         self.productID = productID
+        self.destinationLocale = destinationLocale
         self.source = source
         self.campaignID = campaignID
     }
@@ -32,7 +41,13 @@ public func productShareURL(
     var components = URLComponents()
     components.scheme = "https"
     components.host = "shop.example.com"
-    components.path = "/products/\(request.productID.uuidString.lowercased())"
+
+    let productPath = "/products/\(request.productID.uuidString.lowercased())"
+    if let destinationLocale = request.destinationLocale {
+        components.path = "/\(destinationLocale.rawValue)\(productPath)"
+    } else {
+        components.path = productPath
+    }
 
     var queryItems: [URLQueryItem] = []
 
