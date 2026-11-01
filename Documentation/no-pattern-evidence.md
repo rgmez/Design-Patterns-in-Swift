@@ -173,5 +173,5 @@ default or localized path; `URLComponents` produces the canonical URL.
 The first realistic extension does not create Builder pressure. A closed enum,
 one defaulted initializer value, and one path decision preserve every existing
 invariant while keeping the request complete and calls independent. Day 090
-should keep the direct solution and turn the absent-pressure threshold into the
-final documented no-pattern verdict.
+keeps the direct solution and turns the absent-pressure threshold into the
+final documented [no-pattern verdict](no-pattern-decision.md).

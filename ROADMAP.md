@@ -518,8 +518,11 @@ an editorial guide, not a content quota.
   [evidence review](Documentation/no-pattern-evidence.md) adds one typed
   storefront locale without introducing construction order, reusable state,
   or mechanics beyond the immutable request and `URLComponents`.
-- [ ] **Day 090 — No-pattern decision.** Keep the direct solution and document the
-  concrete signal that would justify revisiting it.
+- [x] **Day 090 — No-pattern decision.** Keep the direct solution and document the
+  concrete signal that would justify revisiting it. The [final no-pattern
+  guide](Documentation/no-pattern-decision.md) retains the immutable product-share
+  request and identifies ordered, validated construction stages as the threshold
+  for reconsidering Builder.
 - [ ] **Day 091 — Catalogue review.** Validate all 23 patterns, status links,
   visuals, tests, and conceptual distinctions.
 

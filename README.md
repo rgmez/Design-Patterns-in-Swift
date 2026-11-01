@@ -28,6 +28,11 @@ these three:
 Together, they show three different reasons to introduce a pattern: integrating
 an external API, varying a business rule, and coordinating independent consumers.
 
+Before choosing any of them, read the [no-pattern product-share
+case](Documentation/no-pattern-decision.md). A localization requirement leaves
+one immutable request and one pure function as the safer design, and records the
+specific construction pressure that would justify revisiting Builder.
+
 ## 📖 How to read an example
 
 Follow the same story in every pattern README:
@@ -53,6 +58,10 @@ still be enough.
 A pattern describes how responsibilities fit together. In Swift, the example
 may use structs, closures, protocols, or an `AsyncSequence`; it does not need to
 reproduce a class hierarchy from a textbook.
+
+Sometimes the turning point never arrives. The catalogue treats **no pattern**
+as a valid, tested decision when ordinary Swift and a platform API already own
+the behavior without duplicated state or indirection.
 
 ## ▶️ Run the examples
 
@@ -128,6 +137,12 @@ who owns subscriptions, traversal, or history.
 | ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
 | 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep reading-list validation, normalization, deduplication, atomic persistence, and reporting in one fixed order while provider decoding varies. |
 | 🔎 [Visitor](Behavioral%20Patterns/Visitor/README.md) | Add accessibility, plain-text, and localization operations across four stable publishing elements without repeating concrete-type switches. |
+
+### 🧭 Knowing when to stop
+
+| Decision | App problem explored |
+| --- | --- |
+| ➡️ [No pattern](Documentation/no-pattern-decision.md) | Keep localized product-share URLs as one complete request and one pure function until construction gains ordered, validated stages. |
 
 ## 📁 Where to find things
 
