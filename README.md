@@ -166,6 +166,8 @@ when you want to understand the series plan or add an example:
   and solution work for all 23 patterns, with review milestones.
 - [Catalogue audit](Documentation/catalogue-audit.md): the starting assessment
   of the historical examples and the decisions behind their replacements.
+- [Complete catalogue review](Documentation/catalogue-review.md): the validated
+  23-pattern decision matrix and the distinctions that prevent misclassification.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the
@@ -186,7 +188,10 @@ and the weekly reviews:
 [07](Documentation/week-07-review.md) ·
 [08](Documentation/week-08-review.md) ·
 [09](Documentation/week-09-review.md) ·
-[10](Documentation/week-10-review.md).
+[10](Documentation/week-10-review.md) ·
+[11](Documentation/week-11-review.md) ·
+[12](Documentation/week-12-review.md) ·
+[catalogue](Documentation/catalogue-review.md).
 
 ## 📚 Resources and license
 

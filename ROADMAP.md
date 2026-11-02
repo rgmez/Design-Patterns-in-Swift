@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-10-30
+Last updated: 2026-11-02
 
 ## Outcomes
 
@@ -523,8 +523,11 @@ an editorial guide, not a content quota.
   guide](Documentation/no-pattern-decision.md) retains the immutable product-share
   request and identifies ordered, validated construction stages as the threshold
   for reconsidering Builder.
-- [ ] **Day 091 — Catalogue review.** Validate all 23 patterns, status links,
-  visuals, tests, and conceptual distinctions.
+- [x] **Day 091 — Catalogue review.** Validate all 23 patterns, status links,
+  visuals, tests, and conceptual distinctions. The [complete catalogue
+  review](Documentation/catalogue-review.md) confirms 23 canonical guides,
+  warning-free behavior, one visual system, and the change boundaries that
+  prevent nearby patterns from being misclassified.
 
 ### Week 14 — Codex skill and release readiness
 
