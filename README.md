@@ -168,6 +168,9 @@ when you want to understand the series plan or add an example:
   of the historical examples and the decisions behind their replacements.
 - [Complete catalogue review](Documentation/catalogue-review.md): the validated
   23-pattern decision matrix and the distinctions that prevent misclassification.
+- [Pattern decision signals](Documentation/skill-decision-signals.md): the
+  evidence gate, positive triggers, and rejection signals that will ground the
+  `choose-swift-design-pattern` skill.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the
