@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-03
+Last updated: 2026-11-04
 
 ## Outcomes
 
@@ -536,8 +536,11 @@ an editorial guide, not a content quota.
   extraction](Documentation/skill-decision-signals.md) makes a verified direct
   Swift baseline, positive pressure, rejection evidence, and neighbour checks
   prerequisites for any future recommendation.
-- [ ] **Day 093 — Design skill scenarios.** Define prompts that require Adapter,
-  State, no pattern, and a Bridge-versus-Strategy decision.
+- [x] **Day 093 — Design skill scenarios.** Define prompts that require Adapter,
+  State, no pattern, and a Bridge-versus-Strategy decision. The
+  [independent evaluation scenarios](Documentation/skill-evaluation-scenarios.md)
+  separate unfamiliar app prompts from observable rubrics so later forward
+  tests can expose overfitting without leaking expected answers.
 - [ ] **Day 094 — Initialize the skill.** Create
   `.codex/skills/choose-swift-design-pattern` with the official skill tooling.
 - [ ] **Day 095 — Write the decision workflow.** Make the direct Swift solution

@@ -171,6 +171,9 @@ when you want to understand the series plan or add an example:
 - [Pattern decision signals](Documentation/skill-decision-signals.md): the
   evidence gate, positive triggers, and rejection signals that will ground the
   `choose-swift-design-pattern` skill.
+- [Independent skill evaluation scenarios](Documentation/skill-evaluation-scenarios.md):
+  four unfamiliar app prompts and observable rubrics for Adapter, State, an
+  explicit no-pattern verdict, and the Bridge-versus-Strategy boundary.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the
