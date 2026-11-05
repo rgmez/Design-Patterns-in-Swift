@@ -541,8 +541,11 @@ an editorial guide, not a content quota.
   [independent evaluation scenarios](Documentation/skill-evaluation-scenarios.md)
   separate unfamiliar app prompts from observable rubrics so later forward
   tests can expose overfitting without leaking expected answers.
-- [ ] **Day 094 — Initialize the skill.** Create
+- [x] **Day 094 — Initialize the skill.** Create
   `.codex/skills/choose-swift-design-pattern` with the official skill tooling.
+  The [skill entry point](.codex/skills/choose-swift-design-pattern/SKILL.md)
+  now defines its discovery boundary, while generated agent metadata keeps the
+  scaffold ready for the Day 095 workflow without premature resources.
 - [ ] **Day 095 — Write the decision workflow.** Make the direct Swift solution
   and explicit no-pattern verdict first-class outcomes.
 - [ ] **Day 096 — Add progressive references.** Provide a concise decision matrix,

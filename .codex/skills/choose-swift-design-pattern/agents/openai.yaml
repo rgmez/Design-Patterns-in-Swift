@@ -1,0 +1,3 @@
+interface:
+  display_name: "Choose Swift Design Pattern"
+  short_description: "Choose a Swift pattern only when evidence earns it"

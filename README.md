@@ -174,6 +174,9 @@ when you want to understand the series plan or add an example:
 - [Independent skill evaluation scenarios](Documentation/skill-evaluation-scenarios.md):
   four unfamiliar app prompts and observable rubrics for Adapter, State, an
   explicit no-pattern verdict, and the Bridge-versus-Strategy boundary.
+- [Pattern-selection skill entry point](.codex/skills/choose-swift-design-pattern/SKILL.md):
+  the initialized skill boundary; its evidence-based workflow and progressive
+  references are the next planned milestones.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the
