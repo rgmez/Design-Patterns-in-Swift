@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-04
+Last updated: 2026-11-06
 
 ## Outcomes
 
@@ -546,8 +546,11 @@ an editorial guide, not a content quota.
   The [skill entry point](.codex/skills/choose-swift-design-pattern/SKILL.md)
   now defines its discovery boundary, while generated agent metadata keeps the
   scaffold ready for the Day 095 workflow without premature resources.
-- [ ] **Day 095 — Write the decision workflow.** Make the direct Swift solution
-  and explicit no-pattern verdict first-class outcomes.
+- [x] **Day 095 — Write the decision workflow.** Make the direct Swift solution
+  and explicit no-pattern verdict first-class outcomes. The [skill entry
+  point](.codex/skills/choose-swift-design-pattern/SKILL.md) now moves from
+  observed pressure through a direct baseline and evidence gate to exactly one
+  reviewable verdict, including the evidence that would reverse it.
 - [ ] **Day 096 — Add progressive references.** Provide a concise decision matrix,
   catalogue guidance, and example-quality checklist without duplication.
 - [ ] **Day 097 — Validate the skill.** Run structural validation and realistic
