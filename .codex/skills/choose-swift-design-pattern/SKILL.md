@@ -38,6 +38,23 @@ hypothetical growth.
    evidence that would justify revisiting the verdict. Do not generalize from
    imagined scale.
 
+## Progressive references
+
+Load only the reference needed for the current decision:
+
+- Read the [decision matrix](references/decision-matrix.md) when the observed
+  pressure could map to several catalogue patterns or no candidate has been
+  named yet. Use it to shortlist by pressure and rejection signal, not to skip
+  the evidence gate.
+- Read the [catalogue guidance](references/catalogue-guidance.md) when the
+  decision sits between commonly confused patterns. Follow its discriminating
+  question, then open a linked canonical pattern guide only when implementation
+  details or pattern-specific trade-offs are material.
+- Read the [example-quality checklist](references/example-quality-checklist.md)
+  when reviewing a concrete proposal or when the user explicitly asks to
+  implement the recommendation. A decision-only request does not require an
+  implementation or the full teaching-example documentation contract.
+
 ## Verdicts
 
 Return exactly one of these outcomes:

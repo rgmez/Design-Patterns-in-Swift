@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 ## Outcomes
 
@@ -551,8 +551,13 @@ an editorial guide, not a content quota.
   point](.codex/skills/choose-swift-design-pattern/SKILL.md) now moves from
   observed pressure through a direct baseline and evidence gate to exactly one
   reviewable verdict, including the evidence that would reverse it.
-- [ ] **Day 096 — Add progressive references.** Provide a concise decision matrix,
-  catalogue guidance, and example-quality checklist without duplication.
+- [x] **Day 096 — Add progressive references.** Provide a concise decision matrix,
+  catalogue guidance, and example-quality checklist without duplication. The
+  [skill entry point](.codex/skills/choose-swift-design-pattern/SKILL.md) now
+  routes only the relevant [catalogue matrix](.codex/skills/choose-swift-design-pattern/references/decision-matrix.md),
+  [neighbour guidance](.codex/skills/choose-swift-design-pattern/references/catalogue-guidance.md),
+  or [example-quality checklist](.codex/skills/choose-swift-design-pattern/references/example-quality-checklist.md)
+  for the current request.
 - [ ] **Day 097 — Validate the skill.** Run structural validation and realistic
   forward tests without leaking expected answers.
 - [ ] **Day 098 — Refine from evidence.** Correct weak triggers, over-prescription,
