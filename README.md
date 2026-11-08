@@ -178,6 +178,9 @@ when you want to understand the series plan or add an example:
   the evidence-based workflow that treats direct Swift, an explicit no-pattern
   verdict, and insufficient evidence as first-class outcomes, with progressive
   references for catalogue discovery, neighbour checks, and example quality.
+- [Pattern-selection skill validation](Documentation/skill-validation.md): the
+  structural checks and four independent forward tests for Adapter, State, a
+  no-pattern decision, and Bridge without leaking their expected answers.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the

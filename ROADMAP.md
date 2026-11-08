@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-08
 
 ## Outcomes
 
@@ -558,8 +558,10 @@ an editorial guide, not a content quota.
   [neighbour guidance](.codex/skills/choose-swift-design-pattern/references/catalogue-guidance.md),
   or [example-quality checklist](.codex/skills/choose-swift-design-pattern/references/example-quality-checklist.md)
   for the current request.
-- [ ] **Day 097 — Validate the skill.** Run structural validation and realistic
-  forward tests without leaking expected answers.
+- [x] **Day 097 — Validate the skill.** Run structural validation and realistic
+  forward tests without leaking expected answers. The [validation report](Documentation/skill-validation.md)
+  records a valid skill package, four independent passing verdicts, ignored raw
+  outputs, and two bounded output-shape observations for Day 098.
 - [ ] **Day 098 — Refine from evidence.** Correct weak triggers, over-prescription,
   and confusing output based on validation results.
 - [ ] **Day 099 — Release-candidate QA.** Run all checks, verify documentation and
