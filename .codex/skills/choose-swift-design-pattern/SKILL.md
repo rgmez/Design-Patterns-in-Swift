@@ -31,9 +31,13 @@ hypothetical growth.
    absorb that variation. Reject candidates that merely rename the same
    branches behind protocols or extra types.
 5. **Discriminate the nearest alternative.** Compare the candidate with the
-   closest direct design or commonly confused pattern using the requirement's
-   change boundary, not class-diagram similarity. Do not return a menu when the
-   evidence supports one decision.
+   alternative a reviewer could most plausibly choose from the same observed
+   pressure. If the user names a competing pattern, address it. Otherwise check
+   the candidate's neighbour group in the catalogue guidance and prefer a
+   plausible boundary from that group over an incidental implementation
+   variant. Use the direct design when no neighbouring pattern plausibly fits.
+   Discriminate by the requirement's change boundary, not class-diagram
+   similarity, and do not return a menu when the evidence supports one decision.
 6. **Make reversal possible.** Name the concrete future requirement or missing
    evidence that would justify revisiting the verdict. Do not generalize from
    imagined scale.
@@ -75,8 +79,14 @@ Keep the recommendation compact and reviewable. Report:
 - **Direct baseline:** the smallest Swift or platform design to try or retain.
 - **Verdict:** one of the three outcomes above.
 - **Responsibility and cost:** what moves if a pattern is used, what complexity
-  it removes, and what new types, indirection, state, or lifecycle it adds. For
-  `no pattern yet`, state the complexity avoided.
+  it removes, and what kinds of types, indirection, state, or lifecycle it may
+  add. For `no pattern yet`, state the complexity avoided. In a decision-only
+  response, describe the ownership boundary without naming protocols or
+  classes, requiring one type per participant, or selecting another concrete
+  representation. The verdict chooses a responsibility boundary, not its Swift
+  encoding; do not downgrade an evidence-backed pattern merely to avoid choosing
+  that encoding. Choose the representation only when implementation is
+  requested.
 - **Verification:** observable checks that would prove the selected boundary.
 - **Closest alternative:** the discriminating reason it loses.
 - **Reconsider when:** the concrete signal that would reverse the verdict.

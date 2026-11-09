@@ -181,6 +181,9 @@ when you want to understand the series plan or add an example:
 - [Pattern-selection skill validation](Documentation/skill-validation.md): the
   structural checks and four independent forward tests for Adapter, State, a
   no-pattern decision, and Bridge without leaking their expected answers.
+- [Pattern-selection skill refinement](Documentation/skill-refinement.md): the
+  evidence-backed corrections that improve neighbour comparisons and keep
+  decision-only recommendations independent from their Swift representation.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the

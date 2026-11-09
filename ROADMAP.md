@@ -562,8 +562,11 @@ an editorial guide, not a content quota.
   forward tests without leaking expected answers. The [validation report](Documentation/skill-validation.md)
   records a valid skill package, four independent passing verdicts, ignored raw
   outputs, and two bounded output-shape observations for Day 098.
-- [ ] **Day 098 — Refine from evidence.** Correct weak triggers, over-prescription,
-  and confusing output based on validation results.
+- [x] **Day 098 — Refine from evidence.** Correct weak triggers, over-prescription,
+  and confusing output based on validation results. The
+  [refinement report](Documentation/skill-refinement.md) records narrower
+  neighbour selection, representation-neutral decision answers, and two fresh
+  passing boundary tests without copying their prompts into the skill.
 - [ ] **Day 099 — Release-candidate QA.** Run all checks, verify documentation and
   assets, prepare release notes, and request approval before any tag or release.
 - [ ] **Day 100 — Retrospective.** Record what was simplified, rejected, learned,
