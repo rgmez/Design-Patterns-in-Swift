@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-08
+Last updated: 2026-11-10
 
 ## Outcomes
 
@@ -567,8 +567,12 @@ an editorial guide, not a content quota.
   [refinement report](Documentation/skill-refinement.md) records narrower
   neighbour selection, representation-neutral decision answers, and two fresh
   passing boundary tests without copying their prompts into the skill.
-- [ ] **Day 099 — Release-candidate QA.** Run all checks, verify documentation and
+- [x] **Day 099 — Release-candidate QA.** Run all checks, verify documentation and
   assets, prepare release notes, and request approval before any tag or release.
+  The [v1.0 release candidate](Documentation/v1.0-release-candidate.md) records a
+  warning-free build, 350 passing tests, complete guide and asset inventories,
+  repository-wide link and Mermaid checks, the explicit renderer-validation
+  limit, and the approval gate that prevents an automatic tag or release.
 - [ ] **Day 100 — Retrospective.** Record what was simplified, rejected, learned,
   and recommended for the next iteration of the repository.
 
