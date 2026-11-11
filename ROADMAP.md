@@ -588,7 +588,11 @@ pattern.
 - [x] **Bonus 001 — Isolate historical examples.** Mark superseded documents
   and Swift files as non-canonical, map each one to its tested replacement, and
   keep the original evidence available without presenting it as current advice.
-- [ ] **Bonus 002 — Re-evaluate Factory Method against creation closures.**
+- [x] **Bonus 002 — Re-evaluate Factory Method against creation closures.** The
+  [executable comparison](Documentation/factory-method-closure-comparison.md)
+  proves that closures reproduce a correctly paired workflow through one
+  configurator but expose preparation/parser pairing to its caller. Factory
+  Method remains only because the provider owns both decisions.
 - [ ] **Bonus 003 — Constrain Singleton's shared lookup.**
 - [ ] **Bonus 004 — Tighten Flyweight measurement claims.**
 - [ ] **Bonus 005 — Define Interpreter's parser handoff.**

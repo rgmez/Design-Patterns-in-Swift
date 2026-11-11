@@ -37,6 +37,74 @@ struct FactoryMethodProblemTests {
     }
     """.utf8)
 
+    private struct ClosureConfiguredWorkflow {
+        let provider: BankStatementProvider
+        let preparePayload: @Sendable (BankStatementPayload) throws -> BankStatementPayload
+        let makeParser: @Sendable () -> any BankStatementParser
+
+        func importStatement(
+            accountID: String,
+            payload: BankStatementPayload
+        ) throws -> BankStatementImport {
+            let preparedPayload = try preparePayload(payload)
+            let transactions = try makeParser().parse(preparedPayload)
+            return BankStatementImport(
+                accountID: accountID,
+                provider: provider,
+                transactions: transactions
+            )
+        }
+    }
+
+    @Suite("Creation closure alternative")
+    struct CreationClosureAlternative {
+        @Test("Matches the creator workflow when both closures stay paired")
+        func matchesCanonicalWorkflow() throws {
+            let workflow = FactoryMethodProblemTests.ClosureConfiguredWorkflow(
+                provider: .northstar,
+                preparePayload: { payload in
+                    try NorthstarBankStatementWorkflow().preparePayload(payload)
+                },
+                makeParser: {
+                    NorthstarBankStatementWorkflow().makeParser()
+                }
+            )
+            let request = BankStatementImportRequest(
+                accountID: FactoryMethodProblemTests.accountID,
+                provider: .northstar,
+                payload: .csv(FactoryMethodProblemTests.northstarCSV)
+            )
+
+            let closureResult = try workflow.importStatement(
+                accountID: request.accountID,
+                payload: request.payload
+            )
+            let creatorResult = try importBankStatement(request)
+
+            #expect(closureResult == creatorResult)
+        }
+
+        @Test("Makes a mismatched preparation and parser pair representable")
+        func exposesPairingRisk() {
+            let workflow = FactoryMethodProblemTests.ClosureConfiguredWorkflow(
+                provider: .northstar,
+                preparePayload: { payload in
+                    try NorthstarBankStatementWorkflow().preparePayload(payload)
+                },
+                makeParser: {
+                    MercadoSurBankStatementWorkflow().makeParser()
+                }
+            )
+
+            #expect(throws: BankStatementImportError.unsupportedPayload(provider: .mercadoSur)) {
+                try workflow.importStatement(
+                    accountID: FactoryMethodProblemTests.accountID,
+                    payload: .csv(FactoryMethodProblemTests.northstarCSV)
+                )
+            }
+        }
+    }
+
     @Suite("Factory Method creators")
     struct Creators {
         @Test("Northstar workflow creates the CSV parser")

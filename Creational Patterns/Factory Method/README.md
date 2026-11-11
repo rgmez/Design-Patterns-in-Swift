@@ -49,6 +49,13 @@ it would leave preparation and workflow ordering centralized. The useful
 boundary is a creator workflow whose factory method chooses the product it uses
 while the shared import operation remains fixed.
 
+The [executable closure comparison](../../Documentation/factory-method-closure-comparison.md)
+also proves that two independently supplied closures can reproduce the result.
+That alternative loses here because the configuring caller must keep provider
+preparation paired with the parser it creates. The concrete creator makes that
+pair one named workflow; it does not claim that closures are inherently less
+capable or measure which representation has fewer lines.
+
 ## Pattern intent
 
 Factory Method lets each concrete import workflow decide which parser it creates
@@ -132,6 +139,10 @@ swift test -Xswiftc -warnings-as-errors --filter FactoryMethodProblemTests
 [`FactoryMethodProblemTests.swift`](../../Tests/DesignPatternsTests/FactoryMethodProblemTests.swift)
 proves:
 
+- a closure-configured workflow matches the canonical result while its
+  preparation and parser factory remain correctly paired;
+- independently assembled closures can make a preparation/parser mismatch
+  representable at the call site;
 - all three creators prepare their provider envelope and create the matching parser;
 - Northstar CSV, Mercado Sur OFX, and Lumen JSON normalize to the same domain value;
 - mismatched payloads and malformed envelopes fail explicitly;
@@ -164,6 +175,8 @@ package-boundary examples.
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
 | Direct enum switch | A few closed formats share preparation and change together. | Provider workflows now have distinct preparation and release cadence. |
+| Parser-creation closure | Only construction varies at one local call site. | Parser creation alone leaves provider preparation centralized. |
+| Preparation plus creation closures | Callers genuinely need to assemble both behaviors dynamically. | One configuration value can reproduce the import, but correct pairing becomes a caller-owned rule. |
 | Simple Factory | One centralized function only needs to return a parser for a format. | It would hide construction but leave provider workflow coordination centralized. |
 | Abstract Factory | Several related products must be created as a coherent family. | Each provider creates one parser product; there is no family of compatible products. |
 | Strategy | One operation needs interchangeable algorithms. | The creator owns a construction workflow and parser lifecycle, not a selected ranking algorithm. |
@@ -189,4 +202,5 @@ creates one product type, not a coordinated family.
 - [`FactoryMethodProblemTests.swift`](../../Tests/DesignPatternsTests/FactoryMethodProblemTests.swift) — creator, preparation, normalization, failure, and value-semantics tests.
 - [`factory-method-problem.md`](../../Documentation/factory-method-problem.md) — direct baseline and initial thesis.
 - [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md) — measured workflow pressure and Simple Factory comparison.
+- [`factory-method-closure-comparison.md`](../../Documentation/factory-method-closure-comparison.md) — executable nearest-alternative comparison and reversal condition.
 - [`factory-method-header.png`](../../Documentation/Assets/Patterns/creational/factory-method-header.png) — editorial header.

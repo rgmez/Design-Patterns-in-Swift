@@ -72,3 +72,16 @@ Bonus 001 therefore keeps the files in place and adds three safeguards:
 
 No runtime code, test behavior, canonical guide, or visual changes in this
 stage.
+
+## Bonus 002 decision
+
+The [Factory Method closure comparison](factory-method-closure-comparison.md)
+makes the closest Swift alternative executable without adding it to production
+source. Correctly paired preparation and parser-creation closures reproduce the
+canonical result through one configuration value, but independently configured
+closures also make a provider/parser mismatch representable at the call site.
+
+Factory Method remains justified for the documented requirement because one
+provider workflow owns both preparation and the parser it creates. The verdict
+reverses when preparation disappears, becomes shared, or dynamic composition of
+the two behaviors becomes a real client requirement.
