@@ -597,7 +597,11 @@ pattern.
   [visibility review](Documentation/singleton-visibility-review.md) replaces
   public `shared` access with one file-private production identity, a package
   composition root for injection, and the single non-injectable callback path.
-- [ ] **Bonus 004 — Tighten Flyweight measurement claims.**
+- [x] **Bonus 004 — Tighten Flyweight measurement claims.** The
+  [measurement review](Documentation/flyweight-measurement-review.md) renames
+  the executable profile around model-owned payload, preserves exact identity
+  and byte evidence, and explicitly excludes allocation, RSS, cache, renderer,
+  and GPU-memory claims.
 - [ ] **Bonus 005 — Define Interpreter's parser handoff.**
 - [ ] **Bonus 006 — Bound Mediator coordination responsibility.**
 - [ ] **Bonus 007 — Quantify Memento snapshot growth.**

@@ -11,7 +11,7 @@ The map currently builds one complete annotation for every location. That is
 the clearest ownership model: a caller receives ordinary annotation values and
 does not know about caches, keys, pools, or shared marker resources. Flyweight
 remains a hypothesis until representative measurements show that repeated
-immutable artwork is a material memory cost.
+immutable artwork creates a material retained-payload cost.
 
 ## Product scenario
 
@@ -131,7 +131,7 @@ resource from the small per-location state:
 
 The pressure review uses explicit counts rather than a vague claim that many
 objects are expensive. Cache lookup, lifecycle, thread safety, and eviction
-remain costs to consider only after the memory evidence exists.
+remain costs to consider only after the payload evidence exists.
 
 ## Initial editorial thesis
 

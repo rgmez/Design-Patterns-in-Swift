@@ -1,4 +1,4 @@
-public struct FestivalCategoryArtworkProfile: Equatable, Sendable {
+public struct FestivalCategoryPayloadProfile: Equatable, Sendable {
     public let category: FestivalVenueCategory
     public let locationCount: Int
     public let artworkObjectCount: Int
@@ -17,7 +17,7 @@ public struct FestivalCategoryArtworkProfile: Equatable, Sendable {
     }
 }
 
-public struct DirectFestivalMapMemoryProfile: Equatable, Sendable {
+public struct DirectFestivalMapPayloadProfile: Equatable, Sendable {
     public let annotationCount: Int
     public let artworkObjectCount: Int
     public let decodedIconConstructionCount: Int
@@ -25,7 +25,7 @@ public struct DirectFestivalMapMemoryProfile: Equatable, Sendable {
     public let minimumCategoryArtworkCount: Int
     public let minimumCategoryPixelBytes: Int
     public let avoidableRepeatedPixelBytes: Int
-    public let categories: [FestivalCategoryArtworkProfile]
+    public let categories: [FestivalCategoryPayloadProfile]
 
     public init(
         annotationCount: Int,
@@ -35,7 +35,7 @@ public struct DirectFestivalMapMemoryProfile: Equatable, Sendable {
         minimumCategoryArtworkCount: Int,
         minimumCategoryPixelBytes: Int,
         avoidableRepeatedPixelBytes: Int,
-        categories: [FestivalCategoryArtworkProfile]
+        categories: [FestivalCategoryPayloadProfile]
     ) {
         self.annotationCount = annotationCount
         self.artworkObjectCount = artworkObjectCount
@@ -50,14 +50,14 @@ public struct DirectFestivalMapMemoryProfile: Equatable, Sendable {
 
 public struct ProfiledDirectFestivalMap: Equatable, Sendable {
     public let annotations: [DirectFestivalMapAnnotation]
-    public let memory: DirectFestivalMapMemoryProfile
+    public let payload: DirectFestivalMapPayloadProfile
 
     public init(
         annotations: [DirectFestivalMapAnnotation],
-        memory: DirectFestivalMapMemoryProfile
+        payload: DirectFestivalMapPayloadProfile
     ) {
         self.annotations = annotations
-        self.memory = memory
+        self.payload = payload
     }
 }
 
@@ -76,13 +76,13 @@ public extension DirectFestivalMapBuilder {
         }
 
         let categories = FestivalVenueCategory.allCases.compactMap {
-            category -> FestivalCategoryArtworkProfile? in
+            category -> FestivalCategoryPayloadProfile? in
             guard let artwork = artworkByCategory[category],
                   !artwork.isEmpty else {
                 return nil
             }
 
-            return FestivalCategoryArtworkProfile(
+            return FestivalCategoryPayloadProfile(
                 category: category,
                 locationCount: artwork.count,
                 artworkObjectCount: Set(
@@ -108,7 +108,7 @@ public extension DirectFestivalMapBuilder {
 
         return ProfiledDirectFestivalMap(
             annotations: annotations,
-            memory: DirectFestivalMapMemoryProfile(
+            payload: DirectFestivalMapPayloadProfile(
                 annotationCount: annotations.count,
                 artworkObjectCount: Set(
                     annotations.map { ObjectIdentifier($0.artwork) }

@@ -96,3 +96,15 @@ zero-argument legacy callback remains the only exceptional lookup.
 Actor isolation, rollback behavior, and parallel-test isolation remain
 unchanged. The Singleton still reverses to one injected actor if the external
 runtime gains any registration or dependency seam.
+
+## Bonus 004 decision
+
+The [Flyweight measurement review](flyweight-measurement-review.md) replaces
+`MemoryProfile` and `.memory` with payload-specific API names. The deterministic
+tests continue to prove object identities, decode constructions, and exact RGBA
+element counts, but no longer imply that they measure allocations, process RSS,
+framework caches, renderer copies, or GPU memory.
+
+Flyweight remains justified for the example's explicit decoded-buffer boundary.
+Real applications must profile their actual rendering stack before transferring
+the same conclusion.

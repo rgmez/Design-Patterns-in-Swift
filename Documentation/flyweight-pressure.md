@@ -48,6 +48,10 @@ copies. Swift and Apple UI implementations may represent those costs
 differently. The pixel count is exact for this code and is the conservative,
 portable pressure this example can defend.
 
+Bonus 004 preserves these figures and makes their boundary part of the API. The
+[measurement review](flyweight-measurement-review.md) distinguishes logical
+payload evidence from allocation, RSS, framework-cache, and GPU claims.
+
 ## Measured pressure
 
 | Evidence | Direct result | Four-category minimum | Difference |

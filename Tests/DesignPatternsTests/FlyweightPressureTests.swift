@@ -17,39 +17,39 @@ struct FlyweightPressureTests {
             FestivalVenueCategory.allCases.count * Self.bytesPerIcon
 
         #expect(profile.annotations.count == Self.locationCount)
-        #expect(profile.memory.annotationCount == Self.locationCount)
-        #expect(profile.memory.artworkObjectCount == Self.locationCount)
+        #expect(profile.payload.annotationCount == Self.locationCount)
+        #expect(profile.payload.artworkObjectCount == Self.locationCount)
         #expect(
-            profile.memory.decodedIconConstructionCount == Self.locationCount
+            profile.payload.decodedIconConstructionCount == Self.locationCount
         )
-        #expect(profile.memory.decodedPixelBytes == expectedDirectBytes)
+        #expect(profile.payload.decodedPixelBytes == expectedDirectBytes)
         #expect(
-            profile.memory.minimumCategoryArtworkCount
+            profile.payload.minimumCategoryArtworkCount
                 == FestivalVenueCategory.allCases.count
         )
         #expect(
-            profile.memory.minimumCategoryPixelBytes
+            profile.payload.minimumCategoryPixelBytes
                 == expectedCategoryMinimum
         )
         #expect(
-            profile.memory.avoidableRepeatedPixelBytes
+            profile.payload.avoidableRepeatedPixelBytes
                 == expectedDirectBytes - expectedCategoryMinimum
         )
     }
 
     @Test("Counts a distinct artwork identity for every location per category")
     func countsArtworkIdentitiesByCategory() {
-        let memory = Self.builder.profiledAnnotations(
+        let payload = Self.builder.profiledAnnotations(
             for: Self.representativeLocations
-        ).memory
+        ).payload
         let locationsPerCategory =
             Self.locationCount / FestivalVenueCategory.allCases.count
 
         #expect(
-            memory.categories.map(\.category)
+            payload.categories.map(\.category)
                 == FestivalVenueCategory.allCases
         )
-        #expect(memory.categories.allSatisfy {
+        #expect(payload.categories.allSatisfy {
             $0.locationCount == locationsPerCategory
                 && $0.artworkObjectCount == locationsPerCategory
                 && $0.decodedPixelBytes
@@ -59,14 +59,14 @@ struct FlyweightPressureTests {
 
     @Test("Counts only categories present in a partial feed")
     func countsOnlyUsedCategories() {
-        let memory = Self.builder.profiledAnnotations(
+        let payload = Self.builder.profiledAnnotations(
             for: Array(Self.representativeLocations.prefix(2))
-        ).memory
+        ).payload
 
-        #expect(memory.annotationCount == 2)
-        #expect(memory.minimumCategoryArtworkCount == 2)
-        #expect(memory.minimumCategoryPixelBytes == 2 * Self.bytesPerIcon)
-        #expect(memory.avoidableRepeatedPixelBytes == 0)
+        #expect(payload.annotationCount == 2)
+        #expect(payload.minimumCategoryArtworkCount == 2)
+        #expect(payload.minimumCategoryPixelBytes == 2 * Self.bytesPerIcon)
+        #expect(payload.avoidableRepeatedPixelBytes == 0)
     }
 
     @Test("Reports zero pressure for an empty feed")
@@ -75,7 +75,7 @@ struct FlyweightPressureTests {
 
         #expect(profile.annotations.isEmpty)
         #expect(
-            profile.memory == DirectFestivalMapMemoryProfile(
+            profile.payload == DirectFestivalMapPayloadProfile(
                 annotationCount: 0,
                 artworkObjectCount: 0,
                 decodedIconConstructionCount: 0,

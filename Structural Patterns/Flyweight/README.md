@@ -65,6 +65,9 @@ The shareable representation removes 99.98% of the decoded pixel payload in
 this workload. The count excludes object headers, array capacity, allocator
 rounding, strings, renderer copies, and framework caches, so it is not presented
 as a process-memory measurement. It is the exact payload owned by this model.
+The [measurement review](../../Documentation/flyweight-measurement-review.md)
+defines the included counters, excluded runtime costs, and the profiling needed
+before transferring this conclusion to an Apple UI or map framework.
 
 ## 🧭 Pattern intent
 
@@ -231,7 +234,7 @@ quantitative evidence. They are not alternate production architectures.
 
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
-| Direct per-annotation artwork | The live map is small or artwork is cheap and short-lived. | The verified workload retains 78.109375 MiB of repeated pixel payload. |
+| Direct per-annotation artwork | The live map is small or artwork is cheap and short-lived. | The verified workload retains 78.109375 MiB of repeated model-owned pixel payload. |
 | Named assets resolved by the UI framework | The renderer documents decoded-resource sharing and accepts stable asset identifiers. | That is a simpler production option, but this example's boundary explicitly receives decoded RGBA buffers. |
 | Global image cache | Resources must survive many independent map snapshots and real profiling justifies the retention. | It adds synchronization, invalidation, memory limits, and test-reset rules absent from the current requirement. |
 | Static property per category | The four resources should live for the entire process. | Process-wide lifetime would retain unused artwork and hide ownership for a benefit not measured here. |
@@ -253,8 +256,8 @@ lifetime and test coupling without improving the four-resource result.
 
 ## 🚫 When not to use it
 
-- Keep the direct builder when only dozens of markers are visible and memory
-  profiling shows no material repetition.
+- Keep the direct builder when only dozens of markers are visible or real
+  renderer profiling shows no material retained-resource benefit.
 - Let the platform own sharing when `UIImage`, `NSImage`, an asset catalogue, or
   the map SDK already deduplicates decoded marker resources.
 - Do not share mutable artwork. Per-location tint, selection state, animation,
@@ -275,9 +278,10 @@ lifetime and test coupling without improving the four-resource result.
 - [`FestivalMapPressure.swift`](../../Sources/DesignPatterns/Flyweight/FestivalMapPressure.swift) — direct ownership and pixel-payload profile.
 - [`FlyweightTests.swift`](../../Tests/DesignPatternsTests/FlyweightTests.swift) — sharing, preserved context, empty input, and before/after evidence.
 - [`FlyweightProblemTests.swift`](../../Tests/DesignPatternsTests/FlyweightProblemTests.swift) — direct baseline acceptance tests.
-- [`FlyweightPressureTests.swift`](../../Tests/DesignPatternsTests/FlyweightPressureTests.swift) — representative direct-memory evidence.
+- [`FlyweightPressureTests.swift`](../../Tests/DesignPatternsTests/FlyweightPressureTests.swift) — representative model-owned payload evidence.
 - [`flyweight-problem.md`](../../Documentation/flyweight-problem.md) — app scope, invariants, and direct-design decision.
 - [`flyweight-pressure.md`](../../Documentation/flyweight-pressure.md) — quantitative turning point and alternatives evaluated before sharing.
+- [`flyweight-measurement-review.md`](../../Documentation/flyweight-measurement-review.md) — exact measurement boundary, excluded runtime costs, and reversal evidence.
 - [`flyweight-header.png`](../../Documentation/Assets/Patterns/structural/flyweight-header.png) — editorial header.
 
 ## 📚 Further reading

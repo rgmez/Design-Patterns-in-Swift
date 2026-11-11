@@ -84,8 +84,8 @@ struct FlyweightTests {
         }
     }
 
-    @Suite("Measured benefit")
-    struct MeasuredBenefit {
+    @Suite("Measured payload reduction")
+    struct MeasuredPayloadReduction {
         @Test("Reduces twenty thousand artwork resources to four")
         func reducesRepresentativePixelPayload() {
             let locations = FlyweightTests.representativeLocations
@@ -108,11 +108,11 @@ struct FlyweightTests {
 
             #expect(shared.count == FlyweightTests.locationCount)
             #expect(
-                direct.memory.artworkObjectCount
+                direct.payload.artworkObjectCount
                     == FlyweightTests.locationCount
             )
             #expect(
-                direct.memory.decodedPixelBytes
+                direct.payload.decodedPixelBytes
                     == FlyweightTests.locationCount * FlyweightTests.bytesPerIcon
             )
             #expect(
@@ -125,7 +125,7 @@ struct FlyweightTests {
                         * FlyweightTests.bytesPerIcon
             )
             #expect(
-                direct.memory.decodedPixelBytes - sharedPixelBytes
+                direct.payload.decodedPixelBytes - sharedPixelBytes
                     == 81_903_616
             )
         }
