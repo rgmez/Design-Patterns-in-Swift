@@ -155,7 +155,8 @@ who owns subscriptions, traversal, or history.
 
 Some older `.md` examples and playground files remain for reference. They are
 outside the Swift Package. The linked pattern READMEs describe the current,
-tested implementations; a planned pattern does not yet have a tested replacement.
+tested implementations and remain the source of truth for the completed
+catalogue.
 
 ## 🛤️ Follow the series or contribute
 
@@ -187,6 +188,9 @@ when you want to understand the series plan or add an example:
 - [v1.0 release candidate](Documentation/v1.0-release-candidate.md): the release
   notes, repository-wide QA evidence, known validation limit, and approval gate
   before any tag or release.
+- [100-day retrospective](Documentation/retrospective.md): what the programme
+  simplified, deliberately rejected, learned about pattern ownership, and
+  recommends investigating next without preselecting another pattern.
 - [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
   each pattern.
 - [Pattern README template](Documentation/pattern-readme-template.md): the

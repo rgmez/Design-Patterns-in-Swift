@@ -9,7 +9,7 @@ The series follows one rule:
 > A pattern earns its place only when it solves a concrete problem more clearly
 > than Swift's direct language and platform features.
 
-Last updated: 2026-11-10
+Last updated: 2026-11-11
 
 ## Outcomes
 
@@ -573,8 +573,11 @@ an editorial guide, not a content quota.
   warning-free build, 350 passing tests, complete guide and asset inventories,
   repository-wide link and Mermaid checks, the explicit renderer-validation
   limit, and the approval gate that prevents an automatic tag or release.
-- [ ] **Day 100 — Retrospective.** Record what was simplified, rejected, learned,
-  and recommended for the next iteration of the repository.
+- [x] **Day 100 — Retrospective.** Record what was simplified, rejected, learned,
+  and recommended for the next iteration of the repository. The
+  [100-day retrospective](Documentation/retrospective.md) closes the programme
+  with its deliberately omitted abstractions, evidence-led lessons, remaining
+  validation limits, and candidate problem areas for a later roadmap.
 
 ## Review checkpoints
 
@@ -584,6 +587,7 @@ an editorial guide, not a content quota.
 - **Day 070:** flow and structural patterns validated.
 - **Day 091:** all 23 patterns complete.
 - **Day 099:** release candidate ready for explicit approval.
+- **Day 100:** retrospective complete; v1.0 awaits explicit release approval.
 
 The roadmap may be clarified as evidence emerges, but changing scope, order, or
 the Definition of Done must be visible in its own reviewed commit.
