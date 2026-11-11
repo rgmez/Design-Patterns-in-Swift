@@ -137,10 +137,20 @@ Reference the exact test files and keep every command synchronized with the pack
 - [The variation or boundary is absent when...]
 - [The pattern's cost exceeds the demonstrated risk when...]
 
+**Reconsider or remove the pattern when:** [Name the concrete requirement change that reverses the decision.]
+
 ## 🗂️ Source map
 
 - [`Sources/.../Example.swift`](path/to/Example.swift) — [purpose].
 - [`Tests/.../ExampleTests.swift`](path/to/ExampleTests.swift) — [behaviors verified].
 - [`Documentation/Assets/Patterns/.../[pattern]-header.png`](../../Documentation/Assets/Patterns/[category]/[pattern]-header.png) — editorial header.
+
+---
+
+## Continue exploring
+
+**Previous:** [Pattern](../<pattern-directory>/README.md) · **Next:** [Pattern](../<pattern-directory>/README.md) · **Compare with:** [Nearby pattern](../../<category-directory>/<pattern-directory>/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)
 
 Before merging, verify every name, link, command, snippet, image alt, caption, and diagram against these files.
