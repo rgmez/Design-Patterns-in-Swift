@@ -10,11 +10,13 @@
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-555555"></a>
 </p>
 
-<p align="center"><a href="#choose-your-path">Choose a path</a> · <a href="#quickstart">Run the examples</a> · <a href="#pattern-catalogue">Browse the catalogue</a> · <a href=".codex/skills/choose-swift-design-pattern/SKILL.md">Use the decision skill</a></p>
+<p align="center"><a href="#choose-your-path">Choose a path</a> · <a href="#quickstart">Run the examples</a> · <a href="#pattern-catalogue">Browse the catalogue</a> · <a href="https://github.com/rgmez/pragmatic-swift-pattern-skills">Install the agent skills</a></p>
 
 > **The question behind every example:** What changed in the app that makes this pattern worth introducing?
 
 Each guide starts with direct Swift, introduces one verified requirement, and adds a pattern only when it reduces coupling, invalid state, duplicated ownership, lifecycle risk, or measured resource cost. You will see what improves, what it costs, the closest alternative, and when to keep the simpler design.
+
+> **Want to apply the same reasoning in another Swift codebase?** [Pragmatic Swift Pattern Skills](https://github.com/rgmez/pragmatic-swift-pattern-skills) packages the catalogue's evidence-first workflow into four living Agent Skills for choosing, implementing, teaching, and auditing patterns without turning them into a quota.
 
 **Catalogue status:** 23 patterns complete · 359 tests passing · 1 explicit no-pattern decision · v1.0.0 released
 
@@ -25,6 +27,7 @@ Each guide starts with direct Swift, introduces one verified requirement, and ad
 - **New to design patterns?** Start with [Adapter](Structural%20Patterns/Adapter/README.md), [Strategy](Behavioral%20Patterns/Strategy/README.md), and [Observer](Behavioral%20Patterns/Observer/README.md). They introduce external boundaries, interchangeable policy, and independent subscriber lifetimes.
 - **Solving a concrete app problem?** Use the [pressure-led pattern finder](Documentation/find-pattern-by-pressure.md) or jump to the [pattern catalogue](#pattern-catalogue).
 - **Reviewing an architecture proposal?** Read the [no-pattern decision](Documentation/no-pattern-decision.md), then use the [`choose-swift-design-pattern` skill](.codex/skills/choose-swift-design-pattern/SKILL.md).
+- **Working with a coding agent?** Install the companion [Pragmatic Swift Pattern Skills](https://github.com/rgmez/pragmatic-swift-pattern-skills), synchronized from this catalogue through reviewable pull requests.
 - **Evaluating the evidence?** Run the package locally, inspect the linked tests, and read the [complete catalogue review](Documentation/catalogue-review.md).
 
 ### A friendly first route
