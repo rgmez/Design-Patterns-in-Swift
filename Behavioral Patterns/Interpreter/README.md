@@ -74,6 +74,9 @@ presence of strings and colons.
 The [pressure review](../../Documentation/interpreter-pressure.md) records the
 grammar boundary and the point at which a maintained parser library should
 replace hand-written parsing.
+The [executable parser handoff](../../Documentation/interpreter-parser-handoff.md)
+keeps nesting, precedence, quoting, escaping, and multi-error recovery outside
+that boundary until one becomes a real supported requirement.
 
 ## 🧭 Pattern intent
 
@@ -193,7 +196,9 @@ verifies:
 - alternative order never changes inbox order;
 - repeated fields remain conjunctive; and
 - malformed syntax and unsupported vocabulary report exact positions through a
-  parameterized diagnostic table.
+  parameterized diagnostic table; and
+- infrastructure-level grammar requests remain explicit rejection cases rather
+  than silently expanding the hand-written scanner.
 
 The same test filter also runs
 [`InterpreterProblemTests.swift`](../../Tests/DesignPatternsTests/InterpreterProblemTests.swift)
@@ -270,4 +275,5 @@ keeping the direct baseline and the measured pressure executable.
 - [`SupportTicketFilterPressure.swift`](../../Sources/DesignPatterns/Interpreter/SupportTicketFilterPressure.swift) — direct positioned scanner used to measure grammar pressure.
 - [`InterpreterTests.swift`](../../Tests/DesignPatternsTests/InterpreterTests.swift) — final parsing, interpretation, ordering, and diagnostic evidence.
 - [`interpreter-problem.md`](../../Documentation/interpreter-problem.md) and [`interpreter-pressure.md`](../../Documentation/interpreter-pressure.md) — evidence that earned the pattern.
+- [`interpreter-parser-handoff.md`](../../Documentation/interpreter-parser-handoff.md) — executable thresholds for replacing hand-written parser mechanics.
 - [`interpreter-header.png`](../../Documentation/Assets/Patterns/behavioral/interpreter-header.png) — editorial header.

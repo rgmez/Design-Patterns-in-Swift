@@ -34,6 +34,33 @@ struct InterpreterTests {
     private static let filter = InterpretedSupportTicketFilter(
         currentAgentID: currentAgentID
     )
+    private static let parserHandoffScenarios = [
+        ParserHandoffScenario(
+            requirement: "nested groups",
+            query: "status:((open|waiting)|closed)",
+            expectedError: .unexpectedDelimiter("|", position: 22)
+        ),
+        ParserHandoffScenario(
+            requirement: "operator precedence",
+            query: "status:open|status:waiting",
+            expectedError: .unexpectedDelimiter("|", position: 11)
+        ),
+        ParserHandoffScenario(
+            requirement: "quoted values",
+            query: "status:\"open waiting\"",
+            expectedError: .unsupportedStatus("\"open", position: 7)
+        ),
+        ParserHandoffScenario(
+            requirement: "escaped whitespace",
+            query: "assignee:agent\\ robin",
+            expectedError: .unsupportedAssignee("agent\\", position: 9)
+        ),
+        ParserHandoffScenario(
+            requirement: "multi-error recovery",
+            query: "status:(|) assignee:",
+            expectedError: .emptyAlternative(position: 8)
+        )
+    ]
 
     @Suite("Parsing")
     struct Parsing {
@@ -181,6 +208,19 @@ struct InterpreterTests {
             )
         ]
     }
+
+    @Suite("Maintained parser handoff")
+    struct MaintainedParserHandoff {
+        @Test(
+            "Rejects grammar that must not extend the hand-written parser",
+            arguments: InterpreterTests.parserHandoffScenarios
+        )
+        func rejectsInfrastructureRequirements(_ scenario: ParserHandoffScenario) {
+            #expect(throws: scenario.expectedError) {
+                try InterpreterTests.parser.parse(scenario.query)
+            }
+        }
+    }
 }
 
 struct InvalidQuery: CustomTestStringConvertible, Sendable {
@@ -189,5 +229,15 @@ struct InvalidQuery: CustomTestStringConvertible, Sendable {
 
     var testDescription: String {
         query
+    }
+}
+
+struct ParserHandoffScenario: CustomTestStringConvertible, Sendable {
+    let requirement: String
+    let query: String
+    let expectedError: SupportTicketQueryError
+
+    var testDescription: String {
+        requirement
     }
 }

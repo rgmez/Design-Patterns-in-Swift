@@ -602,7 +602,10 @@ pattern.
   the executable profile around model-owned payload, preserves exact identity
   and byte evidence, and explicitly excludes allocation, RSS, cache, renderer,
   and GPU-memory claims.
-- [ ] **Bonus 005 — Define Interpreter's parser handoff.**
+- [x] **Bonus 005 — Define Interpreter's parser handoff.** The
+  [handoff review](Documentation/interpreter-parser-handoff.md) turns nesting,
+  precedence, quoting, escaping, and multi-error recovery into executable
+  rejection boundaries without expanding the current grammar.
 - [ ] **Bonus 006 — Bound Mediator coordination responsibility.**
 - [ ] **Bonus 007 — Quantify Memento snapshot growth.**
 - [ ] **Bonus 008 — Compare Template Method with higher-order composition.**

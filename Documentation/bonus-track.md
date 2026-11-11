@@ -108,3 +108,14 @@ framework caches, renderer copies, or GPU memory.
 Flyweight remains justified for the example's explicit decoded-buffer boundary.
 Real applications must profile their actual rendering stack before transferring
 the same conclusion.
+
+## Bonus 005 decision
+
+The [Interpreter parser handoff](interpreter-parser-handoff.md) makes five
+infrastructure thresholds executable as deterministic rejection cases: nesting,
+precedence, quoting, escaping, and multi-error recovery. The current parser does
+not grow to support them.
+
+Interpreter remains appropriate for the bounded domain expressions. Maintained
+parser infrastructure should replace only the parsing mechanics when one of
+those features becomes supported product behavior or the grammar must be shared.
