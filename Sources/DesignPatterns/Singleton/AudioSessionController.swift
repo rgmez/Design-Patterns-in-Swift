@@ -30,7 +30,7 @@ public enum AudioSessionControllerError: Error, Equatable, Sendable {
 }
 
 public actor AudioSessionController {
-    public static let shared = AudioSessionController(
+    fileprivate static let production = AudioSessionController(
         systemSession: ProcessSystemAudioSession()
     )
 
@@ -126,11 +126,19 @@ public actor AudioSessionController {
     }
 }
 
+package struct AudioSessionCompositionRoot: Sendable {
+    package let controller: AudioSessionController
+
+    package init() {
+        controller = AudioSessionController.production
+    }
+}
+
 public struct LegacyPreviewResumeCallback: Sendable {
     package let controller: AudioSessionController
 
     public init() {
-        controller = .shared
+        controller = AudioSessionController.production
     }
 
     package init(controller: AudioSessionController) {

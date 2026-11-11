@@ -85,3 +85,14 @@ Factory Method remains justified for the documented requirement because one
 provider workflow owns both preparation and the parser it creates. The verdict
 reverses when preparation disappears, becomes shared, or dynamic composition of
 the two behaviors becomes a real client requirement.
+
+## Bonus 003 decision
+
+The [Singleton visibility review](singleton-visibility-review.md) removes the
+public `shared` API. The one production identity is now file-private, while a
+package composition root supplies it for ordinary dependency injection and the
+zero-argument legacy callback remains the only exceptional lookup.
+
+Actor isolation, rollback behavior, and parallel-test isolation remain
+unchanged. The Singleton still reverses to one injected actor if the external
+runtime gains any registration or dependency seam.

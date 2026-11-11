@@ -593,7 +593,10 @@ pattern.
   proves that closures reproduce a correctly paired workflow through one
   configurator but expose preparation/parser pairing to its caller. Factory
   Method remains only because the provider owns both decisions.
-- [ ] **Bonus 003 — Constrain Singleton's shared lookup.**
+- [x] **Bonus 003 — Constrain Singleton's shared lookup.** The
+  [visibility review](Documentation/singleton-visibility-review.md) replaces
+  public `shared` access with one file-private production identity, a package
+  composition root for injection, and the single non-injectable callback path.
 - [ ] **Bonus 004 — Tighten Flyweight measurement claims.**
 - [ ] **Bonus 005 — Define Interpreter's parser handoff.**
 - [ ] **Bonus 006 — Bound Mediator coordination responsibility.**

@@ -60,13 +60,14 @@ enforced invariant across those two roots.
 
 ## 🧭 Pattern intent
 
-`AudioSessionController.shared` is the one immutable production identity for
-the process resource. Its initializer is private. The app composition root
-injects that actor into ordinary clients; only `LegacyPreviewResumeCallback()`
-looks it up because the runtime prevents constructor injection.
+`AudioSessionController.production` is the one immutable production identity
+for the process resource. Both the property and initializer are hidden in its
+source file. A package-only composition root obtains that actor for injection
+into ordinary clients; only `LegacyPreviewResumeCallback()` reaches the same
+identity directly because the runtime prevents constructor injection.
 
 The package-only `isolated(systemSession:)` factory creates fresh controllers
-for tests and executable evidence. It cannot replace `shared`, mutate static
+for tests and executable evidence. It cannot replace `production`, mutate static
 storage, or leak state between tests. Singleton therefore contains one proven
 construction gap instead of becoming a general dependency strategy.
 
@@ -74,8 +75,9 @@ construction gap instead of becoming a general dependency strategy.
 
 | App role | Swift type | Responsibility |
 | --- | --- | --- |
-| Process ownership boundary | [`AudioSessionController`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Owns the immutable `shared` identity and serializes activation, release, and rollback state. |
-| Legacy construction root | [`LegacyPreviewResumeCallback`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Uses the shared controller only when a zero-argument runtime initializer prevents injection. |
+| Process ownership boundary | [`AudioSessionController`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Owns the file-private production identity and serializes activation, release, and rollback state. |
+| App construction root | `AudioSessionCompositionRoot` | Resolves the production actor at package scope so ordinary clients can receive it through injection. |
+| Legacy construction root | [`LegacyPreviewResumeCallback`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Reaches the same file-private controller only when a zero-argument runtime initializer prevents injection. |
 | Ownership request | [`AudioSessionRequest`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Carries the nonempty feature identifier and requested audio purpose. |
 | Platform seam | [`SystemAudioSessionApplying`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Isolates the external process resource and gives tests a deterministic actor substitute. |
 
@@ -85,12 +87,13 @@ exists because it is both an external boundary and an immediate test seam.
 
 ## ⚙️ How the Swift implementation works
 
-1. Static initialization creates one `AudioSessionController.shared` with the
-   process adapter. The private initializer prevents another public production
-   identity.
-2. The app root passes that actor to ordinary recording and preview clients.
-   The legacy runtime instead calls `LegacyPreviewResumeCallback()`; that exact
-   initializer captures `.shared`.
+1. Static initialization creates one file-private
+   `AudioSessionController.production` with the process adapter. The private
+   initializer prevents another production identity.
+2. `AudioSessionCompositionRoot` obtains that actor at package scope and passes
+   it to ordinary recording and preview clients. The legacy runtime instead
+   calls `LegacyPreviewResumeCallback()`; that exact initializer reaches the
+   same file-private identity.
 3. `acquire(_:)` changes the actor state from inactive to activating before it
    awaits the platform. Any competing request observes the reserved owner and
    receives `AudioSessionControllerError.occupied`.
@@ -103,9 +106,17 @@ exists because it is both an external boundary and an immediate test seam.
 The production identity and the test identity use the same actor behavior:
 
 ```swift
-public static let shared = AudioSessionController(
+fileprivate static let production = AudioSessionController(
     systemSession: ProcessSystemAudioSession()
 )
+
+package struct AudioSessionCompositionRoot: Sendable {
+    package let controller: AudioSessionController
+
+    package init() {
+        controller = AudioSessionController.production
+    }
+}
 
 package static func isolated(
     systemSession: any SystemAudioSessionApplying
@@ -122,12 +133,12 @@ behind the same `SystemAudioSessionApplying` boundary.
 
 ```mermaid
 flowchart LR
-    Static["Static initialization"] --> Shared["AudioSessionController.shared"]
-    AppRoot["App composition root"] -->|injects same actor| Recorder["Voice-note recorder"]
+    Static["Static initialization"] --> Shared["File-private production identity"]
+    Shared --> AppRoot["Package composition root"]
+    AppRoot -->|injects same actor| Recorder["Voice-note recorder"]
     AppRoot -->|injects same actor| Preview["Preview player"]
-    Shared --> AppRoot
     Runtime["Legacy callback runtime"] -->|zero-argument init| Callback["LegacyPreviewResumeCallback"]
-    Callback -->|only shared lookup| Shared
+    Callback -->|only exceptional lookup| Shared
     Shared -->|one owner at a time| Session["Process audio session"]
     Tests["Parallel tests"] -->|isolated(systemSession:)| Fresh["Fresh controller + spy"]
 ```
@@ -137,12 +148,12 @@ initialization creates one production actor. The app root distributes it
 explicitly, while the runtime-created callback takes the single exceptional
 lookup path. Tests branch to fresh instances and never touch production state.
 
-**Accessible description:** Static initialization creates one shared audio
-session controller. The app composition root injects that same actor into the
-recorder and preview player. A legacy runtime constructs a callback with no
-arguments, so that callback alone looks up the shared actor. The actor controls
-the one process audio session, while parallel tests create separate controllers
-and spies through the package-only isolated factory.
+**Accessible description:** Static initialization creates one file-private
+audio-session controller. A package composition root injects that same actor
+into the recorder and preview player. A legacy runtime constructs a callback
+with no arguments, so that callback alone reaches the hidden production actor.
+The actor controls the one process audio session, while parallel tests create
+separate controllers and spies through the package-only isolated factory.
 
 ## ▶️ Run the example
 
@@ -164,8 +175,8 @@ keeps the direct ownership, rollback, suspension, and two-root pressure
 evidence. [`SingletonTests.swift`](../../Tests/DesignPatternsTests/SingletonTests.swift)
 proves that:
 
-- repeated production access returns the same actor identity;
-- the zero-argument legacy callback captures that production identity;
+- repeated production composition roots return the same actor identity;
+- the zero-argument legacy callback reaches that hidden production identity;
 - an injected callback observes the same active owner and cannot bypass it;
 - isolated test controllers do not share state or mutate the process singleton;
 - the original controller still rejects competing owners and preserves coherent
@@ -193,9 +204,9 @@ test mutates shared production state.
   with a feature.
 - The zero-argument callback has one hidden dependency that its signature cannot
   reveal.
-- Production callers could still misuse the public `shared` entry point by
-  reaching for convenience instead of injection; code review must preserve the
-  narrow policy.
+- Package code can still create another composition-root value, although every
+  root resolves the same immutable actor. Ordinary modules cannot reach the
+  static identity directly.
 - External integration tests cannot replace the shared platform adapter. They
   should exercise injected clients or the package's isolated tests instead.
 - A second legitimate audio-session scope would invalidate the singleton
@@ -233,7 +244,8 @@ the external runtime makes injection impossible.
 
 ## 🗂️ Source map
 
-- [`AudioSessionController.swift`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) — ownership actor, process identity, isolated test factory, platform seam, and legacy callback.
+- [`AudioSessionController.swift`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) — ownership actor, file-private process identity, package composition root, isolated test factory, platform seam, and legacy callback.
+- [`singleton-visibility-review.md`](../../Documentation/singleton-visibility-review.md) — access-control hardening, concurrency boundary, and reversal evidence.
 - [`SingletonProblemTests.swift`](../../Tests/DesignPatternsTests/SingletonProblemTests.swift) — direct ownership behavior and two-root pressure evidence.
 - [`SingletonTests.swift`](../../Tests/DesignPatternsTests/SingletonTests.swift) — controlled identity, callback boundary, and test-isolation checks.
 - [`singleton-problem.md`](../../Documentation/singleton-problem.md) — direct injected baseline and requirements.

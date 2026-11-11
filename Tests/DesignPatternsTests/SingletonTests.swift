@@ -12,18 +12,22 @@ struct SingletonTests {
 
     @Suite("Controlled production identity")
     struct ControlledProductionIdentity {
-        @Test("Returns the same immutable process controller")
-        func returnsOneSharedController() {
+        @Test("Composition roots receive the same immutable process controller")
+        func compositionRootsShareProductionController() {
+            let firstRoot = AudioSessionCompositionRoot()
+            let secondRoot = AudioSessionCompositionRoot()
+
             #expect(
-                AudioSessionController.shared === AudioSessionController.shared
+                firstRoot.controller === secondRoot.controller
             )
         }
 
-        @Test("The runtime-created callback crosses the shared boundary")
-        func callbackUsesSharedController() {
+        @Test("The runtime-created callback crosses the private identity boundary")
+        func callbackUsesProductionController() {
+            let compositionRoot = AudioSessionCompositionRoot()
             let callback = LegacyPreviewResumeCallback()
 
-            #expect(callback.controller === AudioSessionController.shared)
+            #expect(callback.controller === compositionRoot.controller)
         }
     }
 
