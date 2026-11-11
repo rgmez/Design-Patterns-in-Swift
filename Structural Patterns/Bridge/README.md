@@ -6,44 +6,34 @@
 
 **Category:** Structural
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Notification purpose and delivery channel vary independently and otherwise multiply concrete combinations.
+- **Direct baseline:** An enum, switch, function, or one-axis Strategy handles a single varying dimension.
+- **Use Bridge when:** Two dimensions both grow, combine freely, and deserve separate ownership.
+- **Keep it simple when:** Only one behavior family varies or the product matrix is small and closed.
+
 ## The app problem
 
-The commerce app sends security alerts, order updates, and promotional reminders.
-Each purpose may travel through push, email, the in-app inbox, or SMS. Product
-meaning and delivery infrastructure evolve on different schedules: a new
-purpose should not edit every transport, and a new channel should not rewrite
-the meaning of every message.
+The commerce app sends security alerts, order updates, and promotional reminders. Each purpose may travel through push, email, the in-app inbox, or SMS. Product meaning and delivery infrastructure evolve on different schedules: a new purpose should not edit every transport, and a new channel should not rewrite the meaning of every message.
 
-The direct baseline in [the pressure review](../../Documentation/bridge-pressure.md)
-made the problem executable: twelve purpose-channel combinations passed, but
-adding SMS required a branch in all three purpose helpers and copied sender
-policy into each one.
+The direct baseline in [the pressure review](../../Documentation/bridge-pressure.md) made the problem executable: twelve purpose-channel combinations passed, but adding SMS required a branch in all three purpose helpers and copied sender policy into each one.
 
 ## Start with direct Swift
 
-The original `prepareNotification(_:for:)` function used closed enums and one
-channel switch per purpose. That is the smallest honest solution while the
-matrix is small. Its compiler-checked exhaustiveness and local rules are useful;
-the problem is the direction of change, not the number of lines.
+The original `prepareNotification(_:for:)` function used closed enums and one channel switch per purpose. That is the smallest honest solution while the matrix is small. Its compiler-checked exhaustiveness and local rules are useful; the problem is the direction of change, not the number of lines.
 
-Day 016 proved the pressure. A fifth channel would touch every purpose, while a
-fourth purpose would have to know every channel. The direct implementation is
-preserved in Git history and explained in [the baseline](../../Documentation/bridge-problem.md),
-but the canonical example below separates the two axes.
+Day 016 proved the pressure. A fifth channel would touch every purpose, while a fourth purpose would have to know every channel. The direct implementation is preserved in Git history and explained in [the baseline](../../Documentation/bridge-problem.md), but the canonical example below separates the two axes.
 
 ## The turning point
 
-The purpose axis owns semantic content: the category label and the app-owned
-request values. The channel axis owns transport policy: subjects, sounds,
-sender IDs, opt-out copy, and the asynchronous dispatch boundary. These axes
-can now change independently without a class for every combination.
+The purpose axis owns semantic content: the category label and the app-owned request values. The channel axis owns transport policy: subjects, sounds, sender IDs, opt-out copy, and the asynchronous dispatch boundary. These axes can now change independently without a class for every combination.
 
 ## Pattern intent
 
-Bridge separates an abstraction from its implementation so both can vary
-independently. Here `NotificationBridge` joins one purpose composer with one
-channel delivery implementation. It does not select a provider, hide business
-rules in a registry, or create a hierarchy of twelve message classes.
+Bridge separates an abstraction from its implementation so both can vary independently. Here `NotificationBridge` joins one purpose composer with one channel delivery implementation. It does not select a provider, hide business rules in a registry, or create a hierarchy of twelve message classes.
 
 ## Participants and responsibilities
 
@@ -55,23 +45,16 @@ rules in a registry, or create a hierarchy of twelve message classes.
 | Channel implementors | `PushNotificationDelivery`, `EmailNotificationDelivery`, `InAppInboxDelivery`, `SMSNotificationDelivery` | Apply channel metadata and call the injected dispatch closure. |
 | Domain values | [`NotificationDelivery.swift`](../../Sources/DesignPatterns/Bridge/NotificationDelivery.swift) | Keep requests, semantic content, dispatches, and receipts immutable. |
 
-The protocols have multiple concrete implementations because the app already
-has three purpose rules and four delivery channels. No protocol exists only to
-mock one type.
+The protocols have multiple concrete implementations because the app already has three purpose rules and four delivery channels. No protocol exists only to mock one type.
 
 ## How the Swift implementation works
 
 1. The composition root chooses a purpose composer and a channel delivery value.
 2. `NotificationBridge.send(_:)` asks the composer for `NotificationContent`.
-3. The selected channel turns that content into `NotificationDispatch`, applies
-   its own policy, awaits the injected `@Sendable` dispatch closure, and returns
-   a `NotificationDeliveryReceipt`.
-4. A dispatch closure can be replaced by a test recorder or a real transport
-   without changing either axis. No network service is required here.
+3. The selected channel turns that content into `NotificationDispatch`, applies its own policy, awaits the injected `@Sendable` dispatch closure, and returns a `NotificationDeliveryReceipt`.
+4. A dispatch closure can be replaced by a test recorder or a real transport without changing either axis. No network service is required here.
 
-The `makeNotificationPurposeComposer(for:)` switch is only a closed enum
-selection helper. It is not Factory Method: callers do not subclass a creator,
-and provider construction is not the variation being taught.
+The `makeNotificationPurposeComposer(for:)` switch is only a closed enum selection helper. It is not Factory Method: callers do not subclass a creator, and provider construction is not the variation being taught.
 
 ## Diagram
 
@@ -92,16 +75,9 @@ sequenceDiagram
     Bridge-->>Client: receipt or propagated error
 ```
 
-The sequence shows the independent boundary: purpose composition finishes before
-the channel applies transport policy. The channel remains asynchronous and
-testable, while the client depends on neither a purpose-specific formatter nor
-a vendor transport.
+The sequence shows the independent boundary: purpose composition finishes before the channel applies transport policy. The channel remains asynchronous and testable, while the client depends on neither a purpose-specific formatter nor a vendor transport.
 
-**Accessible description:** A notification client sends a request to
-`NotificationBridge`. The bridge asks an order-purpose composer for semantic
-content, passes that content to an SMS delivery implementation, and waits for
-an injected asynchronous dispatch closure. The delivery returns a receipt or
-propagates its error back to the client.
+**Accessible description:** A notification client sends a request to `NotificationBridge`. The bridge asks an order-purpose composer for semantic content, passes that content to an SMS delivery implementation, and waits for an injected asynchronous dispatch closure. The delivery returns a receipt or propagates its error back to the client.
 
 ## Run the example
 
@@ -111,9 +87,7 @@ From the repository root:
 swift build -Xswiftc -warnings-as-errors
 ```
 
-The default dispatch closures are deterministic no-ops. They model the async
-transport boundary without credentials, network calls, or process-lifetime
-coordination.
+The default dispatch closures are deterministic no-ops. They model the async transport boundary without credentials, network calls, or process-lifetime coordination.
 
 ## Tests
 
@@ -140,13 +114,10 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 
 ### What it costs
 
-- Two protocols and several small value types add indirection around a tiny
-  notification domain.
+- Two protocols and several small value types add indirection around a tiny notification domain.
 - Composition code must choose compatible purpose and channel values.
-- Channel implementations still need semantic metadata such as urgency and
-  promotional opt-out rules; Bridge does not remove domain decisions.
-- A protocol boundary can obscure a simple flow when the axes are actually
-  closed and stable.
+- Channel implementations still need semantic metadata such as urgency and promotional opt-out rules; Bridge does not remove domain decisions.
+- A protocol boundary can obscure a simple flow when the axes are actually closed and stable.
 
 ## Alternatives
 
@@ -162,12 +133,9 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 ## When not to use it
 
 - Keep the direct function when there is one purpose and one transport.
-- Keep enums and switches when both axes are closed, synchronous, and edited by
-  the same team at the same time.
-- Prefer a simple function value when only one behavior varies and it does not
-  need a second family of implementations.
-- Do not introduce Bridge to hide a few repeated literals; extract a local
-  helper first and measure whether independent changes still touch both axes.
+- Keep enums and switches when both axes are closed, synchronous, and edited by the same team at the same time.
+- Prefer a simple function value when only one behavior varies and it does not need a second family of implementations.
+- Do not introduce Bridge to hide a few repeated literals; extract a local helper first and measure whether independent changes still touch both axes.
 
 ## Source map
 

@@ -2,24 +2,28 @@
 
 ![A single document and a cutaway folder containing nested folders and files share one red traversal rail toward offline storage](../../Documentation/Assets/Patterns/structural/composite-header.png)
 
-> **Caption:** One traversal rail carries a leaf file and nested folders toward
-> the same offline boundary while every concrete document remains visible.
+> **Caption:** One traversal rail carries a leaf file and nested folders toward the same offline boundary while every concrete document remains visible.
 
 **Category:** Structural
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Clients need the same operation for one file and for arbitrarily nested workspace folders.
+- **Direct baseline:** Collections, recursion, or an explicit enum keep a small hierarchy visible.
+- **Use Composite when:** Leaves and containers must respond uniformly without repeated client branching.
+- **Keep it simple when:** The structure is flat or traversal order—not part/whole substitution—is the real concern.
+
 ## 🎯 The app problem
 
-A field-service app lets engineers select workspace content before travelling
-to sites with unreliable connectivity. The workspace contains files and folders,
-and a folder may contain both files and other folders.
+A field-service app lets engineers select workspace content before travelling to sites with unreliable connectivity. The workspace contains files and folders, and a folder may contain both files and other folders.
 
 Three clients need the same hierarchy:
 
-- offline selection counts files, totals bytes, and rejects a selection with a
-  restricted file;
+- offline selection counts files, totals bytes, and rejects a selection with a restricted file;
 - search indexing emits one record per file with its complete folder path; and
-- storage cleanup totals files already stored on the device, regardless of
-  whether they remain downloadable.
+- storage cleanup totals files already stored on the device, regardless of whether they remain downloadable.
 
 ### Requirements
 
@@ -28,47 +32,30 @@ Three clients need the same hierarchy:
 - Preserve complete folder paths for search records.
 - Keep download permission separate from local-storage cleanup policy.
 - Treat an empty folder as an unavailable offline selection.
-- Keep opening a file as a leaf-only operation rather than pretending folders
-  can open like documents.
+- Keep opening a file as a leaf-only operation rather than pretending folders can open like documents.
 
 ## 🪶 Start with direct Swift
 
-[`WorkspaceOfflineDirect.swift`](../../Sources/DesignPatterns/Composite/WorkspaceOfflineDirect.swift)
-uses a closed `DirectWorkspaceEntry` indirect enum with file and folder cases.
-`DirectOfflineSelectionPreview` switches once and recursively reduces child
-summaries. With one client, this is the clearest design: the compiler checks the
-complete hierarchy and no protocol or existential is needed.
+[`WorkspaceOfflineDirect.swift`](../../Sources/DesignPatterns/Composite/WorkspaceOfflineDirect.swift) uses a closed `DirectWorkspaceEntry` indirect enum with file and folder cases. `DirectOfflineSelectionPreview` switches once and recursively reduces child summaries. With one client, this is the clearest design: the compiler checks the complete hierarchy and no protocol or existential is needed.
 
-The direct version is not a failed architecture. It is the preferred option
-while the tree is closed and one or two short recursive functions remain easy
-to audit.
+The direct version is not a failed architecture. It is the preferred option while the tree is closed and one or two short recursive functions remain easy to audit.
 
 ## ⚡ The turning point
 
-[`WorkspaceOfflinePressure.swift`](../../Sources/DesignPatterns/Composite/WorkspaceOfflinePressure.swift)
-adds search indexing and storage cleanup. The direct design now contains:
+[`WorkspaceOfflinePressure.swift`](../../Sources/DesignPatterns/Composite/WorkspaceOfflinePressure.swift) adds search indexing and storage cleanup. The direct design now contains:
 
 - three recursive client operations;
 - three file-or-folder switches;
 - three child traversal loops; and
 - three distinct leaf policies that must not be merged.
 
-Moving every rule into one enum method would replace repeated branching with a
-multi-purpose helper full of flags, callbacks, or optional accumulators. The
-pressure is not that recursion is difficult; it is that structural traversal
-has three owners.
+Moving every rule into one enum method would replace repeated branching with a multi-purpose helper full of flags, callbacks, or optional accumulators. The pressure is not that recursion is difficult; it is that structural traversal has three owners.
 
 ## 🧭 Pattern intent
 
-Composite lets a client treat one leaf and a nested container through the same
-component boundary. A `WorkspaceFile` yields one located file. A
-`WorkspaceFolder` asks each child for its locations, prefixes its own name, and
-combines the results. Clients consume those locations without branching on the
-shape of the tree.
+Composite lets a client treat one leaf and a nested container through the same component boundary. A `WorkspaceFile` yields one located file. A `WorkspaceFolder` asks each child for its locations, prefixes its own name, and combines the results. Clients consume those locations without branching on the shape of the tree.
 
-The common operation owns only traversal. It does not decide whether a file may
-be downloaded, whether it belongs in search, how cleanup works, or how a file
-opens.
+The common operation owns only traversal. It does not decide whether a file may be downloaded, whether it belongs in search, how cleanup works, or how a file opens.
 
 ## 🧩 Participants and responsibilities
 
@@ -81,23 +68,16 @@ opens.
 | Clients | [`WorkspaceOfflineSelectionPreview`](../../Sources/DesignPatterns/Composite/WorkspaceComposite.swift), [`WorkspaceSearchIndexer`](../../Sources/DesignPatterns/Composite/WorkspaceComposite.swift), and [`WorkspaceCleanupPreview`](../../Sources/DesignPatterns/Composite/WorkspaceComposite.swift) | Map, filter, or reduce located files according to separate product policies. |
 | Leaf-only request | [`WorkspaceFileOpenRequest`](../../Sources/DesignPatterns/Composite/WorkspaceComposite.swift) | Represents opening one concrete file and deliberately does not belong to the component protocol. |
 
-The protocol has two immediate participants and one demonstrated operation.
-That operation varies structurally between a leaf and a container, so this is
-not a protocol created for a single implementation.
+The protocol has two immediate participants and one demonstrated operation. That operation varies structurally between a leaf and a container, so this is not a protocol created for a single implementation.
 
 ## ⚙️ How the Swift implementation works
 
-1. `WorkspaceFile.fileLocations` returns one location containing itself and its
-   filename.
+1. `WorkspaceFile.fileLocations` returns one location containing itself and its filename.
 2. `WorkspaceFolder.fileLocations` asks every child component for its locations.
-3. The folder prefixes its name to every child path and flattens the results in
-   child order.
-4. Nested folders repeat the same delegation without exposing their shape to
-   clients.
-5. Offline preview, search, and cleanup receive `any WorkspaceComponent` and
-   operate only on the returned locations.
-6. `WorkspaceFile.openRequest()` stays on the concrete leaf, so a folder is not
-   forced to implement a meaningless open operation.
+3. The folder prefixes its name to every child path and flattens the results in child order.
+4. Nested folders repeat the same delegation without exposing their shape to clients.
+5. Offline preview, search, and cleanup receive `any WorkspaceComponent` and operate only on the returned locations.
+6. `WorkspaceFile.openRequest()` stays on the concrete leaf, so a folder is not forced to implement a meaningless open operation.
 
 The composition root remains explicit:
 
@@ -116,8 +96,7 @@ let summary = WorkspaceOfflineSelectionPreview().summary(for: visit)
 let records = WorkspaceSearchIndexer().records(in: visit)
 ```
 
-No client asks whether `visit` is a file or folder. The folder owns recursion;
-the clients still own what each file means to their feature.
+No client asks whether `visit` is a file or folder. The folder owns recursion; the clients still own what each file means to their feature.
 
 ## 🗺️ Diagram
 
@@ -156,15 +135,9 @@ classDiagram
     WorkspaceClients --> WorkspaceComponent : traverses
 ```
 
-Observe that both the file and folder satisfy one narrow component boundary.
-Only the folder contains more components, and every client points to the common
-boundary rather than to the two concrete shapes. `openRequest()` appears only
-on `WorkspaceFile`, outside the shared traversal contract.
+Observe that both the file and folder satisfy one narrow component boundary. Only the folder contains more components, and every client points to the common boundary rather than to the two concrete shapes. `openRequest()` appears only on `WorkspaceFile`, outside the shared traversal contract.
 
-**Accessible description:** A workspace component can be either a file or a
-folder. A folder contains more workspace components, so nesting can continue to
-any depth. Both file and folder yield file locations to the offline, search, and
-cleanup clients. Only a concrete file can create an open request.
+**Accessible description:** A workspace component can be either a file or a folder. A folder contains more workspace components, so nesting can continue to any depth. Both file and folder yield file locations to the offline, search, and cleanup clients. Only a concrete file can create an open request.
 
 ## ▶️ Run the example
 
@@ -174,8 +147,7 @@ From the repository root:
 swift test -Xswiftc -warnings-as-errors --filter CompositeTests
 ```
 
-The example uses deterministic in-memory values. It requires no filesystem,
-network connection, database, or Apple document framework.
+The example uses deterministic in-memory values. It requires no filesystem, network connection, database, or Apple document framework.
 
 ## 🧪 Tests
 
@@ -185,44 +157,34 @@ swift test -Xswiftc -warnings-as-errors --filter CompositeProblemTests
 swift test -Xswiftc -warnings-as-errors --filter CompositePressureTests
 ```
 
-[`CompositeTests.swift`](../../Tests/DesignPatternsTests/CompositeTests.swift)
-proves:
+[`CompositeTests.swift`](../../Tests/DesignPatternsTests/CompositeTests.swift) proves:
 
 - one file and one nested folder substitute through the same component boundary;
 - nested files preserve depth-first order and complete display paths;
-- one shared subtree derives independent paths under two parents without storing
-  parent state;
+- one shared subtree derives independent paths under two parents without storing parent state;
 - restricted leaves propagate through offline-selection policy;
 - cleanup includes stored restricted data but ignores unstored files;
 - an empty folder yields no locations and remains unavailable offline; and
-- an open request is created from the concrete file rather than the component
-  protocol.
+- an open request is created from the concrete file rather than the component protocol.
 
-The problem and pressure suites retain the direct enum baseline and the three
-client-owned recursive walks that earned the pattern.
+The problem and pressure suites retain the direct enum baseline and the three client-owned recursive walks that earned the pattern.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
-- Three clients no longer switch between file and folder or recurse through
-  child entries.
+- Three clients no longer switch between file and folder or recurse through child entries.
 - Folder path construction has one owner and preserves child order once.
-- A new container shape can implement `WorkspaceComponent` without editing
-  every client switch.
+- A new container shape can implement `WorkspaceComponent` without editing every client switch.
 - Offline, search, and cleanup rules remain small and independently testable.
 - File-only behavior stays visible on `WorkspaceFile`.
 
 ### What it costs
 
-- The final design adds one protocol, one traversal value, one composite type,
-  and an existential child array.
-- `fileLocations` allocates arrays while flattening each level. A very large or
-  remotely paginated tree may need lazy iteration instead.
-- The protocol opens a hierarchy that the original enum closed exhaustively.
-  New conformers must preserve path and ordering invariants.
-- This value-oriented example trusts app-owned acyclic composition. Importing
-  arbitrary graph data would require cycle validation and identity rules.
+- The final design adds one protocol, one traversal value, one composite type, and an existential child array.
+- `fileLocations` allocates arrays while flattening each level. A very large or remotely paginated tree may need lazy iteration instead.
+- The protocol opens a hierarchy that the original enum closed exhaustively. New conformers must preserve path and ordering invariants.
+- This value-oriented example trusts app-owned acyclic composition. Importing arbitrary graph data would require cycle validation and identity rules.
 
 ## 🔀 Alternatives considered
 
@@ -236,24 +198,16 @@ client-owned recursive walks that earned the pattern.
 | Decorator | Wrappers add optional behavior around one component operation. | Folders contain peer components; they do not wrap one child to add behavior. |
 | Flyweight | Many repeated leaves need shared intrinsic state to reduce memory. | The problem is recursive composition and client branching, not duplicated file metadata. |
 
-Composite and Decorator can both nest values behind one interface. Composite
-forms a part-whole tree where containers aggregate peer components. Decorator
-forms a wrapper chain where each layer adds behavior around one wrapped value.
+Composite and Decorator can both nest values behind one interface. Composite forms a part-whole tree where containers aggregate peer components. Decorator forms a wrapper chain where each layer adds behavior around one wrapped value.
 
 ## 🚫 When not to use it
 
-- Keep the indirect enum when file and folder are the complete, stable set and
-  recursive clients remain few.
-- Prefer a direct recursive function when traversal is module-private and no
-  client needs to substitute a leaf and container through one boundary.
-- Do not add parent links, mutation APIs, repositories, or cycle detection to a
-  read-only value tree without requirements for them.
-- Do not put file-only operations on `WorkspaceComponent`; a folder should not
-  fake opening, decoding, or downloading one file.
-- Do not eagerly flatten a hierarchy that is too large for memory or backed by
-  pagination; use a lazy `Sequence` or `AsyncSequence` instead.
-- Do not use Composite merely because one type owns an array. The children must
-  share the same meaningful operation as the container.
+- Keep the indirect enum when file and folder are the complete, stable set and recursive clients remain few.
+- Prefer a direct recursive function when traversal is module-private and no client needs to substitute a leaf and container through one boundary.
+- Do not add parent links, mutation APIs, repositories, or cycle detection to a read-only value tree without requirements for them.
+- Do not put file-only operations on `WorkspaceComponent`; a folder should not fake opening, decoding, or downloading one file.
+- Do not eagerly flatten a hierarchy that is too large for memory or backed by pagination; use a lazy `Sequence` or `AsyncSequence` instead.
+- Do not use Composite merely because one type owns an array. The children must share the same meaningful operation as the container.
 
 ## 🗂️ Source map
 

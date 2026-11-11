@@ -2,21 +2,24 @@
 
 ![Three product entry rails converge on one checkout boundary that conducts inventory, payment, order creation, analytics, and a payment-failure return path](../../Documentation/Assets/Patterns/structural/facade-header.png)
 
-*Three product entry points cross one checkout boundary; the subsystem stations
-remain visible, while their choreography and compensation have one owner.*
+> **Caption:** Three product entry points cross one checkout boundary; the subsystem stations remain visible, while their choreography and compensation have one owner.
 
 **Category:** Structural
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Checkout, Buy Again, and payment retry repeat inventory, payment, compensation, order, and analytics choreography.
+- **Direct baseline:** One focused orchestration function at the call site is enough for a single entry point.
+- **Use Facade when:** Several clients need one stable app-level operation over a subsystem they already understand.
+- **Keep it simple when:** There is one caller or the real issue is interface translation or peer coordination.
+
 ## 🎯 The app problem
 
-A commerce app places an order from its checkout screen. The customer sees one
-action, but the client must reserve every item, authorize the exact cart total,
-create an order linked to both results, record the terminal outcome, and release
-the reservation if payment declines.
+A commerce app places an order from its checkout screen. The customer sees one action, but the client must reserve every item, authorize the exact cart total, create an order linked to both results, record the terminal outcome, and release the reservation if payment declines.
 
-The flow later appears in order history's **Buy Again** shortcut and in a
-payment-retry banner. Their input preparation and presentation differ; their
-placement rules do not.
+The flow later appears in order history's **Buy Again** shortcut and in a payment-retry banner. Their input preparation and presentation differ; their placement rules do not.
 
 ### Requirements
 
@@ -24,45 +27,26 @@ placement rules do not.
 - Payment decline must restore the complete reservation before the error escapes.
 - An order must retain the identifiers returned by inventory and payment.
 - Exactly one completion or failure event must describe each attempt.
-- Checkout clients should request placement without learning intermediate types,
-  ordering, or compensation.
-- Inventory, payment, order, and analytics types must remain available to narrower
-  use cases that genuinely need them.
+- Checkout clients should request placement without learning intermediate types, ordering, or compensation.
+- Inventory, payment, order, and analytics types must remain available to narrower use cases that genuinely need them.
 
 ## 🪶 Start with direct Swift
 
-[`CheckoutDirect.swift`](../../Sources/DesignPatterns/Facade/CheckoutDirect.swift)
-keeps four concrete, value-semantic subsystems on `DirectCheckoutScreen`. Its
-`placeOrder(from:)` method makes the complete sequence explicit. With one caller
-and one short flow, that is easier to follow than an extra abstraction.
+[`CheckoutDirect.swift`](../../Sources/DesignPatterns/Facade/CheckoutDirect.swift) keeps four concrete, value-semantic subsystems on `DirectCheckoutScreen`. Its `placeOrder(from:)` method makes the complete sequence explicit. With one caller and one short flow, that is easier to follow than an extra abstraction.
 
-[`CheckoutPressure.swift`](../../Sources/DesignPatterns/Facade/CheckoutPressure.swift)
-then adds direct **Buy Again** and payment-retry clients. The code deliberately
-retains their duplicate orchestration so the cost is executable evidence rather
-than a claim about future reuse.
+[`CheckoutPressure.swift`](../../Sources/DesignPatterns/Facade/CheckoutPressure.swift) then adds direct **Buy Again** and payment-retry clients. The code deliberately retains their duplicate orchestration so the cost is executable evidence rather than a claim about future reuse.
 
 ## ⚡ The turning point
 
-Three clients now expose **12 subsystem dependency slots**, three copies of one
-five-stage workflow, three payment-decline compensation branches, and three
-terminal analytics decision points. A missed synchronized edit can strand stock
-or report the wrong product outcome.
+Three clients now expose **12 subsystem dependency slots**, three copies of one five-stage workflow, three payment-decline compensation branches, and three terminal analytics decision points. A missed synchronized edit can strand stock or report the wrong product outcome.
 
-A helper function could remove lines, but four coordinated mutable values would
-still need to move into and back out of every caller. The stable requirement is
-not code reuse alone: product clients need one checkout-placement boundary that
-owns the partial-failure rules.
+A helper function could remove lines, but four coordinated mutable values would still need to move into and back out of every caller. The stable requirement is not code reuse alone: product clients need one checkout-placement boundary that owns the partial-failure rules.
 
 ## 🧭 Pattern intent
 
-Facade presents a focused interface over several subsystem objects. Here,
-`CheckoutFacade.placeOrder(from:)` is the product operation. It hides ordering,
-identifier handoff, compensation, and terminal analytics without pretending the
-subsystems no longer exist.
+Facade presents a focused interface over several subsystem objects. Here, `CheckoutFacade.placeOrder(from:)` is the product operation. It hides ordering, identifier handoff, compensation, and terminal analytics without pretending the subsystems no longer exist.
 
-This is a use-case facade, not a universal commerce API. It does not own cart
-editing, navigation, retries, tax, shipping, authentication, or every inventory
-and payment capability.
+This is a use-case facade, not a universal commerce API. It does not own cart editing, navigation, retries, tax, shipping, authentication, or every inventory and payment capability.
 
 ## 🧩 Participants and responsibilities
 
@@ -75,28 +59,17 @@ and payment capability.
 | Outcome subsystem | [`CheckoutAnalytics`](../../Sources/DesignPatterns/Facade/CheckoutDirect.swift) | Records one terminal completion or failure. |
 | Product clients | Checkout screen, Buy Again, payment retry | Build a `CheckoutSubmission`, call the facade, and handle the returned order or domain error. |
 
-No subsystem protocol is introduced. These deterministic components have no
-external boundary or immediate implementation variation, so protocols would
-increase the example's surface without reducing risk.
+No subsystem protocol is introduced. These deterministic components have no external boundary or immediate implementation variation, so protocols would increase the example's surface without reducing risk.
 
 ## ⚙️ How the Swift implementation works
 
-1. A product client passes a validated `CheckoutSubmission` to
-   `CheckoutFacade.placeOrder(from:)`.
-2. The facade asks `CheckoutInventory` to reserve all line quantities. A failure
-   records `.inventoryUnavailable` and exits before payment.
-3. It passes the computed minor-unit total and checkout identity to
-   `CheckoutPayments`. A decline releases the exact reservation, records
-   `.paymentDeclined`, and rethrows the domain error.
-4. Approval lets `CheckoutOrders` create an order from the original submission
-   and the two returned subsystem values.
+1. A product client passes a validated `CheckoutSubmission` to `CheckoutFacade.placeOrder(from:)`.
+2. The facade asks `CheckoutInventory` to reserve all line quantities. A failure records `.inventoryUnavailable` and exits before payment.
+3. It passes the computed minor-unit total and checkout identity to `CheckoutPayments`. A decline releases the exact reservation, records `.paymentDeclined`, and rethrows the domain error.
+4. Approval lets `CheckoutOrders` create an order from the original submission and the two returned subsystem values.
 5. The facade records completion only after order creation and returns the order.
 
-The facade owns concrete subsystem values with `public private(set)` access.
-Clients cannot mutate coordinated state behind its back, while tests and
-read-only product views can inspect outcomes. The subsystem types themselves
-remain public and can still be instantiated directly for focused operations such
-as stock availability or payment-method validation.
+The facade owns concrete subsystem values with `public private(set)` access. Clients cannot mutate coordinated state behind its back, while tests and read-only product views can inspect outcomes. The subsystem types themselves remain public and can still be instantiated directly for focused operations such as stock availability or payment-method validation.
 
 ## 🗺️ Diagram
 
@@ -115,15 +88,9 @@ flowchart LR
     Facade -. "compensate: release reservation" .-> Inventory
 ```
 
-Notice that all three product entry points stop at the same operation. The
-facade conducts four focused subsystems and owns the one cross-subsystem recovery
-edge, while each subsystem remains a separate type with a narrower purpose.
+Notice that all three product entry points stop at the same operation. The facade conducts four focused subsystems and owns the one cross-subsystem recovery edge, while each subsystem remains a separate type with a narrower purpose.
 
-**Accessible description:** The checkout screen, Buy Again shortcut, and payment
-retry all call `CheckoutFacade.placeOrder`. The facade reserves inventory,
-authorizes payment, creates the linked order, and records analytics. If payment
-declines, the facade releases the inventory reservation before returning the
-error.
+**Accessible description:** The checkout screen, Buy Again shortcut, and payment retry all call `CheckoutFacade.placeOrder`. The facade reserves inventory, authorizes payment, creates the linked order, and records analytics. If payment declines, the facade releases the inventory reservation before returning the error.
 
 ## ▶️ Run the example
 
@@ -134,8 +101,7 @@ swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors --filter FacadeTests
 ```
 
-The package uses deterministic in-memory values. It needs no backend, payment
-SDK, persistent store, or UI framework.
+The package uses deterministic in-memory values. It needs no backend, payment SDK, persistent store, or UI framework.
 
 ## 🧪 Tests
 
@@ -148,16 +114,13 @@ SDK, persistent store, or UI framework.
 - terminal analytics keep the same success and failure semantics;
 - a lower-level subsystem remains directly usable outside the facade.
 
-The problem and pressure suites remain executable. They preserve the evidence
-that the direct design was initially sufficient and that three clients created
-the coupling which earned the final boundary.
+The problem and pressure suites remain executable. They preserve the evidence that the direct design was initially sufficient and that three clients created the coupling which earned the final boundary.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
-- Three product clients replace 12 subsystem dependencies with one use-case
-  dependency each.
+- Three product clients replace 12 subsystem dependencies with one use-case dependency each.
 - One method owns order, identifier handoff, compensation, and analytics order.
 - Reservation cleanup can no longer drift between checkout entry points.
 - Domain errors and the `CheckoutOrder` result remain unchanged.
@@ -166,14 +129,10 @@ the coupling which earned the final boundary.
 ### What it costs
 
 - The facade becomes the mutation owner for the subsystem values it receives.
-- Its value semantics mean copies do not share later mutations; callers must keep
-  the authoritative facade instance where coordinated state matters.
-- Adding unrelated commerce operations would quickly turn the narrow boundary
-  into a god object.
-- The synchronous example models local orchestration, not distributed
-  transactions or durable compensation after process failure.
-- Read-only subsystem access exposes implementation detail, so clients should use
-  it only for a concrete narrower need rather than reconstructing the workflow.
+- Its value semantics mean copies do not share later mutations; callers must keep the authoritative facade instance where coordinated state matters.
+- Adding unrelated commerce operations would quickly turn the narrow boundary into a god object.
+- The synchronous example models local orchestration, not distributed transactions or durable compensation after process failure.
+- Read-only subsystem access exposes implementation detail, so clients should use it only for a concrete narrower need rather than reconstructing the workflow.
 
 ## 🔀 Alternatives considered
 
@@ -186,25 +145,16 @@ the coupling which earned the final boundary.
 | Strategy | The caller must choose among interchangeable checkout algorithms. | Clients need one stable sequence, not runtime algorithm selection. |
 | Decorator | Optional behaviors wrap one shared interface in configurable order. | Inventory, payment, order, and analytics are distinct participants in one orchestration, not interchangeable wrappers. |
 
-Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds
-behavior around one interface, Strategy exchanges algorithms, and a coordinator
-typically owns UI flow or lifetime. Those responsibilities are deliberately not
-combined here.
+Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds behavior around one interface, Strategy exchanges algorithms, and a coordinator typically owns UI flow or lifetime. Those responsibilities are deliberately not combined here.
 
 ## 🚫 When not to use it
 
-- Keep the direct call sequence when it has one owner and failure handling is
-  already local and obvious.
+- Keep the direct call sequence when it has one owner and failure handling is already local and obvious.
 - Do not add a facade only to rename one subsystem method.
-- Prefer a helper function when the work is stateless and no durable boundary or
-  ownership decision is needed.
-- Do not funnel unrelated inventory, payment, catalogue, account, and navigation
-  operations into one convenience object.
-- Do not hide useful lower-level capabilities from clients that genuinely need
-  them; simplify the common path, not the entire domain.
-- Do not treat an in-process facade as a transaction across remote services. Use
-  idempotency, durable workflow state, or compensating operations when failures
-  must survive process and network boundaries.
+- Prefer a helper function when the work is stateless and no durable boundary or ownership decision is needed.
+- Do not funnel unrelated inventory, payment, catalogue, account, and navigation operations into one convenience object.
+- Do not hide useful lower-level capabilities from clients that genuinely need them; simplify the common path, not the entire domain.
+- Do not treat an in-process facade as a transaction across remote services. Use idempotency, durable workflow state, or compensating operations when failures must survive process and network boundaries.
 
 ## 🗂️ Source map
 

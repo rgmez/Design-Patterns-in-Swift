@@ -2,28 +2,28 @@
 
 ![Three red publishing operations cross four fixed document modules and leave through separate output trays](../../Documentation/Assets/Patterns/behavioral/visitor-header.png)
 
-> **Caption:** Three publishing operations traverse the same four stable
-> document elements without rebuilding concrete-type dispatch in each one.
+> **Caption:** Three publishing operations traverse the same four stable document elements without rebuilding concrete-type dispatch in each one.
 
 **Category:** Behavioral
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Accessibility, plain-text, and localization operations repeat concrete dispatch across four stable publishing elements.
+- **Direct baseline:** Exhaustive enum switches are clearer while operations or element kinds remain few.
+- **Use Visitor when:** Operations grow faster than a stable element family and each operation needs cohesive state or results.
+- **Keep it simple when:** Element kinds change frequently, behavior is intrinsic, or a small fold removes the repetition.
+
 ## 🎯 The app problem
 
-A city-guide publishing app represents an article with paragraphs, links,
-images, and tables. Editors now need three whole-document operations whose
-rules differ by concrete element:
+A city-guide publishing app represents an article with paragraphs, links, images, and tables. Editors now need three whole-document operations whose rules differ by concrete element:
 
-- accessibility auditing returns ordered, typed findings and remembers the
-  previous heading level;
-- plain-text extraction creates search and share copy while excluding
-  decorative images; and
-- localization inventory records authored strings together with their node,
-  asset, row, and column metadata.
+- accessibility auditing returns ordered, typed findings and remembers the previous heading level;
+- plain-text extraction creates search and share copy while excluding decorative images; and
+- localization inventory records authored strings together with their node, asset, row, and column metadata.
 
-The four element kinds have remained fixed while independent operations have
-grown. Each operation must preserve article order, but they must not share
-policy: decorative alternative text is excluded from plain text, inventoried
-for localization when present, and reported by accessibility as redundant.
+The four element kinds have remained fixed while independent operations have grown. Each operation must preserve article order, but they must not share policy: decorative alternative text is excluded from plain text, inventoried for localization when present, and reported by accessibility as redundant.
 
 ### Requirements
 
@@ -36,24 +36,15 @@ for localization when present, and reported by accessibility as redundant.
 
 ## 🪶 Start with direct Swift
 
-[`PublishingDocumentDirect.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentDirect.swift)
-models document nodes as a four-case `PublishingDocumentNode` enum. One
-`DirectDocumentAccessibilityAuditor` loop and one exhaustive switch are the
-smallest correct design for the initial requirement.
+[`PublishingDocumentDirect.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentDirect.swift) models document nodes as a four-case `PublishingDocumentNode` enum. One `DirectDocumentAccessibilityAuditor` loop and one exhaustive switch are the smallest correct design for the initial requirement.
 
-That version remains preferable with one or two operations. The switch is
-local, value semantics are obvious, and the compiler identifies every place
-that must handle a new node case. Visitor would only distribute a decision that
-one function already expresses clearly.
+That version remains preferable with one or two operations. The switch is local, value semantics are obvious, and the compiler identifies every place that must handle a new node case. Visitor would only distribute a decision that one function already expresses clearly.
 
-The [problem definition](../../Documentation/visitor-problem.md) records that
-baseline and its accessibility invariants.
+The [problem definition](../../Documentation/visitor-problem.md) records that baseline and its accessibility invariants.
 
 ## ⚡ The turning point
 
-[`PublishingDocumentPressure.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentPressure.swift)
-adds plain-text extraction and localization inventory without changing the four
-node kinds. The direct implementation now contains:
+[`PublishingDocumentPressure.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentPressure.swift) adds plain-text extraction and localization inventory without changing the four node kinds. The direct implementation now contains:
 
 | Pressure signal | Direct implementation |
 | --- | ---: |
@@ -63,32 +54,20 @@ node kinds. The direct implementation now contains:
 | Concrete case branches | 12 |
 | Node kinds | 4 |
 
-The repeated detail is concrete-type selection, not the operations' different
-rules or result shapes. A fourth operation would add another traversal and four
-branches. A fifth node kind would deliberately be expensive either way because
-every existing operation must define its behavior for that new kind.
+The repeated detail is concrete-type selection, not the operations' different rules or result shapes. A fourth operation would add another traversal and four branches. A fifth node kind would deliberately be expensive either way because every existing operation must define its behavior for that new kind.
 
-The [pressure review](../../Documentation/visitor-pressure.md) compares the
-enum with protocol requirements, a four-closure fold, free functions, and
-Visitor before accepting the new boundary.
-The [extension-direction review](../../Documentation/visitor-extension-review.md)
-turns the cheap operation direction into a dedicated executable suite and
-records the compiler-enforced change surface for a new element kind.
+The [pressure review](../../Documentation/visitor-pressure.md) compares the enum with protocol requirements, a four-closure fold, free functions, and Visitor before accepting the new boundary. The [extension-direction review](../../Documentation/visitor-extension-review.md) turns the cheap operation direction into a dedicated executable suite and records the compiler-enforced change surface for a new element kind.
 
 ## 🧭 Pattern intent
 
-Visitor moves concrete-element dispatch into the stable elements and keeps each
-external operation in one cohesive type. `PublishingArticle.accept(_:)` walks
-the elements. Every element's `accept` implementation calls the matching
-overload on `PublishingDocumentVisiting`.
+Visitor moves concrete-element dispatch into the stable elements and keeps each external operation in one cohesive type. `PublishingArticle.accept(_:)` walks the elements. Every element's `accept` implementation calls the matching overload on `PublishingDocumentVisiting`.
 
 That two-step call is the double dispatch:
 
 1. the runtime selects the concrete element's `accept` implementation; and
 2. that implementation selects `visit(_:)` for its own concrete value.
 
-The operation no longer switches or casts. The element does not learn any
-accessibility, extraction, or localization policy.
+The operation no longer switches or casts. The element does not learn any accessibility, extraction, or localization policy.
 
 ## 🧩 Participants and responsibilities
 
@@ -102,19 +81,14 @@ accessibility, extraction, or localization policy.
 | Text operation | [`PublishingPlainTextVisitor`](../../Sources/DesignPatterns/Visitor/PublishingDocumentVisitor.swift) | Accumulates normalized search and share lines. |
 | Localization operation | [`PublishingLocalizationVisitor`](../../Sources/DesignPatterns/Visitor/PublishingDocumentVisitor.swift) | Accumulates strings with source metadata. |
 
-The three concrete visitors are reference types because each traversal owns a
-mutable accumulator with a different result type. Elements and articles remain
-immutable values. There is no superclass, generic result algebra, type erasure,
-registry, dependency container, asynchronous layer, or shared global visitor.
+The three concrete visitors are reference types because each traversal owns a mutable accumulator with a different result type. Elements and articles remain immutable values. There is no superclass, generic result algebra, type erasure, registry, dependency container, asynchronous layer, or shared global visitor.
 
 ## ⚙️ How the Swift implementation works
 
 1. The app creates one fresh visitor for one operation.
-2. `PublishingArticle.accept(_:)` gives it the title and walks elements in
-   source order.
+2. `PublishingArticle.accept(_:)` gives it the title and walks elements in source order.
 3. The existential element call selects the concrete `accept` implementation.
-4. That implementation forwards its concrete value to the corresponding
-   visitor overload.
+4. That implementation forwards its concrete value to the corresponding visitor overload.
 5. The visitor applies only its own policy and updates only its own state.
 6. After traversal, the caller reads `report`, `text`, or `entries`.
 
@@ -132,18 +106,9 @@ extension PublishingImage: PublishingDocumentElement {
 }
 ```
 
-A new outbound-link operation conforms to `PublishingDocumentVisiting` and
-implements the existing overload set; no element changes. In the opposite
-direction, a new video element must add a visitor requirement and behavior to
-all existing visitors. That asymmetry is the reason to use Visitor only while
-element kinds are more stable than operations.
+A new outbound-link operation conforms to `PublishingDocumentVisiting` and implements the existing overload set; no element changes. In the opposite direction, a new video element must add a visitor requirement and behavior to all existing visitors. That asymmetry is the reason to use Visitor only while element kinds are more stable than operations.
 
-Each concrete visitor is single-use. Reusing one instance would append a second
-article's result and carry heading state across documents. A production API
-could hide construction behind operation functions, but three tiny factories
-would add no teaching value here. Concurrent traversal would require one
-visitor per task or explicit isolation; these mutable visitor classes are not
-`Sendable`.
+Each concrete visitor is single-use. Reusing one instance would append a second article's result and carry heading state across documents. A production API could hide construction behind operation functions, but three tiny factories would add no teaching value here. Concurrent traversal would require one visitor per task or explicit isolation; these mutable visitor classes are not `Sendable`.
 
 ## 🗺️ Diagram
 
@@ -163,17 +128,9 @@ sequenceDiagram
     App->>Visitor: read text
 ```
 
-Observe the two runtime decisions inside the loop: the article reaches the
-concrete element through `accept`, then that element reaches its specific
-visitor overload. Accessibility and localization follow the same sequence with
-their own state and result.
+Observe the two runtime decisions inside the loop: the article reaches the concrete element through `accept`, then that element reaches its specific visitor overload. Accessibility and localization follow the same sequence with their own state and result.
 
-**Accessible description:** The publishing app creates a plain-text visitor and
-passes it to the article. The article first sends its title to the visitor. It
-then visits each paragraph, link, image, and table in source order. Each concrete
-element accepts the visitor and invokes the overload for its own type. After the
-walk, the app reads the accumulated text. The other two operations use the same
-element path but separate visitors.
+**Accessible description:** The publishing app creates a plain-text visitor and passes it to the article. The article first sends its title to the visitor. It then visits each paragraph, link, image, and table in source order. Each concrete element accepts the visitor and invokes the overload for its own type. After the walk, the app reads the accumulated text. The other two operations use the same element path but separate visitors.
 
 ## ▶️ Run the example
 
@@ -184,28 +141,20 @@ swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors --filter Visitor
 ```
 
-The package is a library. Tests construct publishing articles, run visitors,
-and inspect typed results; no executable app or console output is required.
+The package is a library. Tests construct publishing articles, run visitors, and inspect typed results; no executable app or console output is required.
 
 ## 🧪 Tests
 
-[`VisitorTests.swift`](../../Tests/DesignPatternsTests/VisitorTests.swift)
-verifies:
+[`VisitorTests.swift`](../../Tests/DesignPatternsTests/VisitorTests.swift) verifies:
 
-- concrete overload dispatch for all four elements in source order through the
-  `ExtensionDirection` suite;
+- concrete overload dispatch for all four elements in source order through the `ExtensionDirection` suite;
 - a fourth outbound-link operation without any production element modification;
 - accessibility finding order and cross-element heading state;
 - a complete article with no accessibility findings;
 - plain-text ordering and decorative-image exclusion; and
 - localization metadata with blank authored copy omitted.
 
-The same filter also runs
-[`VisitorProblemTests.swift`](../../Tests/DesignPatternsTests/VisitorProblemTests.swift)
-and [`VisitorPressureTests.swift`](../../Tests/DesignPatternsTests/VisitorPressureTests.swift),
-so the direct enum baseline and measured pressure remain executable evidence.
-The final implementation does not make the direct alternative artificially
-fail or disappear.
+The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatternsTests/VisitorProblemTests.swift) and [`VisitorPressureTests.swift`](../../Tests/DesignPatternsTests/VisitorPressureTests.swift), so the direct enum baseline and measured pressure remain executable evidence. The final implementation does not make the direct alternative artificially fail or disappear.
 
 ## ⚖️ Trade-offs
 
@@ -218,15 +167,11 @@ fail or disappear.
 
 ### What it costs
 
-- Two protocols, four `accept` implementations, and one indirect call per
-  visited element.
-- The visitor protocol lists the complete element set, coupling every visitor
-  to that closed family.
+- Two protocols, four `accept` implementations, and one indirect call per visited element.
+- The visitor protocol lists the complete element set, coupling every visitor to that closed family.
 - A new element kind changes the protocol and every existing visitor.
-- Stateful visitors have a one-traversal lifetime and are not automatically
-  safe to share across concurrent tasks.
-- Protocol existentials mean `PublishingArticle` does not gain synthesized
-  `Equatable`; this example compares observable operation results instead.
+- Stateful visitors have a one-traversal lifetime and are not automatically safe to share across concurrent tasks.
+- Protocol existentials mean `PublishingArticle` does not gain synthesized `Equatable`; this example compares observable operation results instead.
 
 ## 🔀 Alternatives considered
 
@@ -243,13 +188,11 @@ fail or disappear.
 ## 🚫 When not to use it
 
 - Keep the enum and exhaustive switches while they remain easier to understand.
-- Do not use Visitor when element kinds change as often as operations; its
-  extension direction will work against the product.
+- Do not use Visitor when element kinds change as often as operations; its extension direction will work against the product.
 - Keep intrinsic behavior as a protocol requirement or method beside its data.
 - Prefer a fold when one small traversal abstraction removes the repetition.
 - Do not add a visitor to avoid four obvious branches in one function.
-- Do not share a mutable visitor across articles, tasks, or actors without an
-  explicit reset and isolation policy.
+- Do not share a mutable visitor across articles, tasks, or actors without an explicit reset and isolation policy.
 - Do not erase result types into `Any` merely to make one universal visitor API.
 
 ## 🗂️ Source map

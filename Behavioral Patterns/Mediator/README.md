@@ -2,71 +2,54 @@
 
 ![Four independent checkout modules connect through one central routing plate that orders their red signal paths](../../Documentation/Assets/Patterns/behavioral/mediator-header.png)
 
-> **Caption:** One routing plate resolves the delivery choice before sending
-> the final state to payment, while each module retains its own validation.
+> **Caption:** One routing plate resolves the delivery choice before sending the final state to payment, while each module retains its own validation.
 
 **Category:** Behavioral
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Delivery and promotion can correct one another while payment must validate only the final checkout selection.
+- **Direct baseline:** One value-semantic form or one-way callbacks are clearer while a single owner controls the interaction.
+- **Use Mediator when:** Independently owned peers react bidirectionally and one boundary must own their ordering invariant.
+- **Keep it simple when:** Coordination is one-way, one external operation is enough, or the participants are not independently owned.
+
 ## 🎯 The app problem
 
-A delivery checkout has independently maintained address, delivery-window,
-promotion, and payment sections. An address determines available windows. A
-window determines payment options and promotion eligibility. The promotion
-section also lets a customer opt into keeping a compatible window selected.
+A delivery checkout has independently maintained address, delivery-window, promotion, and payment sections. An address determines available windows. A window determines payment options and promotion eligibility. The promotion section also lets a customer opt into keeping a compatible window selected.
 
-That last action makes interaction bidirectional: delivery refreshes promotion,
-and promotion can request a different delivery window. The checkout must finish
-each synchronous customer action with one coherent selection.
+That last action makes interaction bidirectional: delivery refreshes promotion, and promotion can request a different delivery window. The checkout must finish each synchronous customer action with one coherent selection.
 
 ### Requirements
 
 - Filter windows by delivery zone and reject unavailable choices.
 - Reevaluate promotion eligibility when the selected window changes.
 - Enter a promotion without automatically changing the delivery choice.
-- Honor an explicit preference for an eligible window until its code is cleared
-  or replaced; keep a compatible current window before choosing another.
+- Honor an explicit preference for an eligible window until its code is cleared or replaced; keep a compatible current window before choosing another.
 - Resolve the final delivery window before invalidating payment.
 - Preserve a payment accepted by that final window; clear incompatible payments.
 - Keep participant validation local and release the checkout without retain cycles.
 
 ## 🪶 Start with direct Swift
 
-[`DeliveryCheckoutDirect.swift`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutDirect.swift)
-models four fixed section values in one `DirectDeliveryCheckoutForm`. Explicit
-mutation methods coordinate address, window, and payment. Promotion status is
-derived when reading the snapshot. No module callbacks or separate mediator are
-needed while one form owns the whole interaction.
+[`DeliveryCheckoutDirect.swift`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutDirect.swift) models four fixed section values in one `DirectDeliveryCheckoutForm`. Explicit mutation methods coordinate address, window, and payment. Promotion status is derived when reading the snapshot. No module callbacks or separate mediator are needed while one form owns the whole interaction.
 
-This remains the preferred solution for that simpler ownership boundary. Four
-fields in a screen are not sufficient reason to introduce Mediator.
+This remains the preferred solution for that simpler ownership boundary. Four fields in a screen are not sufficient reason to introduce Mediator.
 
 ## ⚡ The turning point
 
-[`DeliveryCheckoutPressure.swift`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutPressure.swift)
-adds independent stateful modules and the promotion's delivery preference. The
-direct graph has three callback assignments, four directed participant
-dependencies, and one bidirectional pair: delivery ↔ promotion.
+[`DeliveryCheckoutPressure.swift`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutPressure.swift) adds independent stateful modules and the promotion's delivery preference. The direct graph has three callback assignments, four directed participant dependencies, and one bidirectional pair: delivery ↔ promotion.
 
-The direct implementation requires two coordination precautions: selecting an
-unchanged window must not announce another change, and payment must update
-before promotion can reenter delivery. That keeps the graph coherent, but cash
-can be discarded by an intermediate express choice even when promotion
-immediately restores a cash-compatible evening window.
+The direct implementation requires two coordination precautions: selecting an unchanged window must not announce another change, and payment must update before promotion can reenter delivery. That keeps the graph coherent, but cash can be discarded by an intermediate express choice even when promotion immediately restores a cash-compatible evening window.
 
-A local ordering fix preserves coherence; it does not express the stronger
-product requirement to validate payment only against the final window. The
-[pressure review](../../Documentation/mediator-pressure.md) records the graph
-and the tests that demonstrate these interactions.
+A local ordering fix preserves coherence; it does not express the stronger product requirement to validate payment only against the final window. The [pressure review](../../Documentation/mediator-pressure.md) records the graph and the tests that demonstrate these interactions.
 
 ## 🧭 Pattern intent
 
-`DeliveryCheckoutMediator` owns the interaction sequence between these modules.
-Participants announce a change or request a choice through callbacks bound to
-the mediator, instead of calling another participant directly.
+`DeliveryCheckoutMediator` owns the interaction sequence between these modules. Participants announce a change or request a choice through callbacks bound to the mediator, instead of calling another participant directly.
 
-The mediator lets promotion resolve the final window, refreshes its status if
-that correction changed delivery, and only then tells payment which options
-apply. It does not choose eligible windows or validate payment methods itself.
+The mediator lets promotion resolve the final window, refreshes its status if that correction changed delivery, and only then tells payment which options apply. It does not choose eligible windows or validate payment methods itself.
 
 ## 🧩 Participants and responsibilities
 
@@ -79,32 +62,18 @@ apply. It does not choose eligible windows or validate payment methods itself.
 | Payment section | [`CheckoutPaymentModule`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutPressure.swift) | Rejects unavailable methods and clears selections incompatible with the supplied final window. |
 | Read-only result | [`DeliveryCheckoutFormSnapshot`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutDirect.swift) | Exposes the coherent selection and order readiness after an action returns. |
 
-The final implementation reuses the pressure-stage participants unchanged.
-There is one concrete mediator, no colleague protocol, no universal event type,
-and no new abstraction around domain validation. The retained pressure file
-allows the same participant behavior to be compared under both interaction
-policies.
+The final implementation reuses the pressure-stage participants unchanged. There is one concrete mediator, no colleague protocol, no universal event type, and no new abstraction around domain validation. The retained pressure file allows the same participant behavior to be compared under both interaction policies.
 
-The [responsibility review](../../Documentation/mediator-responsibility-review.md)
-also exercises delivery, payment, and promotion without a mediator. It defines
-the concrete signals for splitting this coordinator before domain rules or
-external side effects accumulate here.
+The [responsibility review](../../Documentation/mediator-responsibility-review.md) also exercises delivery, payment, and promotion without a mediator. It defines the concrete signals for splitting this coordinator before domain rules or external side effects accumulate here.
 
 ## ⚙️ How the Swift implementation works
 
-1. An address change enters the mediator's callback and updates delivery's
-   available windows. A delivery selection also announces its change there.
+1. An address change enters the mediator's callback and updates delivery's available windows. A delivery selection also announces its change there.
 2. `coordinateDeliveryChange()` starts one synchronous coordination operation.
-3. Promotion receives the initial selection and available windows. Its active
-   preference may request an eligible window through the mediator.
-4. Delivery validates that request. Nested delivery notifications do not begin
-   another coordination operation while the current one is resolving selection.
-5. If delivery changed, the mediator refreshes promotion with the corrected
-   window. The promotion preserves an eligible current window, so one corrective
-   refresh suffices; there is no unbounded retry loop.
-6. Payment receives the final window once. A previously selected cash method
-   survives when evening remains the final choice. It is cleared when a new
-   address ends at a card-only window.
+3. Promotion receives the initial selection and available windows. Its active preference may request an eligible window through the mediator.
+4. Delivery validates that request. Nested delivery notifications do not begin another coordination operation while the current one is resolving selection.
+5. If delivery changed, the mediator refreshes promotion with the corrected window. The promotion preserves an eligible current window, so one corrective refresh suffices; there is no unbounded retry loop.
+6. Payment receives the final window once. A previously selected cash method survives when evening remains the final choice. It is cleared when a new address ends at a card-only window.
 
 These are the final payment update and the correction block from verified source:
 
@@ -120,18 +89,9 @@ if delivery.selectedSlot != initialSlot {
 payment.updateSlot(delivery.selectedSlot)
 ```
 
-The mediator strongly owns its four modules; their installed closures capture
-it weakly. No participant directly retains another participant. The mediator
-must remain alive while its modules are used, and its installed callbacks must
-not be replaced by callers. The example is synchronous and confined to one
-checkout: these mutable reference types are not `Sendable` and cannot be shared
-across concurrent tasks. No UI framework, network, persistence, or asynchronous
-publication is included.
+The mediator strongly owns its four modules; their installed closures capture it weakly. No participant directly retains another participant. The mediator must remain alive while its modules are used, and its installed callbacks must not be replaced by callers. The example is synchronous and confined to one checkout: these mutable reference types are not `Sendable` and cannot be shared across concurrent tasks. No UI framework, network, persistence, or asynchronous publication is included.
 
-The reentry guard suppresses only nested notifications generated by the current
-correction. The outer operation explicitly reads the corrected state before
-returning. It does not provide transactions for arbitrary third-party observers
-reading module state midway through an action.
+The reentry guard suppresses only nested notifications generated by the current correction. The outer operation explicitly reads the corrected state before returning. It does not provide transactions for arbitrary third-party observers reading module state midway through an action.
 
 ## 🗺️ Diagram
 
@@ -155,15 +115,9 @@ sequenceDiagram
     Mediator->>Payment: validate against final evening
 ```
 
-Notice that promotion requests and delivery announcements pass through one
-interaction owner. Payment sees the final choice rather than the provisional
-express selection.
+Notice that promotion requests and delivery announcements pass through one interaction owner. Payment sees the final choice rather than the provisional express selection.
 
-**Accessible description:** A customer selects express. Delivery announces the
-change to the mediator. Promotion asks the mediator for evening. Delivery accepts
-that correction, and the mediator suppresses its nested announcement. The
-mediator refreshes promotion with evening, stops the unchanged request, and
-updates payment once with evening's options.
+**Accessible description:** A customer selects express. Delivery announces the change to the mediator. Promotion asks the mediator for evening. Delivery accepts that correction, and the mediator suppresses its nested announcement. The mediator refreshes promotion with evening, stops the unchanged request, and updates payment once with evening's options.
 
 ## ▶️ Run the example
 
@@ -174,39 +128,27 @@ swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors --filter Mediator
 ```
 
-The package provides library examples. The tests execute customer actions and
-inspect snapshots; there is no executable app or console-output demonstration.
+The package provides library examples. The tests execute customer actions and inspect snapshots; there is no executable app or console-output demonstration.
 
 ## 🧪 Tests
 
-[`MediatorTests.swift`](../../Tests/DesignPatternsTests/MediatorTests.swift)
-verifies final-window payment preservation, address invalidation, unavailable
-choices, unknown codes, inert promotion application until explicit opt-in,
-promotion-driven correction, preference across zones, preference clearing and
-replacement, no eligible window, and module/mediator release. Every test
-creates its own checkout.
+[`MediatorTests.swift`](../../Tests/DesignPatternsTests/MediatorTests.swift) verifies final-window payment preservation, address invalidation, unavailable choices, unknown codes, inert promotion application until explicit opt-in, promotion-driven correction, preference across zones, preference clearing and replacement, no eligible window, and module/mediator release. Every test creates its own checkout.
 
-The `ParticipantOwnedRules` suite separately proves that delivery, payment, and
-promotion preserve their own validation without the mediator.
+The `ParticipantOwnedRules` suite separately proves that delivery, payment, and promotion preserve their own validation without the mediator.
 
-The same filter also runs
-[`MediatorProblemTests.swift`](../../Tests/DesignPatternsTests/MediatorProblemTests.swift)
-and [`MediatorPressureTests.swift`](../../Tests/DesignPatternsTests/MediatorPressureTests.swift)
-so the direct baseline and direct callback graph remain executable evidence.
+The same filter also runs [`MediatorProblemTests.swift`](../../Tests/DesignPatternsTests/MediatorProblemTests.swift) and [`MediatorPressureTests.swift`](../../Tests/DesignPatternsTests/MediatorPressureTests.swift) so the direct baseline and direct callback graph remain executable evidence.
 
 ```sh
 swift test -Xswiftc -warnings-as-errors
 ```
 
-The full suite verifies that the new pattern still compiles alongside the rest
-of the catalogue, with warnings treated as errors.
+The full suite verifies that the new pattern still compiles alongside the rest of the catalogue, with warnings treated as errors.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
-- Direct participant-to-participant dependencies fall from four to zero in the
-  installed graph; the three callback assignments now route through the mediator.
+- Direct participant-to-participant dependencies fall from four to zero in the installed graph; the three callback assignments now route through the mediator.
 - One method expresses corrective ordering and the payment commit boundary.
 - A valid payment survives an intermediate selection corrected by promotion.
 - The participant domain rules remain unchanged and individually testable.
@@ -215,8 +157,7 @@ of the catalogue, with warnings treated as errors.
 
 - One additional reference type, indirection through callbacks, and a reentry guard.
 - A lifetime rule: the mediator must outlive participant interaction.
-- The bounded refresh relies on the promotion preserving an eligible current
-  window; changing that policy requires reviewing the coordination operation.
+- The bounded refresh relies on the promotion preserving an eligible current window; changing that policy requires reviewing the coordination operation.
 - Mutable module APIs and replaceable callbacks require disciplined composition.
 
 ## 🔀 Alternatives considered
@@ -234,10 +175,8 @@ of the catalogue, with warnings treated as errors.
 - Keep the direct form when one owner can derive the complete state simply.
 - Keep one-way callbacks when no corrective interaction needs a shared order.
 - Do not add Mediator merely because a screen contains several sections.
-- Do not turn it into a god coordinator that prices orders, performs networking,
-  authorizes payment, persists forms, and navigates between screens.
-- Do not reuse this synchronous guard as a concurrency or asynchronous-delivery
-  solution; those requirements need explicit isolation and completion policy.
+- Do not turn it into a god coordinator that prices orders, performs networking, authorizes payment, persists forms, and navigates between screens.
+- Do not reuse this synchronous guard as a concurrency or asynchronous-delivery solution; those requirements need explicit isolation and completion policy.
 
 ## 🗂️ Source map
 

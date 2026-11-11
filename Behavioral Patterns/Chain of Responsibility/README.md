@@ -2,22 +2,24 @@
 
 ![One universal-link capsule advances through ordered feature-owned routing stations until one illuminated handler diverts it and leaves later stations untouched](../../Documentation/Assets/Patterns/behavioral/chain-of-responsibility-header.png)
 
-> **Caption:** One universal link moves through an explicit feature order and
-> stops as soon as a responsible handler accepts or rejects it.
+> **Caption:** One universal link moves through an explicit feature order and stops as soon as a responsible handler accepts or rejects it.
 
 **Category:** Behavioral
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Independently growing universal-link features need explicit precedence, pass-through, and one terminal decision.
+- **Direct baseline:** An ordered loop or conditional router keeps a small route set visible.
+- **Use Chain of Responsibility when:** Ordered handlers own separate features and processing stops after one handles or rejects the request.
+- **Keep it simple when:** One function owns the request or every processing step must run.
+
 ## 🎯 The app problem
 
-A commerce app receives universal links for products, orders, campaigns,
-account recovery, and stores. Each feature can own its routing decision, but
-the app must still preserve one deterministic rule: ask handlers in order and
-stop after the first terminal answer.
+A commerce app receives universal links for products, orders, campaigns, account recovery, and stores. Each feature can own its routing decision, but the app must still preserve one deterministic rule: ask handlers in order and stop after the first terminal answer.
 
-Two routes make that order observable. Featured products must run before the
-generic product handler, and referral campaigns must run before generic
-campaigns. A malformed referral is owned but invalid; it must stop as
-unhandled rather than becoming a campaign whose slug happens to be `referral`.
+Two routes make that order observable. Featured products must run before the generic product handler, and referral campaigns must run before generic campaigns. A malformed referral is owned but invalid; it must stop as unhandled rather than becoming a campaign whose slug happens to be `referral`.
 
 ### Requirements
 
@@ -32,20 +34,13 @@ unhandled rather than becoming a campaign whose slug happens to be `referral`.
 
 ## 🪶 Start with direct Swift
 
-[`UniversalLinkDirect.swift`](../../Sources/DesignPatterns/ChainOfResponsibility/UniversalLinkDirect.swift)
-uses one `DirectCommerceLinkRouter` and one exhaustive switch. For four stable
-route families owned together, that is the clearest design: the compiler-visible
-branch set, authentication guard, and terminal result fit in one place.
+[`UniversalLinkDirect.swift`](../../Sources/DesignPatterns/ChainOfResponsibility/UniversalLinkDirect.swift) uses one `DirectCommerceLinkRouter` and one exhaustive switch. For four stable route families owned together, that is the clearest design: the compiler-visible branch set, authentication guard, and terminal result fit in one place.
 
-The direct version deliberately has no handler protocol, linked nodes,
-middleware array, type erasure, or dependency container. Several switch cases
-do not justify a pattern by themselves.
+The direct version deliberately has no handler protocol, linked nodes, middleware array, type erasure, or dependency container. Several switch cases do not justify a pattern by themselves.
 
 ## ⚡ The turning point
 
-[`UniversalLinkPressure.swift`](../../Sources/DesignPatterns/ChainOfResponsibility/UniversalLinkPressure.swift)
-adds featured products, referral campaigns, and retail stores. The central
-router then contains measurable coordination pressure:
+[`UniversalLinkPressure.swift`](../../Sources/DesignPatterns/ChainOfResponsibility/UniversalLinkPressure.swift) adds featured products, referral campaigns, and retail stores. The central router then contains measurable coordination pressure:
 
 - five independently changing feature families in one switch;
 - eight handling clauses plus the default pass-through;
@@ -54,20 +49,13 @@ router then contains measurable coordination pressure:
 - two query-validation branches; and
 - two authentication outcomes for one order route.
 
-The switch still works, but its source order has become cross-feature policy.
-A merchandising change can shadow ordinary products, while a growth route can
-turn malformed referrals into valid campaign pages. This is the point where an
-explicit ordered chain gives ownership back to features without hiding order.
+The switch still works, but its source order has become cross-feature policy. A merchandising change can shadow ordinary products, while a growth route can turn malformed referrals into valid campaign pages. This is the point where an explicit ordered chain gives ownership back to features without hiding order.
 
 ## 🧭 Pattern intent
 
-Chain of Responsibility passes a request through ordered handlers until one of
-them produces a terminal decision. The sender knows the chain boundary and its
-order, not which concrete feature will accept a given link.
+Chain of Responsibility passes a request through ordered handlers until one of them produces a terminal decision. The sender knows the chain boundary and its order, not which concrete feature will accept a given link.
 
-This example uses an array instead of mutable `next` references. The behavioral
-contract is the same, while composition remains readable as one ordered list
-and value types need no post-initialization linking.
+This example uses an array instead of mutable `next` references. The behavioral contract is the same, while composition remains readable as one ordered list and value types need no post-initialization linking.
 
 ## 🧩 Participants and responsibilities
 
@@ -80,22 +68,16 @@ and value types need no post-initialization linking.
 | Generic handlers | `ProductLinkHandler` and `CampaignLinkHandler` | Accept remaining links in their feature families after specialized handlers pass. |
 | Independent handlers | `OrderLinkHandler`, `AccountRecoveryLinkHandler`, and `StoreLinkHandler` | Own authentication, token validation, and retail routing without editing sibling handlers. |
 
-The protocol has several immediate implementations because the pressure is
-independent feature ownership. The array uses Swift's protocol existential
-directly; there is no custom type-erased box or general-purpose pipeline type.
+The protocol has several immediate implementations because the pressure is independent feature ownership. The array uses Swift's protocol existential directly; there is no custom type-erased box or general-purpose pipeline type.
 
 ## ⚙️ How the Swift implementation works
 
-1. `CommerceLinkRouter.route(_:isAuthenticated:)` rejects an insecure or
-   foreign-host URL before constructing a request.
-2. The router requires the two-segment shape shared by this teaching unit and
-   creates one `CommerceLinkRequest`.
+1. `CommerceLinkRouter.route(_:isAuthenticated:)` rejects an insecure or foreign-host URL before constructing a request.
+2. The router requires the two-segment shape shared by this teaching unit and creates one `CommerceLinkRequest`.
 3. It asks each handler in the configured array order.
 4. `.pass` continues to the next handler.
 5. `.handled(destination)` returns that destination immediately.
-6. `.reject` also terminates, but the app-facing result is `.unhandled`. This
-   distinguishes an unrelated URL from a malformed URL already owned by a
-   feature, so a generic sibling cannot reinterpret it.
+6. `.reject` also terminates, but the app-facing result is `.unhandled`. This distinguishes an unrelated URL from a malformed URL already owned by a feature, so a generic sibling cannot reinterpret it.
 7. If every handler passes, the router returns `.unhandled`.
 
 The composition root makes precedence reviewable:
@@ -115,9 +97,7 @@ let router = CommerceLinkRouter(
 )
 ```
 
-Putting `ProductLinkHandler` first would deliberately interpret
-`/products/featured` as an ordinary product. The order is therefore data at the
-composition boundary rather than incidental case order inside one router.
+Putting `ProductLinkHandler` first would deliberately interpret `/products/featured` as an ordinary product. The order is therefore data at the composition boundary rather than incidental case order inside one router.
 
 ## 🗺️ Diagram
 
@@ -159,16 +139,9 @@ sequenceDiagram
     end
 ```
 
-Observe that only `.pass` advances the request. A handled product never reaches
-campaign handlers, and a malformed referral stops before the generic campaign
-handler can reinterpret it. The remaining order, recovery, and store handlers
-follow the same contract after the branches shown.
+Observe that only `.pass` advances the request. A handled product never reaches campaign handlers, and a malformed referral stops before the generic campaign handler can reinterpret it. The remaining order, recovery, and store handlers follow the same contract after the branches shown.
 
-**Accessible description:** The app gives one validated universal link to an
-ordered router. The featured-products handler sees it first. If that handler
-passes, the generic product handler gets a chance. Campaign handlers are asked
-later in the same specialized-before-generic order. A handled or rejected link
-stops immediately; only an explicit pass reaches the next feature.
+**Accessible description:** The app gives one validated universal link to an ordered router. The featured-products handler sees it first. If that handler passes, the generic product handler gets a chance. Campaign handlers are asked later in the same specialized-before-generic order. A handled or rejected link stops immediately; only an explicit pass reaches the next feature.
 
 ## ▶️ Run the example
 
@@ -178,8 +151,7 @@ From the repository root:
 swift test -Xswiftc -warnings-as-errors --filter ChainTests
 ```
 
-The suite uses local URLs and value types. It needs no navigation framework,
-authentication backend, web fallback, analytics service, or network access.
+The suite uses local URLs and value types. It needs no navigation framework, authentication backend, web fallback, analytics service, or network access.
 
 ## 🧪 Tests
 
@@ -200,32 +172,25 @@ swift test -Xswiftc -warnings-as-errors --filter ChainPressureTests
 - authenticated orders open directly; and
 - signed-out orders retain their destination through sign-in.
 
-The problem and pressure suites preserve the direct baseline and the centralized
-branching evidence that earned the handler boundary.
+The problem and pressure suites preserve the direct baseline and the centralized branching evidence that earned the handler boundary.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
 - Each feature owns its route matching, validation, and dependencies.
-- Adding a store-like feature adds one handler and one composition entry instead
-  of another branch to the central switch.
+- Adding a store-like feature adds one handler and one composition entry instead of another branch to the central switch.
 - Precedence is visible in one array and executable in focused tests.
 - Only an explicit pass advances the request.
-- Terminal rejection prevents malformed specialized routes from falling into
-  generic handlers.
+- Terminal rejection prevents malformed specialized routes from falling into generic handlers.
 
 ### What it costs
 
-- The final design adds one protocol, one request value, one decision enum, one
-  chain type, and seven focused handlers.
-- An existential array trades compile-time concrete composition for a small
-  runtime dispatch cost and heterogeneous storage.
-- The compiler cannot prove that specialized handlers precede generic ones;
-  tests and composition review enforce that invariant.
+- The final design adds one protocol, one request value, one decision enum, one chain type, and seven focused handlers.
+- An existential array trades compile-time concrete composition for a small runtime dispatch cost and heterogeneous storage.
+- The compiler cannot prove that specialized handlers precede generic ones; tests and composition review enforce that invariant.
 - Route families split across modules still need one owner for the final order.
-- `.reject` must remain rare and precisely defined; using it as a generic error
-  channel would obscure failures.
+- `.reject` must remain rare and precisely defined; using it as a generic error channel would obscure failures.
 
 ## 🔀 Alternatives considered
 
@@ -239,28 +204,17 @@ branching evidence that earned the handler boundary.
 | Middleware pipeline | Cross-cutting stages should transform, observe, or wrap a request/response flow. | These handlers compete for ownership. They do not all process the link, call `next`, or wrap downstream results. |
 | Observer | Several independent subscribers should receive the same event. | A universal link opens at most one destination. |
 
-Decorator and a typical middleware pipeline may also be ordered, but order alone
-does not define this pattern. Decorators compose behavior around one known
-operation. Middleware commonly performs cross-cutting work before or after a
-downstream stage. This chain asks “which feature owns this link?” and stops at
-the first terminal answer.
+Decorator and a typical middleware pipeline may also be ordered, but order alone does not define this pattern. Decorators compose behavior around one known operation. Middleware commonly performs cross-cutting work before or after a downstream stage. This chain asks “which feature owns this link?” and stops at the first terminal answer.
 
 ## 🚫 When not to use it
 
-- Keep the exhaustive switch while the route set is small, stable, and owned by
-  one team.
-- Prefer an enum switch when compile-time exhaustiveness matters more than
-  independently deployed feature ownership.
-- Prefer ordered functions when no shared handler boundary or heterogeneous
-  storage is needed.
-- Do not create one handler type per trivial condition merely to remove a
-  readable switch.
-- Do not use a chain when every consumer must observe the event; use
-  Observation, `AsyncStream`, or another broadcast mechanism.
-- Do not hide precedence in runtime registration, dependency injection, or
-  mutable `next` links when one explicit array is sufficient.
-- Do not convert parsing failures or feature errors into `.pass`; only genuinely
-  unowned links should continue.
+- Keep the exhaustive switch while the route set is small, stable, and owned by one team.
+- Prefer an enum switch when compile-time exhaustiveness matters more than independently deployed feature ownership.
+- Prefer ordered functions when no shared handler boundary or heterogeneous storage is needed.
+- Do not create one handler type per trivial condition merely to remove a readable switch.
+- Do not use a chain when every consumer must observe the event; use Observation, `AsyncStream`, or another broadcast mechanism.
+- Do not hide precedence in runtime registration, dependency injection, or mutable `next` links when one explicit array is sufficient.
+- Do not convert parsing failures or feature errors into `.pass`; only genuinely unowned links should continue.
 
 ## 🗂️ Source map
 

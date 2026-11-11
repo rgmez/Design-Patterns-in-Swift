@@ -6,25 +6,24 @@
 
 **Category:** Creational
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Each bank provider must own payload preparation and the parser created inside one shared import workflow.
+- **Direct baseline:** A provider switch or locally injected creation closure keeps a small, closed workflow visible.
+- **Use Factory Method when:** Creator-owned preparation and product creation change together while the surrounding workflow stays fixed.
+- **Keep it simple when:** Only parser selection varies or a closure keeps the variation local without exposing invalid pairings.
+
 ## The app problem
 
-A personal-finance app imports transactions from Northstar CSV, Mercado Sur
-OFX, and Lumen open-banking JSON. The institutions do not return the same
-transport envelope, but categorization and reconciliation need one stable
-`BankStatementImport` value.
+A personal-finance app imports transactions from Northstar CSV, Mercado Sur OFX, and Lumen open-banking JSON. The institutions do not return the same transport envelope, but categorization and reconciliation need one stable `BankStatementImport` value.
 
-The pressure is a workflow change, not a format count. Each provider needs its
-own preparation rules before parsing, and that preparation can grow to include
-authentication, pagination, or cursor handling without changing the normalized
-result contract.
+The pressure is a workflow change, not a format count. Each provider needs its own preparation rules before parsing, and that preparation can grow to include authentication, pagination, or cursor handling without changing the normalized result contract.
 
 ## Start with direct Swift
 
-The first solution was an exhaustive provider switch. It prepared each payload,
-selected a parser, translated failures, and returned the common result from one
-function. That was appropriate while the workflows were small and closed; the
-baseline and its evidence remain in [`factory-method-problem.md`](../../Documentation/factory-method-problem.md)
-and [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md).
+The first solution was an exhaustive provider switch. It prepared each payload, selected a parser, translated failures, and returned the common result from one function. That was appropriate while the workflows were small and closed; the baseline and its evidence remain in [`factory-method-problem.md`](../../Documentation/factory-method-problem.md) and [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md).
 
 ```swift
 switch request.provider {
@@ -39,30 +38,15 @@ case .lumenOpenBanking:
 
 ## The turning point
 
-The central function began to own two decisions for every provider: how its
-transport response is prepared and which parser understands that prepared
-value. A new provider workflow therefore edits the same selection point even
-when all other workflows and the shared result stay unchanged.
+The central function began to own two decisions for every provider: how its transport response is prepared and which parser understands that prepared value. A new provider workflow therefore edits the same selection point even when all other workflows and the shared result stay unchanged.
 
-A Simple Factory could hide parser construction behind `makeParser(for:)`, but
-it would leave preparation and workflow ordering centralized. The useful
-boundary is a creator workflow whose factory method chooses the product it uses
-while the shared import operation remains fixed.
+A Simple Factory could hide parser construction behind `makeParser(for:)`, but it would leave preparation and workflow ordering centralized. The useful boundary is a creator workflow whose factory method chooses the product it uses while the shared import operation remains fixed.
 
-The [executable closure comparison](../../Documentation/factory-method-closure-comparison.md)
-also proves that two independently supplied closures can reproduce the result.
-That alternative loses here because the configuring caller must keep provider
-preparation paired with the parser it creates. The concrete creator makes that
-pair one named workflow; it does not claim that closures are inherently less
-capable or measure which representation has fewer lines.
+The [executable closure comparison](../../Documentation/factory-method-closure-comparison.md) also proves that two independently supplied closures can reproduce the result. That alternative loses here because the configuring caller must keep provider preparation paired with the parser it creates. The concrete creator makes that pair one named workflow; it does not claim that closures are inherently less capable or measure which representation has fewer lines.
 
 ## Pattern intent
 
-Factory Method lets each concrete import workflow decide which parser it creates
-and uses, while the common workflow contract keeps account identity, provider
-identity, and normalized transaction output consistent. The creator variation
-is local to the provider workflow; callers no longer coordinate preparation and
-parser pairing themselves.
+Factory Method lets each concrete import workflow decide which parser it creates and uses, while the common workflow contract keeps account identity, provider identity, and normalized transaction output consistent. The creator variation is local to the provider workflow; callers no longer coordinate preparation and parser pairing themselves.
 
 ## Participants and responsibilities
 
@@ -74,26 +58,16 @@ parser pairing themselves.
 | Concrete products | `NorthstarCSVParser`, `MercadoSurOFXParser`, `LumenOpenBankingParser` | Parse one provider's prepared representation. |
 | Client/composition root | [`importBankStatement(_:)`](../../Sources/DesignPatterns/FactoryMethod/BankStatementImport.swift) | Selects the workflow from the app-owned provider enum and invokes the common operation. |
 
-The parser implementations are private because callers need the product
-contract, not provider parser identity. The public workflow types are value
-types: they carry no mutable session or network state in this executable
-example.
+The parser implementations are private because callers need the product contract, not provider parser identity. The public workflow types are value types: they carry no mutable session or network state in this executable example.
 
 ## How the Swift implementation works
 
-1. `importBankStatement(_:)` selects a concrete workflow at the composition
-   root from `BankStatementProvider`.
-2. The shared `importStatement(accountID:payload:)` operation asks that creator
-   to prepare its provider envelope, then calls `makeParser()`.
-3. The concrete parser receives only its prepared payload and returns normalized
-   `ImportedBankTransaction` values.
-4. The shared operation builds `BankStatementImport`, preserving account and
-   provider identity and propagating preparation or parser errors unchanged.
+1. `importBankStatement(_:)` selects a concrete workflow at the composition root from `BankStatementProvider`.
+2. The shared `importStatement(accountID:payload:)` operation asks that creator to prepare its provider envelope, then calls `makeParser()`.
+3. The concrete parser receives only its prepared payload and returns normalized `ImportedBankTransaction` values.
+4. The shared operation builds `BankStatementImport`, preserving account and provider identity and propagating preparation or parser errors unchanged.
 
-The Factory Method is `makeParser()`. Preparation remains an explicit creator
-step so the example does not pretend that parser construction alone is the
-workflow variation. The provider switch at the composition root is a closed
-selection helper, not a second factory hierarchy.
+The Factory Method is `makeParser()`. Preparation remains an explicit creator step so the example does not pretend that parser construction alone is the workflow variation. The provider switch at the composition root is a closed selection helper, not a second factory hierarchy.
 
 ## Diagram
 
@@ -109,15 +83,9 @@ flowchart LR
     Lumen["Lumen workflow"] -. conforms .-> Creator
 ```
 
-Observe that each concrete workflow owns the arrow from preparation to its
-parser, while the client sees one operation and one normalized result. Adding
-another provider extends the creator/product pair without changing the shared
-import operation's invariant result construction.
+Observe that each concrete workflow owns the arrow from preparation to its parser, while the client sees one operation and one normalized result. Adding another provider extends the creator/product pair without changing the shared import operation's invariant result construction.
 
-**Accessible description:** The composition root chooses one of three provider
-workflows. The chosen workflow prepares its raw payload and creates the parser
-for that payload. The parser produces one normalized bank-statement result,
-which the shared import operation returns to the client.
+**Accessible description:** The composition root chooses one of three provider workflows. The chosen workflow prepares its raw payload and creates the parser for that payload. The parser produces one normalized bank-statement result, which the shared import operation returns to the client.
 
 ## Run the example
 
@@ -127,8 +95,7 @@ From the repository root:
 swift build -Xswiftc -warnings-as-errors
 ```
 
-The package uses local fixtures and deterministic parser behavior; no network,
-credentials, or external SDKs are required.
+The package uses local fixtures and deterministic parser behavior; no network, credentials, or external SDKs are required.
 
 ## Tests
 
@@ -136,39 +103,31 @@ credentials, or external SDKs are required.
 swift test -Xswiftc -warnings-as-errors --filter FactoryMethodProblemTests
 ```
 
-[`FactoryMethodProblemTests.swift`](../../Tests/DesignPatternsTests/FactoryMethodProblemTests.swift)
-proves:
+[`FactoryMethodProblemTests.swift`](../../Tests/DesignPatternsTests/FactoryMethodProblemTests.swift) proves:
 
-- a closure-configured workflow matches the canonical result while its
-  preparation and parser factory remain correctly paired;
-- independently assembled closures can make a preparation/parser mismatch
-  representable at the call site;
+- a closure-configured workflow matches the canonical result while its preparation and parser factory remain correctly paired;
+- independently assembled closures can make a preparation/parser mismatch representable at the call site;
 - all three creators prepare their provider envelope and create the matching parser;
 - Northstar CSV, Mercado Sur OFX, and Lumen JSON normalize to the same domain value;
 - mismatched payloads and malformed envelopes fail explicitly;
 - the request remains an immutable value.
 
-The full package suite also verifies the existing Adapter, Bridge, Strategy, and
-package-boundary examples.
+The full package suite also verifies the existing Adapter, Bridge, Strategy, and package-boundary examples.
 
 ## Trade-offs
 
 ### What improves
 
-- Provider preparation and parser pairing move out of one growing import
-  function and into the workflow that owns them.
+- Provider preparation and parser pairing move out of one growing import function and into the workflow that owns them.
 - The shared import operation centralizes the stable result and error contract.
 - A workflow can evolve its preparation steps without editing other providers.
 - Parser products remain focused and testable behind one app-owned contract.
 
 ### What it costs
 
-- Three creator values, a parser protocol, and existential dispatch add
-  indirection around a small closed catalogue.
-- The composition root still has a provider selection switch; Factory Method
-  does not remove product selection from the app boundary.
-- New creators and parsers must preserve the prepared-payload invariant and
-  translate provider failures correctly.
+- Three creator values, a parser protocol, and existential dispatch add indirection around a small closed catalogue.
+- The composition root still has a provider selection switch; Factory Method does not remove product selection from the app boundary.
+- New creators and parsers must preserve the prepared-payload invariant and translate provider failures correctly.
 
 ## Alternatives considered
 
@@ -182,19 +141,14 @@ package-boundary examples.
 | Strategy | One operation needs interchangeable algorithms. | The creator owns a construction workflow and parser lifecycle, not a selected ranking algorithm. |
 | Template Method | A stable algorithm has subclass-overridable steps. | The variation here is the product created by each workflow; no inheritance skeleton is needed. |
 
-Factory Method differs from Simple Factory by moving the creation decision into
-the concrete creator. It differs from Abstract Factory because this example
-creates one product type, not a coordinated family.
+Factory Method differs from Simple Factory by moving the creation decision into the concrete creator. It differs from Abstract Factory because this example creates one product type, not a coordinated family.
 
 ## When not to use it
 
-- Keep the direct switch when formats are closed and provider preparation is
-  absent or shared.
-- Prefer a Simple Factory when parser construction is the only variation and
-  no creator workflow owns additional steps.
+- Keep the direct switch when formats are closed and provider preparation is absent or shared.
+- Prefer a Simple Factory when parser construction is the only variation and no creator workflow owns additional steps.
 - Do not add a protocol and creator types for one parser or one call site.
-- Prefer Swift enums, functions, or a memberwise initializer when they express
-  the construction rules without a separate workflow boundary.
+- Prefer Swift enums, functions, or a memberwise initializer when they express the construction rules without a separate workflow boundary.
 
 ## Source map
 

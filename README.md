@@ -1,229 +1,168 @@
-# 📘 Design Patterns in Swift
+<h1 align="center">Design Patterns in Swift</h1>
 
-Learn design patterns by following the app problems that make them useful.
+<p align="center"><strong>Learn 23 GoF patterns from the app problems that make them useful — and from one case where no pattern wins.</strong></p>
 
-This guide explores the 23 Gang of Four patterns through concrete Swift examples:
-checkout payments, video editing, file uploads, session changes, and more.
-✅ **23 examples are complete** · 🚧 **0 are in progress** · ⏳ **0 are planned.**
+<p align="center">
+  <a href="https://github.com/rgmez/Design-Patterns-in-Swift/releases/tag/v1.0.0"><img alt="Release v1.0.0" src="https://img.shields.io/badge/release-v1.0.0-C2410C"></a>
+  <img alt="Swift 6.0" src="https://img.shields.io/badge/Swift-6.0-F05138?logo=swift&logoColor=white">
+  <img alt="macOS 14 or later" src="https://img.shields.io/badge/macOS-14%2B-1F2937?logo=apple&logoColor=white">
+  <a href="https://github.com/rgmez/Design-Patterns-in-Swift/actions/workflows/ci.yml"><img alt="Continuous integration" src="https://github.com/rgmez/Design-Patterns-in-Swift/actions/workflows/ci.yml/badge.svg?branch=feature%2Fpragmatic_design_patterns_series"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-555555"></a>
+</p>
 
-The central question is simple:
+<p align="center"><a href="#choose-your-path">Choose a path</a> · <a href="#quickstart">Run the examples</a> · <a href="#pattern-catalogue">Browse the catalogue</a> · <a href=".codex/skills/choose-swift-design-pattern/SKILL.md">Use the decision skill</a></p>
 
-> What changed in the app that makes this pattern worth introducing?
+> **The question behind every example:** What changed in the app that makes this pattern worth introducing?
 
-Each example begins with a direct Swift solution. A new requirement reveals its
-limits, then a pattern introduces a focused way to handle that change. You will
-see what improves, what complexity it adds, and when to keep the simpler design.
+Each guide starts with direct Swift, introduces one verified requirement, and adds a pattern only when it reduces coupling, invalid state, duplicated ownership, lifecycle risk, or measured resource cost. You will see what improves, what it costs, the closest alternative, and when to keep the simpler design.
 
-## 🧭 Start here
+**Catalogue status:** 23 patterns complete · 359 tests passing · 1 explicit no-pattern decision · v1.0.0 released
 
-You can read each example independently. If you are new to patterns, start with
-these three:
+<a id="choose-your-path"></a>
 
-| Example | The question it answers | What you will learn |
-| --- | --- | --- |
-| 🔌 [Adapter](Structural%20Patterns/Adapter/README.md) | How can checkout work with two incompatible payment SDKs? | Translate each provider's requests, results, and errors into one app-owned contract. |
-| ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | How can checkout change the way it ranks delivery options? | Keep interchangeable ranking rules and their inputs together. |
-| 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | How can screens react to session changes for only as long as they need to? | Separate a session change from the lifetime of its subscribers. |
+## Choose your path
 
-Together, they show three different reasons to introduce a pattern: integrating
-an external API, varying a business rule, and coordinating independent consumers.
+- **New to design patterns?** Start with [Adapter](Structural%20Patterns/Adapter/README.md), [Strategy](Behavioral%20Patterns/Strategy/README.md), and [Observer](Behavioral%20Patterns/Observer/README.md). They introduce external boundaries, interchangeable policy, and independent subscriber lifetimes.
+- **Solving a concrete app problem?** Jump to the [pattern catalogue](#pattern-catalogue) and choose the scenario closest to yours.
+- **Reviewing an architecture proposal?** Read the [no-pattern decision](Documentation/no-pattern-decision.md), then use the [`choose-swift-design-pattern` skill](.codex/skills/choose-swift-design-pattern/SKILL.md).
+- **Evaluating the evidence?** Run the package locally, inspect the linked tests, and read the [complete catalogue review](Documentation/catalogue-review.md).
 
-Before choosing any of them, read the [no-pattern product-share
-case](Documentation/no-pattern-decision.md). A localization requirement leaves
-one immutable request and one pure function as the safer design, and records the
-specific construction pressure that would justify revisiting Builder.
+### A friendly first route
 
-## 📖 How to read an example
+- 🔌 **[Adapter](Structural%20Patterns/Adapter/README.md)** — integrate incompatible payment SDKs behind one app-owned contract.
+- ♟️ **[Strategy](Behavioral%20Patterns/Strategy/README.md)** — switch delivery-ranking policy without moving campaign rules into the ranker.
+- 👀 **[Observer](Behavioral%20Patterns/Observer/README.md)** — deliver session changes to consumers with independent lifetimes.
+- ➡️ **[No pattern](Documentation/no-pattern-decision.md)** — keep a localized product-share URL as one immutable request and one pure function.
 
-Follow the same story in every pattern README:
+<a id="quickstart"></a>
 
-1. **Understand the app problem.** What does the user need, and which rules must
-   the implementation preserve?
-2. **Look at the direct solution.** Start with ordinary Swift: a value type, a
-   function, an enum, or a small service.
-3. **Find the turning point.** A concrete requirement changes. Identify what the
-   direct solution now has to know, repeat, or coordinate.
-4. **Follow the pattern.** Read the responsibilities, implementation walkthrough,
-   and diagram to see where that knowledge moves.
-5. **Judge the trade-off.** Check the tests, alternatives, and “When not to use
-   it” section before deciding whether the pattern fits your own app.
+## Quickstart
 
-For example, the first payment SDK can be called directly from checkout. Adding
-a second SDK brings different request formats, success responses, and errors.
-Adapter moves those translations into one adapter per provider, so checkout can
-work with a stable payment operation. That earns a boundary, but also adds types
-and mappings to maintain. With one simple integration, the direct approach may
-still be enough.
-
-A pattern describes how responsibilities fit together. In Swift, the example
-may use structs, closures, protocols, or an `AsyncSequence`; it does not need to
-reproduce a class hierarchy from a textbook.
-
-Sometimes the turning point never arrives. The catalogue treats **no pattern**
-as a valid, tested decision when ordinary Swift and a platform API already own
-the behavior without duplicated state or indirection.
-
-## ▶️ Run the examples
-
-The implemented examples live in one Swift Package. You need **Swift 6.0 or
-later**; the package declares **macOS 14 or later** as its supported platform.
-From the repository root, run:
+The examples live in one Swift Package and require Swift 6.0 or later on macOS 14 or later.
 
 ```sh
 swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors
 ```
 
-The first command compiles the examples together. The second runs their
-behavioral tests. Both treat compiler warnings as errors, matching CI.
-
-To focus on the Adapter suites:
+Run one teaching area with a suite filter:
 
 ```sh
 swift test -Xswiftc -warnings-as-errors --filter Adapter
 ```
 
-These are library examples exercised through tests. Each pattern README links
-to its implementation and test files, and explains which behaviors to inspect.
+The package contains deterministic library examples rather than live SDKs, credentials, or UI automation. Each canonical guide links to the exact source and tests behind its claims.
 
-## 🗂️ Find a pattern by its problem
+<a id="pattern-catalogue"></a>
 
-The tables below link to the implemented guides. Pick the app problem closest
-to yours; the category helps explain what kind of responsibility changes.
+## Pattern catalogue
 
-### 🏗️ Creating values and objects
+Choose by the problem that is changing, not by the class diagram you remember.
 
-Creational patterns help when creation itself has rules: selecting related
-services, assembling a request over time, or duplicating an editable object graph.
+### 🏗️ Creational — creating values and objects
 
 | Pattern | App problem explored |
 | --- | --- |
 | 🧰 [Abstract Factory](Creational%20Patterns/Abstract%20Factory/README.md) | Select tax, payment, and receipt policies as one consistent regional checkout family. |
 | 🛠️ [Builder](Creational%20Patterns/Builder/README.md) | Assemble a support request across screens while enforcing attachment consent and size limits. |
-| 🏭 [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import within a shared workflow. |
-| 🧬 [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document, reconnect its internal links, and share only the resources that should remain shared. |
-| 🎙️ [Singleton](Creational%20Patterns/Singleton/README.md) | Keep one accountable owner for a process-wide audio session while confining shared lookup to a runtime-created callback. |
+| 🏭 [Factory Method](Creational%20Patterns/Factory%20Method/README.md) | Let each bank provider prepare and create a normalized statement import inside a shared workflow. |
+| 🧬 [Prototype](Creational%20Patterns/Prototype/README.md) | Duplicate an editable document graph, reconnect internal links, and share only immutable resources. |
+| 🎙️ [Singleton](Creational%20Patterns/Singleton/README.md) | Keep one accountable owner for a process-wide audio session while confining shared lookup to a runtime callback. |
 
-### 🌉 Connecting and composing types
-
-Structural patterns help when existing parts need to work together through a
-clear boundary, or when their combinations need to change independently.
+### 🌉 Structural — connecting and composing types
 
 | Pattern | App problem explored |
 | --- | --- |
 | 🔌 [Adapter](Structural%20Patterns/Adapter/README.md) | Give checkout one payment contract despite incompatible provider SDKs. |
 | 🌁 [Bridge](Structural%20Patterns/Bridge/README.md) | Add notification purposes and delivery channels independently. |
-| 🗂️ [Composite](Structural%20Patterns/Composite/README.md) | Traverse one file or a nested workspace folder without repeating client-side branching. |
-| 🎨 [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload, with explicit ordering. |
-| 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation that coordinates inventory, payment, and cleanup. |
+| 🗂️ [Composite](Structural%20Patterns/Composite/README.md) | Traverse one file or a nested workspace folder without client-side branching. |
+| 🎨 [Decorator](Structural%20Patterns/Decorator/README.md) | Compose authentication, retry, and metrics around an upload in an explicit order. |
+| 🏢 [Facade](Structural%20Patterns/Facade/README.md) | Give checkout, Buy Again, and payment retry one order-placement operation with consistent compensation. |
 | 🪶 [Flyweight](Structural%20Patterns/Flyweight/README.md) | Share four immutable marker resources across 20,000 unique festival-map locations. |
-| 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription access checks and one expired-URL replacement. |
+| 🛡️ [Proxy](Structural%20Patterns/Proxy/README.md) | Guard lesson playback with subscription checks and one expired-URL replacement. |
 
-### 🧠 Coordinating behavior and change
-
-Behavioral patterns help decide who handles an event, how behavior varies, and
-who owns subscriptions, traversal, or history.
+### 🧠 Behavioral — coordinating behavior and change
 
 | Pattern | App problem explored |
 | --- | --- |
-| 🔗 [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers, stopping when one handles or rejects the request. |
-| 🎮 [Command](Behavioral%20Patterns/Command/README.md) | Represent video timeline edits from multiple entry points and support bounded undo and redo. |
+| 🔗 [Chain of Responsibility](Behavioral%20Patterns/Chain%20of%20Responsibility/README.md) | Route universal links through ordered feature handlers until one handles or rejects the request. |
+| 🎮 [Command](Behavioral%20Patterns/Command/README.md) | Represent video-timeline edits from multiple entry points with bounded undo and redo. |
+| 🧩 [Interpreter](Behavioral%20Patterns/Interpreter/README.md) | Parse a bounded support-inbox language with explicit expressions and positioned diagnostics. |
 | 🔁 [Iterator](Behavioral%20Patterns/Iterator/README.md) | Traverse cursor-paginated photos lazily through an `AsyncSequence`. |
-| 🧩 [Interpreter](Behavioral%20Patterns/Interpreter/README.md) | Parse a bounded support-inbox language once, then interpret explicit status and assignee expressions with positioned diagnostics. |
-| 📸 [Memento](Behavioral%20Patterns/Memento/README.md) | Save and restore itinerary checkpoints without exposing the editor's private state. |
-| 🔀 [Mediator](Behavioral%20Patterns/Mediator/README.md) | Resolve promotion-driven delivery corrections before validating payment across independent checkout sections. |
-| 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify independent session consumers while respecting each subscription's lifetime. |
-| 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup actions, worker behavior, and pause/resume rules consistent with the current lifecycle phase. |
-| ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery ranking policies without moving campaign-specific rules into the ranker. |
-| 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep reading-list validation, normalization, deduplication, atomic persistence, and reporting in one fixed order while provider decoding varies. |
-| 🔎 [Visitor](Behavioral%20Patterns/Visitor/README.md) | Add accessibility, plain-text, and localization operations across four stable publishing elements without repeating concrete-type switches. |
+| 🔀 [Mediator](Behavioral%20Patterns/Mediator/README.md) | Resolve promotion-driven delivery corrections before validating payment. |
+| 📸 [Memento](Behavioral%20Patterns/Memento/README.md) | Restore itinerary checkpoints without exposing the editor's private state. |
+| 👀 [Observer](Behavioral%20Patterns/Observer/README.md) | Notify session consumers while respecting each subscription's lifetime. |
+| 🚦 [State](Behavioral%20Patterns/State/README.md) | Keep backup transitions, UI actions, and worker behavior consistent with lifecycle phase. |
+| ♟️ [Strategy](Behavioral%20Patterns/Strategy/README.md) | Switch delivery-ranking policy without moving campaign rules into the ranker. |
+| 🛤️ [Template Method](Behavioral%20Patterns/Template%20Method/README.md) | Keep validation, normalization, deduplication, persistence, and reporting in one fixed order. |
+| 🔎 [Visitor](Behavioral%20Patterns/Visitor/README.md) | Add operations across stable publishing elements without repeating concrete-type switches. |
 
 ### 🧭 Knowing when to stop
 
 | Decision | App problem explored |
 | --- | --- |
-| ➡️ [No pattern](Documentation/no-pattern-decision.md) | Keep localized product-share URLs as one complete request and one pure function until construction gains ordered, validated stages. |
+| ➡️ [No pattern](Documentation/no-pattern-decision.md) | Keep localized product-share URLs direct until construction gains ordered, validated stages. |
 
-## 📁 Where to find things
+<a id="reading-guide"></a>
+
+## How every guide works
+
+1. **App problem** — the user outcome and invariants that matter.
+2. **Direct Swift** — the smallest value, enum, function, actor, `AsyncSequence`, or platform API that already works.
+3. **Turning point** — the verified requirement that creates pressure.
+4. **Pattern boundary** — the responsibility that moves and the minimum Swift representation needed.
+5. **Executable evidence** — exact build commands, tests, and measurements.
+6. **Decision** — trade-offs, nearby alternatives, `When not to use it`, and the signal that would reverse the choice.
+
+The diagrams explain relationships, sequences, or states. The editorial headers communicate one memorable thesis. Neither replaces the code or the tests.
+
+## Repository map
 
 | Location | What it contains |
 | --- | --- |
-| `Creational Patterns/`, `Structural Patterns/`, `Behavioral Patterns/` | The pattern READMEs linked above, alongside historical material. Start with a README. |
-| [`Sources/DesignPatterns/`](Sources/DesignPatterns/) | The implemented examples compiled by the package, organized by pattern. |
-| [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify the examples' behavior. |
-| [`Documentation/`](Documentation/) | Supporting problem analyses, design decisions, and progress reviews. |
-| [Historical examples](Documentation/historical-examples.md) | Superseded sketches, what they actually demonstrate, and the canonical replacement for each one. |
+| `Creational Patterns/`, `Structural Patterns/`, `Behavioral Patterns/` | Canonical pattern guides alongside clearly marked historical material. |
+| [`Sources/DesignPatterns/`](Sources/DesignPatterns/) | Package-backed implementations organized by pattern. |
+| [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify behavior and decision boundaries. |
+| [`Documentation/`](Documentation/) | Problem definitions, pressure reviews, QA evidence, and visual guidance. |
+| [Historical examples](Documentation/historical-examples.md) | Superseded sketches, what they actually demonstrate, and their canonical replacements. |
 
-Some older `.md` examples and playground files remain for reference. They are
-outside the Swift Package. The linked pattern READMEs describe the current,
-tested implementations and remain the source of truth for the completed
-catalogue.
+<details>
+<summary><strong>Project history, QA, and contributor references</strong></summary>
 
-## 🛤️ Follow the series or contribute
+### Programme and reviews
 
-The learning guides above are the entry point. Use these supporting documents
-when you want to understand the series plan or add an example:
+- [100-day roadmap](ROADMAP.md)
+- [100-day retrospective](Documentation/retrospective.md)
+- [Bonus-track plan](Documentation/bonus-track.md)
+- [Bonus-track final review](Documentation/bonus-track-review.md)
+- [v1.0.0 release notes](Documentation/v1.0-release-candidate.md)
 
-- [100-day roadmap](ROADMAP.md): the sequence of problem, changing requirement,
-  and solution work for all 23 patterns, with review milestones.
-- [Bonus-track plan](Documentation/bonus-track.md): ten evidence-led stages that
-  isolate historical material and strengthen the eight narrowest canonical
-  examples without adding speculative abstractions.
-- [Bonus-track final review](Documentation/bonus-track-review.md): the hardened
-  example decisions, repository-wide verification, known tooling limits, and
-  v1.0 requalification result.
-- [Catalogue audit](Documentation/catalogue-audit.md): the starting assessment
-  of the historical examples and the decisions behind their replacements.
-- [Complete catalogue review](Documentation/catalogue-review.md): the validated
-  23-pattern decision matrix and the distinctions that prevent misclassification.
-- [Pattern decision signals](Documentation/skill-decision-signals.md): the
-  evidence gate, positive triggers, and rejection signals that will ground the
-  `choose-swift-design-pattern` skill.
-- [Independent skill evaluation scenarios](Documentation/skill-evaluation-scenarios.md):
-  four unfamiliar app prompts and observable rubrics for Adapter, State, an
-  explicit no-pattern verdict, and the Bridge-versus-Strategy boundary.
-- [Pattern-selection skill entry point](.codex/skills/choose-swift-design-pattern/SKILL.md):
-  the evidence-based workflow that treats direct Swift, an explicit no-pattern
-  verdict, and insufficient evidence as first-class outcomes, with progressive
-  references for catalogue discovery, neighbour checks, and example quality.
-- [Pattern-selection skill validation](Documentation/skill-validation.md): the
-  structural checks and four independent forward tests for Adapter, State, a
-  no-pattern decision, and Bridge without leaking their expected answers.
-- [Pattern-selection skill refinement](Documentation/skill-refinement.md): the
-  evidence-backed corrections that improve neighbour comparisons and keep
-  decision-only recommendations independent from their Swift representation.
-- [v1.0.0 release notes](Documentation/v1.0-release-candidate.md): published highlights, repository-wide QA evidence, known validation limits, and links into the tagged catalogue.
-- [100-day retrospective](Documentation/retrospective.md): what the programme
-  simplified, deliberately rejected, learned about pattern ownership, and
-  recommends investigating next without preselecting another pattern.
-- [App domain map](Documentation/app-domain-map.md): the scenarios chosen for
-  each pattern.
-- [Pattern README template](Documentation/pattern-readme-template.md): the
-  structure used to explain and evaluate an example.
-- [Quality gates](Documentation/quality-gates.md) and
-  [package boundary](Documentation/package-boundary.md): how examples are
-  compiled, tested, and organized.
-- [Visual style](Documentation/visual-style.md): conventions for headers and
-  diagrams.
+### Catalogue and decision evidence
 
-Review evidence is available in the [foundation review](Documentation/foundation-review.md)
-and the weekly reviews:
-[02](Documentation/week-02-review.md) ·
-[03](Documentation/week-03-review.md) ·
-[04](Documentation/week-04-review.md) ·
-[05](Documentation/week-05-review.md) ·
-[06](Documentation/week-06-review.md) ·
-[07](Documentation/week-07-review.md) ·
-[08](Documentation/week-08-review.md) ·
-[09](Documentation/week-09-review.md) ·
-[10](Documentation/week-10-review.md) ·
-[11](Documentation/week-11-review.md) ·
-[12](Documentation/week-12-review.md) ·
-[catalogue](Documentation/catalogue-review.md).
+- [Starting catalogue audit](Documentation/catalogue-audit.md)
+- [Complete catalogue review](Documentation/catalogue-review.md)
+- [Real-app domain map](Documentation/app-domain-map.md)
+- [Pattern decision signals](Documentation/skill-decision-signals.md)
+- [Independent skill scenarios](Documentation/skill-evaluation-scenarios.md)
+- [Skill validation](Documentation/skill-validation.md)
+- [Skill refinement](Documentation/skill-refinement.md)
 
-## 📚 Resources and license
+### Authoring and quality system
+
+- [Pattern README template](Documentation/pattern-readme-template.md)
+- [README experience](Documentation/readme-experience.md)
+- [Visual style](Documentation/visual-style.md)
+- [Quality gates](Documentation/quality-gates.md)
+- [Package boundary](Documentation/package-boundary.md)
+
+### Review archive
+
+[Foundation](Documentation/foundation-review.md) · [02](Documentation/week-02-review.md) · [03](Documentation/week-03-review.md) · [04](Documentation/week-04-review.md) · [05](Documentation/week-05-review.md) · [06](Documentation/week-06-review.md) · [07](Documentation/week-07-review.md) · [08](Documentation/week-08-review.md) · [09](Documentation/week-09-review.md) · [10](Documentation/week-10-review.md) · [11](Documentation/week-11-review.md) · [12](Documentation/week-12-review.md) · [Catalogue](Documentation/catalogue-review.md)
+
+</details>
+
+## Resources and license
 
 - [Swift documentation](https://swift.org/documentation/)
 - [Roberto Gómez on LinkedIn](https://www.linkedin.com/in/rgmez)
-
-Licensed under the [MIT License](LICENSE).
+- [MIT License](LICENSE)

@@ -1,17 +1,12 @@
 # 📘 Pattern README Template
 
-Use this template when a pattern reaches Day C of its three-day cycle. Replace
-every bracketed prompt, remove instructions that do not apply, and keep the
-result in the pattern directory as its canonical `README.md`.
+Use this template when a pattern reaches Day C of its three-day cycle. Replace every bracketed prompt, remove instructions that do not apply, and keep the result in the pattern directory as its canonical `README.md`.
 
-Use the pattern's semantic icon from the root catalogue in the title. Keep the
-section icons below unchanged across every canonical README so the collection
-has one predictable visual hierarchy. Use one icon per heading and do not add
-decorative icons to body copy or lower-level headings.
+Use the pattern's semantic icon from the root catalogue in the title. Keep the section icons below unchanged across every canonical README so the collection has one predictable visual hierarchy. Use one icon per heading and do not add decorative icons to body copy or lower-level headings.
 
-The document must stand on its own. A reader should understand the app problem,
-why direct Swift stopped being enough, and what the pattern costs before opening
-the implementation.
+Keep each prose paragraph and list item on one logical source line. Do not insert hard wrapping; let GitHub adapt the reading measure to the viewport.
+
+The document must stand on its own. A reader should understand the app problem, why direct Swift stopped being enough, and what the pattern costs before opening the implementation.
 
 ---
 
@@ -19,16 +14,26 @@ the implementation.
 
 ![Accessible description of the editorial metaphor](../../Documentation/Assets/Patterns/[category]/[pattern]-header.png)
 
-> **Caption:** [One sentence connecting the visual metaphor to the design
-> pressure addressed by the pattern.]
+> **Caption:** [One sentence connecting the visual metaphor to the design pressure addressed by the pattern.]
 
 **Category:** [Creational | Structural | Behavioral]
 
+Add this navigation row in the canonical pattern directory:
+
+```md
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+```
+
+## ✨ At a glance
+
+- **Problem:** [One sentence naming the app pressure.]
+- **Direct baseline:** [The smallest Swift or platform solution that still works.]
+- **Use [Pattern] when:** [The current evidence that earns the boundary.]
+- **Keep it simple when:** [The concrete condition under which the direct solution wins.]
+
 ## 🎯 The app problem
 
-[Describe a concrete app scenario, the user or product outcome, and the
-constraint that makes the problem worth solving. Name the real domain rather
-than placeholder types such as `ProductA`, `Manager`, or `ConcreteCreator`.]
+[Describe a concrete app scenario, the user or product outcome, and the constraint that makes the problem worth solving. Name the real domain rather than placeholder types such as `ProductA`, `Manager`, or `ConcreteCreator`.]
 
 ### Requirements
 
@@ -38,9 +43,7 @@ than placeholder types such as `ProductA`, `Manager`, or `ConcreteCreator`.]
 
 ## 🪶 Start with direct Swift
 
-[Show or explain the smallest reasonable solution using value semantics,
-enums, functions, protocol extensions, Observation, `AsyncSequence`, actors, or
-another native feature as appropriate. Reference the exact source file.]
+[Show or explain the smallest reasonable solution using value semantics, enums, functions, protocol extensions, Observation, `AsyncSequence`, actors, or another native feature as appropriate. Reference the exact source file.]
 
 ```swift
 // Keep this excerpt short and identical to verified source.
@@ -50,14 +53,11 @@ another native feature as appropriate. Reference the exact source file.]
 
 ## ⚡ The turning point
 
-[Identify the new, demonstrated requirement that creates measurable coupling,
-branching, invalid states, duplication, lifecycle risk, or test friction. Avoid
-hypothetical extensibility. Explain why a local refactor is no longer enough.]
+[Identify the new, demonstrated requirement that creates measurable coupling, branching, invalid states, duplication, lifecycle risk, or test friction. Avoid hypothetical extensibility. Explain why a local refactor is no longer enough.]
 
 ## 🧭 Pattern intent
 
-[Explain in this app's language what responsibility the pattern separates or
-what variation it contains. Do not paste a textbook definition.]
+[Explain in this app's language what responsibility the pattern separates or what variation it contains. Do not paste a textbook definition.]
 
 ## 🧩 Participants and responsibilities
 
@@ -66,8 +66,7 @@ what variation it contains. Do not paste a textbook definition.]
 | [Domain participant] | [`TypeName`](path/to/Source.swift) | [One owned decision or behavior.] |
 | [Domain participant] | [`TypeName`](path/to/Source.swift) | [One owned decision or behavior.] |
 
-Every protocol in this table must represent an external boundary, a test seam,
-or variation already required by the example. Delete ceremonial participants.
+Every protocol in this table must represent an external boundary, a test seam, or variation already required by the example. Delete ceremonial participants.
 
 ## ⚙️ How the Swift implementation works
 
@@ -75,9 +74,7 @@ or variation already required by the example. Delete ceremonial participants.
 2. [Explain the relevant transformation, selection, or delegation.]
 3. [End at the observable result or error.]
 
-Call out ownership, value/reference semantics, isolation, cancellation, ordering,
-and error propagation wherever they affect correctness. Explain decisions and
-invariants, not syntax.
+Call out ownership, value/reference semantics, isolation, cancellation, ordering, and error propagation wherever they affect correctness. Explain decisions and invariants, not syntax.
 
 ## 🗺️ Diagram
 
@@ -87,13 +84,9 @@ flowchart LR
     Boundary --> Outcome["[Observable outcome]"]
 ```
 
-[Explain what the reader should notice in the diagram. Use a creation flow for
-a creational pattern, relationships/composition for a structural pattern, and a
-sequence or state diagram for a behavioral pattern. Show only necessary
-relationships and use domain names.]
+[Explain what the reader should notice in the diagram. Use a creation flow for a creational pattern, relationships/composition for a structural pattern, and a sequence or state diagram for a behavioral pattern. Show only necessary relationships and use domain names.]
 
-**Accessible description:** [Describe the same nodes, direction, and meaning in
-plain language so the diagram is not the only source of information.]
+**Accessible description:** [Describe the same nodes, direction, and meaning in plain language so the diagram is not the only source of information.]
 
 ## ▶️ Run the example
 
@@ -103,8 +96,7 @@ From the repository root:
 [Exact warning-free build or executable command]
 ```
 
-[Describe the observable output and any platform requirements. Do not make
-`print` output the only proof of behavior.]
+[Describe the observable output and any platform requirements. Do not make `print` output the only proof of behavior.]
 
 ## 🧪 Tests
 
@@ -118,20 +110,17 @@ The tests prove:
 - [Failure, edge case, or invariant.]
 - [The pressure that justified the pattern, when testable.]
 
-Reference the exact test files and keep every command synchronized with the
-package.
+Reference the exact test files and keep every command synchronized with the package.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
-- [Verified reduction in coupling, branching, invalid state, duplication, or
-  risk.]
+- [Verified reduction in coupling, branching, invalid state, duplication, or risk.]
 
 ### What it costs
 
-- [Additional type, indirection, allocation, ordering rule, ownership burden, or
-  maintenance cost introduced by the pattern.]
+- [Additional type, indirection, allocation, ordering rule, ownership burden, or maintenance cost introduced by the pattern.]
 
 ## 🔀 Alternatives considered
 
@@ -140,9 +129,7 @@ package.
 | [Direct Swift solution] | [Simpler condition.] | [Concrete pressure, not speculation.] |
 | [Nearby pattern or API] | [Its actual intent.] | [Key distinction in this domain.] |
 
-[Explicitly contrast patterns that are commonly confused, such as Simple
-Factory / Factory Method / Abstract Factory, Strategy / State / Bridge, or
-Decorator / Proxy / Chain of Responsibility.]
+[Explicitly contrast patterns that are commonly confused, such as Simple Factory / Factory Method / Abstract Factory, Strategy / State / Bridge, or Decorator / Proxy / Chain of Responsibility.]
 
 ## 🚫 When not to use it
 
@@ -153,10 +140,7 @@ Decorator / Proxy / Chain of Responsibility.]
 ## 🗂️ Source map
 
 - [`Sources/.../Example.swift`](path/to/Example.swift) — [purpose].
-- [`Tests/.../ExampleTests.swift`](path/to/ExampleTests.swift) — [behaviors
-  verified].
-- [`Documentation/Assets/Patterns/.../[pattern]-header.png`](../../Documentation/Assets/Patterns/[category]/[pattern]-header.png)
-  — editorial header.
+- [`Tests/.../ExampleTests.swift`](path/to/ExampleTests.swift) — [behaviors verified].
+- [`Documentation/Assets/Patterns/.../[pattern]-header.png`](../../Documentation/Assets/Patterns/[category]/[pattern]-header.png) — editorial header.
 
-Before merging, verify every name, link, command, snippet, image alt, caption,
-and diagram against these files.
+Before merging, verify every name, link, command, snippet, image alt, caption, and diagram against these files.

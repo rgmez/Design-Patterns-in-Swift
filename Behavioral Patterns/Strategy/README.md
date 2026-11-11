@@ -6,15 +6,20 @@
 
 **Category:** Behavioral
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Checkout must select ranking policies whose rules and external campaign data vary independently.
+- **Direct baseline:** An enum switch or injected function is ideal for closed, local policies.
+- **Use Strategy when:** The caller selects one interchangeable policy that owns its inputs and tie-breaking rules.
+- **Keep it simple when:** Policies are fixed or lifecycle history—not the caller—selects behavior.
+
 ## 🎯 The app problem
 
-A commerce checkout receives normalized delivery options and must rank the same
-values by lowest cost, earliest arrival, or lowest carbon. A partner campaign
-adds a fourth policy: sponsored options rank by a score map that changes
-independently from fulfillment data and sorts in the opposite direction.
+A commerce checkout receives normalized delivery options and must rank the same values by lowest cost, earliest arrival, or lowest carbon. A partner campaign adds a fourth policy: sponsored options rank by a score map that changes independently from fulfillment data and sorts in the opposite direction.
 
-Ranking changes presentation order only. Eligibility, delivery promises,
-selection, and booking remain outside this example.
+Ranking changes presentation order only. Eligibility, delivery promises, selection, and booking remain outside this example.
 
 ### Requirements
 
@@ -27,34 +32,19 @@ selection, and booking remain outside this example.
 
 ## 🪶 Start with direct Swift
 
-The initial solution was an enum and a pure function with one exhaustive
-`switch`. It was the clearest design while three built-in policies each read one
-integer from `DeliveryOption`. No protocol, object, registry, or type erasure was
-needed.
+The initial solution was an enum and a pure function with one exhaustive `switch`. It was the clearest design while three built-in policies each read one integer from `DeliveryOption`. No protocol, object, registry, or type erasure was needed.
 
-Day 012 added `partnerSponsored` and `DeliveryRankingContext` without hiding the
-cost. That direct implementation is preserved in commit `7719540` and explained
-in the [pressure review](../../Documentation/strategy-pressure.md).
+Day 012 added `partnerSponsored` and `DeliveryRankingContext` without hiding the cost. That direct implementation is preserved in commit `7719540` and explained in the [pressure review](../../Documentation/strategy-pressure.md).
 
 ## ⚡ The turning point
 
-The fourth case did more than add another sort key. The central function learned
-that campaign data comes from another source, missing values mean zero, and this
-policy sorts descending. A change to campaign semantics now edited a ranker that
-should only order values.
+The fourth case did more than add another sort key. The central function learned that campaign data comes from another source, missing values mean zero, and this policy sorts descending. A change to campaign semantics now edited a ranker that should only order values.
 
-An enum remained possible, but it no longer kept the independently changing
-policy knowledge together. Passing a comparison closure directly would remove
-the switch, yet every caller would have to preserve the shared identity
-tie-breaker and direction rules. The useful boundary is therefore a small named
-value that carries one scoring function and its immutable inputs.
+An enum remained possible, but it no longer kept the independently changing policy knowledge together. Passing a comparison closure directly would remove the switch, yet every caller would have to preserve the shared identity tie-breaker and direction rules. The useful boundary is therefore a small named value that carries one scoring function and its immutable inputs.
 
 ## 🧭 Pattern intent
 
-Strategy makes a family of ranking algorithms interchangeable at runtime so the
-ranker can use one selected behavior without knowing which policy supplied it.
-In Swift, that behavior can be a captured `@Sendable` function inside a value
-type; the pattern does not require a protocol or class hierarchy.
+Strategy makes a family of ranking algorithms interchangeable at runtime so the ranker can use one selected behavior without knowing which policy supplied it. In Swift, that behavior can be a captured `@Sendable` function inside a value type; the pattern does not require a protocol or class hierarchy.
 
 ## 🧩 Participants and responsibilities
 
@@ -66,22 +56,14 @@ type; the pattern does not require a protocol or class hierarchy.
 | Policy input | `pointsByOptionID` captured by `partnerSponsored(pointsByOptionID:)` | Keep one immutable campaign snapshot beside the behavior that interprets it. |
 | Domain value | [`DeliveryOption`](../../Sources/DesignPatterns/Strategy/DeliveryOption.swift) | Supply normalized delivery facts without knowing how checkout ranks them. |
 
-There are no `ConcreteStrategy` types. Static values represent the three
-data-local policies, and one constructor captures campaign data for the fourth.
-That collapse is deliberate: the algorithms share one shape and need no
-independent lifecycle.
+There are no `ConcreteStrategy` types. Static values represent the three data-local policies, and one constructor captures campaign data for the fourth. That collapse is deliberate: the algorithms share one shape and need no independent lifecycle.
 
 ## ⚙️ How the Swift implementation works
 
-1. Checkout composition selects `.lowestCost`, `.earliestArrival`, or
-   `.lowestCarbon`, or builds `.partnerSponsored(pointsByOptionID:)` from the
-   current campaign snapshot.
-2. `rankDeliveryOptions(_:using:)` asks that value to order each comparison; it
-   contains no preference enum, campaign context, or policy switch.
-3. The strategy evaluates its captured score function, applies ascending or
-   descending order, and uses `DeliveryOption.id` when scores tie.
-4. `sorted` returns a new array, so both the fulfillment response and captured
-   campaign dictionary remain immutable and parallel-test safe.
+1. Checkout composition selects `.lowestCost`, `.earliestArrival`, or `.lowestCarbon`, or builds `.partnerSponsored(pointsByOptionID:)` from the current campaign snapshot.
+2. `rankDeliveryOptions(_:using:)` asks that value to order each comparison; it contains no preference enum, campaign context, or policy switch.
+3. The strategy evaluates its captured score function, applies ascending or descending order, and uses `DeliveryOption.id` when scores tie.
+4. `sorted` returns a new array, so both the fulfillment response and captured campaign dictionary remain immutable and parallel-test safe.
 
 ## 🗺️ Diagram
 
@@ -100,15 +82,9 @@ sequenceDiagram
     Ranker-->>Checkout: ranked copy
 ```
 
-Observe that checkout chooses behavior once and the ranker never branches on a
-preference. Campaign data travels inside the selected strategy rather than
-through a context bag understood by every policy.
+Observe that checkout chooses behavior once and the ranker never branches on a preference. Campaign data travels inside the selected strategy rather than through a context bag understood by every policy.
 
-**Accessible description:** Checkout first selects a DeliveryRankingStrategy,
-optionally capturing partner campaign scores. It passes delivery options and
-that strategy to rankDeliveryOptions. During sorting, the ranker delegates each
-comparison to the strategy, which applies its score direction and stable ID
-tie-breaker. Checkout receives a newly ordered array.
+**Accessible description:** Checkout first selects a DeliveryRankingStrategy, optionally capturing partner campaign scores. It passes delivery options and that strategy to rankDeliveryOptions. During sorting, the ranker delegates each comparison to the strategy, which applies its score direction and stable ID tie-breaker. Checkout receives a newly ordered array.
 
 ## ▶️ Run the example
 
@@ -119,8 +95,7 @@ swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors --filter StrategyTests
 ```
 
-The example uses app-owned values and deterministic dictionaries. It needs no
-network, UI framework, credentials, or process-wide mutable state.
+The example uses app-owned values and deterministic dictionaries. It needs no network, UI framework, credentials, or process-wide mutable state.
 
 ## 🧪 Tests
 
@@ -138,19 +113,15 @@ network, UI framework, credentials, or process-wide mutable state.
 
 - The ranker no longer owns a growing policy switch or generic context bag.
 - Campaign data and the function that interprets it change together.
-- Every policy is a small immutable `Sendable` value that callers can select at
-  runtime and tests can substitute directly.
+- Every policy is a small immutable `Sendable` value that callers can select at runtime and tests can substitute directly.
 - Shared direction and tie-breaking invariants stay inside one boundary.
 
 ### What it costs
 
-- The score closure hides its implementation from equality, encoding, and
-  exhaustive compiler checks.
+- The score closure hides its implementation from equality, encoding, and exhaustive compiler checks.
 - A named value and `using:` call add indirection compared with a local enum.
-- The current design compares one integer score per strategy. Multi-stage or
-  asynchronous ranking would require an explicit contract change.
-- Captured campaign snapshots are intentionally immutable; callers must create
-  a new strategy when campaign data changes.
+- The current design compares one integer score per strategy. Multi-stage or asynchronous ranking would require an explicit contract change.
+- Captured campaign snapshots are intentionally immutable; callers must create a new strategy when campaign data changes.
 
 ## 🔀 Alternatives considered
 
@@ -165,15 +136,11 @@ network, UI framework, credentials, or process-wide mutable state.
 
 ## 🚫 When not to use it
 
-- Keep an enum and exhaustive `switch` when the policy set is small, closed, and
-  based on the same local values.
-- Pass a function when variation is local to one call site and has no shared
-  rules or independently changing inputs.
-- Use `sorted(by:)` directly for a one-off ordering that needs no runtime
-  selection.
+- Keep an enum and exhaustive `switch` when the policy set is small, closed, and based on the same local values.
+- Pass a function when variation is local to one call site and has no shared rules or independently changing inputs.
+- Use `sorted(by:)` directly for a one-off ordering that needs no runtime selection.
 - Do not create a protocol and several types merely to rename simple closures.
-- Do not use Strategy to model lifecycle transitions; that pressure belongs to
-  State.
+- Do not use Strategy to model lifecycle transitions; that pressure belongs to State.
 
 ## 🗂️ Source map
 

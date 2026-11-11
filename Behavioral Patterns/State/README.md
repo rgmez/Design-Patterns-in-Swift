@@ -2,58 +2,42 @@
 
 ![One encrypted backup capsule waits at an illuminated checkpoint while locked industrial gates constrain its route to a final vault](../../Documentation/Assets/Patterns/behavioral/state-header.png)
 
-> **Caption:** One backup keeps one authoritative phase; that phase unlocks only
-> the transitions, actions, and background work that are safe there.
+> **Caption:** One backup keeps one authoritative phase; that phase unlocks only the transitions, actions, and background work that are safe there.
 
 **Category:** Behavioral
 
+[← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
+
+## ✨ At a glance
+
+- **Problem:** Backup transitions, screen actions, and worker operations must stay coherent with event-selected lifecycle phase.
+- **Direct baseline:** An enum state machine and pure reducer keep a closed transition graph exhaustive.
+- **Use State when:** Several behavior families change together with internal history and need one phase owner.
+- **Keep it simple when:** Transitions are the only varying behavior or a few enum computed properties remain cohesive.
+
 ## 🎯 The app problem
 
-A secure backup app prepares local files, encrypts them, uploads the encrypted
-payload, and records a remote identifier. Connectivity can disappear during
-transfer, so pause, resume, failure, and retry must preserve the last accepted
-byte without allowing lifecycle jumps.
+A secure backup app prepares local files, encrypts them, uploads the encrypted payload, and records a remote identifier. Connectivity can disappear during transfer, so pause, resume, failure, and retry must preserve the last accepted byte without allowing lifecycle jumps.
 
-The backup screen and a background worker also need different answers from the
-same lifecycle: the screen may offer Start, Pause, Resume, or Retry, while the
-worker may prepare, encrypt, or upload. Those answers must never disagree about
-whether work is paused, recoverable, or complete.
+The backup screen and a background worker also need different answers from the same lifecycle: the screen may offer Start, Pause, Resume, or Retry, while the worker may prepare, encrypt, or upload. Those answers must never disagree about whether work is paused, recoverable, or complete.
 
 ## 🪶 Start with direct Swift
 
-[`BackupUploadDirect.swift`](../../Sources/DesignPatterns/State/BackupUploadDirect.swift)
-uses one `BackupUploadPhase` enum and the pure
-`transitionBackupUpload(from:on:)` reducer. That solution is exhaustive,
-testable, and still preferable when transitions are the only phase-dependent
-behavior.
+[`BackupUploadDirect.swift`](../../Sources/DesignPatterns/State/BackupUploadDirect.swift) uses one `BackupUploadPhase` enum and the pure `transitionBackupUpload(from:on:)` reducer. That solution is exhaustive, testable, and still preferable when transitions are the only phase-dependent behavior.
 
-There are no state objects in the baseline. One switch keeps the complete
-lifecycle visible, associated values make progress valid only where it exists,
-and unsupported event-and-phase pairs throw without mutating anything.
+There are no state objects in the baseline. One switch keeps the complete lifecycle visible, associated values make progress valid only where it exists, and unsupported event-and-phase pairs throw without mutating anything.
 
 ## ⚡ The turning point
 
-The [pressure review](../../Documentation/state-pressure.md) added persistence,
-a primary screen action, and a background operation. A six-flag snapshot could
-encode 64 combinations although only seven were coherent. In an
-`isUploading && isPaused` snapshot, the screen offered Resume while the worker
-continued Upload.
+The [pressure review](../../Documentation/state-pressure.md) added persistence, a primary screen action, and a background operation. A six-flag snapshot could encode 64 combinations although only seven were coherent. In an `isUploading && isPaused` snapshot, the screen offered Resume while the worker continued Upload.
 
-Replacing the flags with `BackupUploadPhase` would remove impossible values,
-but free functions or computed properties would leave three separate switch
-owners: transitions, UI behavior, and worker behavior. The useful State
-boundary appears when those rules change together per phase.
+Replacing the flags with `BackupUploadPhase` would remove impossible values, but free functions or computed properties would leave three separate switch owners: transitions, UI behavior, and worker behavior. The useful State boundary appears when those rules change together per phase.
 
 ## 🧭 Pattern intent
 
-State lets a backup change its behavior when its internal phase changes. The
-`BackupUpload` context delegates each event and each phase-dependent decision
-to its current private state, then replaces that state only after a successful
-transition.
+State lets a backup change its behavior when its internal phase changes. The `BackupUpload` context delegates each event and each phase-dependent decision to its current private state, then replaces that state only after a successful transition.
 
-This is a lifecycle, not a runtime-selected policy. The client does not choose
-an Uploading or Failed algorithm; prior events determine the current state and
-therefore which behavior is legal next.
+This is a lifecycle, not a runtime-selected policy. The client does not choose an Uploading or Failed algorithm; prior events determine the current state and therefore which behavior is legal next.
 
 ## 🧩 Participants and responsibilities
 
@@ -65,29 +49,17 @@ therefore which behavior is legal next.
 | Persisted value | [`BackupUploadPhase`](../../Sources/DesignPatterns/State/BackupUploadDirect.swift) | Encode one of seven lifecycle shapes with only phase-valid associated data. |
 | Client inputs | `BackupUploadEvent` | Describe facts and commands without choosing the next state directly. |
 
-The protocol and concrete state types are private. Callers cannot manufacture a
-custom lifecycle, and the public API stays smaller than the implementation
-mechanism used to organize its rules.
+The protocol and concrete state types are private. Callers cannot manufacture a custom lifecycle, and the public API stays smaller than the implementation mechanism used to organize its rules.
 
 ## ⚙️ How the Swift implementation works
 
-1. `BackupUpload()` starts with `ReadyBackupUploadState`, whose only screen
-   action is Start.
-2. `handle(_:)` asks the current state to process an event. A valid event
-   returns a new state; an invalid event throws before the context changes.
-3. Each concrete state owns its own `phase`, `primaryAction`,
-   `backgroundOperation`, and accepted transitions. Uploading alone validates
-   progress and completion; Failed alone knows its recovery point.
-4. The context exposes `BackupUploadPhase` for UI, diagnostics, and `Codable`
-   persistence without exposing private state objects.
-5. Restoration contains the implementation's only all-phase switch. That
-   switch is a serialization boundary: it validates persisted associated data
-   and rebuilds the matching private state, rather than deciding ongoing app
-   behavior.
+1. `BackupUpload()` starts with `ReadyBackupUploadState`, whose only screen action is Start.
+2. `handle(_:)` asks the current state to process an event. A valid event returns a new state; an invalid event throws before the context changes.
+3. Each concrete state owns its own `phase`, `primaryAction`, `backgroundOperation`, and accepted transitions. Uploading alone validates progress and completion; Failed alone knows its recovery point.
+4. The context exposes `BackupUploadPhase` for UI, diagnostics, and `Codable` persistence without exposing private state objects.
+5. Restoration contains the implementation's only all-phase switch. That switch is a serialization boundary: it validates persisted associated data and rebuilds the matching private state, rather than deciding ongoing app behavior.
 
-`BackupUpload` is a value type. Copying it produces an independent lifecycle,
-which is clearer for this local domain model than introducing shared reference
-identity solely to resemble a class-oriented pattern diagram.
+`BackupUpload` is a value type. Copying it produces an independent lifecycle, which is clearer for this local domain model than introducing shared reference identity solely to resemble a class-oriented pattern diagram.
 
 ## 🗺️ Diagram
 
@@ -110,14 +82,9 @@ stateDiagram-v2
     Completed --> [*]
 ```
 
-Observe that every arrow begins at the state that owns the event. Pause and
-connection failure retain the Uploading checkpoint; invalid arrows do not
-exist and are rejected without changing the context.
+Observe that every arrow begins at the state that owns the event. Pause and connection failure retain the Uploading checkpoint; invalid arrows do not exist and are rejected without changing the context.
 
-**Accessible description:** A backup starts Ready, then moves through Preparing
-and Encrypting to Uploading. Uploading can advance, pause, fail, or complete
-after all bytes arrive. Paused resumes at the same progress. Failed retries the
-exact Preparing, Encrypting, or Uploading recovery point. Completed is terminal.
+**Accessible description:** A backup starts Ready, then moves through Preparing and Encrypting to Uploading. Uploading can advance, pause, fail, or complete after all bytes arrive. Paused resumes at the same progress. Failed retries the exact Preparing, Encrypting, or Uploading recovery point. Completed is terminal.
 
 ## ▶️ Run the example
 
@@ -128,9 +95,7 @@ swift build -Xswiftc -warnings-as-errors
 swift test -Xswiftc -warnings-as-errors --filter StateTests
 ```
 
-The example uses Foundation only for whitespace validation and `Codable`. File
-I/O, cryptography, network transport, background scheduling, and UI remain
-outside the teaching unit.
+The example uses Foundation only for whitespace validation and `Codable`. File I/O, cryptography, network transport, background scheduling, and UI remain outside the teaching unit.
 
 ## 🧪 Tests
 
@@ -144,34 +109,25 @@ outside the teaching unit.
 - `Codable` round trips one authoritative typed phase;
 - invalid restored terminal data is rejected.
 
-The earlier problem and pressure suites remain executable so the direct reducer
-and impossible-flag evidence do not become unverified prose.
+The earlier problem and pressure suites remain executable so the direct reducer and impossible-flag evidence do not become unverified prose.
 
 ## ⚖️ Trade-offs
 
 ### What improves
 
 - Transition rules and phase-dependent decisions change together.
-- A persisted enum permits seven meaningful shapes instead of 64 flag
-  combinations.
+- A persisted enum permits seven meaningful shapes instead of 64 flag combinations.
 - Invalid events cannot partially mutate the context.
-- Private concrete states keep the public API focused and prevent arbitrary
-  behavior injection.
-- Adding a genuinely new phase gives its rules one owner instead of requiring
-  synchronized precedence changes in several consumers.
+- Private concrete states keep the public API focused and prevent arbitrary behavior injection.
+- Adding a genuinely new phase gives its rules one owner instead of requiring synchronized precedence changes in several consumers.
 
 ### What it costs
 
-- Seven small state types and existential dispatch replace one exhaustive
-  transition switch.
-- The complete transition graph is distributed across implementations, so the
-  README diagram matters for whole-lifecycle review.
-- `BackupUpload` cannot synthesize `Codable`; restoration must explicitly map a
-  persisted phase back to a concrete state.
-- New cross-state invariants may still require shared helpers or context-level
-  validation.
-- A public phase snapshot and private state objects describe the same current
-  lifecycle for different purposes and must remain aligned.
+- Seven small state types and existential dispatch replace one exhaustive transition switch.
+- The complete transition graph is distributed across implementations, so the README diagram matters for whole-lifecycle review.
+- `BackupUpload` cannot synthesize `Codable`; restoration must explicitly map a persisted phase back to a concrete state.
+- New cross-state invariants may still require shared helpers or context-level validation.
+- A public phase snapshot and private state objects describe the same current lifecycle for different purposes and must remain aligned.
 
 ## 🔀 Alternatives considered
 
@@ -185,15 +141,11 @@ and impossible-flag evidence do not become unverified prose.
 
 ## 🚫 When not to use it
 
-- Keep an enum and exhaustive reducer when legal transitions are the only
-  behavior that varies.
-- Use enum computed properties when two or three simple phase queries remain
-  readable and change rarely.
-- Do not create a protocol and type per enum case merely because a lifecycle
-  has named phases.
+- Keep an enum and exhaustive reducer when legal transitions are the only behavior that varies.
+- Use enum computed properties when two or three simple phase queries remain readable and change rarely.
+- Do not create a protocol and type per enum case merely because a lifecycle has named phases.
 - Use Strategy when clients select behavior without changing internal state.
-- Use a durable workflow engine when recovery spans processes, devices, or
-  distributed services and needs operational guarantees beyond `Codable`.
+- Use a durable workflow engine when recovery spans processes, devices, or distributed services and needs operational guarantees beyond `Codable`.
 
 ## 🗂️ Source map
 
