@@ -141,3 +141,15 @@ keeps restoration atomic.
 Deltas or operation logs require measured budget pressure, deeper history,
 small relative edits, and owned replay/compaction semantics. Durable data across
 launches or devices belongs to an explicit persistence boundary instead.
+
+## Bonus 008 decision
+
+The [Template Method composition review](template-method-composition-review.md)
+proves that a higher-order value can enforce the same normalization,
+deduplication, atomic append, and reporting order. Inheritance is not required
+for safety.
+
+Template Method remains for the closed built-in provider set because it offers
+one nominal importer type and a final module-controlled operation. Prefer the
+closure representation when providers are injected, composed externally, or
+better expressed with value semantics.

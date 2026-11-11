@@ -67,6 +67,10 @@ copied workflow choose its own order.
 The [pressure evidence](../../Documentation/template-method-pressure.md)
 measures the three copies and compares inheritance with protocol defaults,
 ordinary function composition, and an enum switch.
+The [executable composition review](../../Documentation/template-method-composition-review.md)
+proves that a private higher-order rail can preserve the same order and
+atomicity. Template Method remains a nominal, module-controlled representation,
+not the only safe Swift encoding.
 
 ## 🧭 Pattern intent
 
@@ -197,6 +201,10 @@ verifies all three concrete variations through the final skeleton, title and URL
 normalization, provider filtering, stored and in-batch deduplication, atomic
 failure, and source-aware validation and decoding errors.
 
+[`TemplateMethodCompositionTests.swift`](../../Tests/DesignPatternsTests/TemplateMethodCompositionTests.swift)
+executes the higher-order alternative and verifies equivalent normalization and
+atomic append behavior without adding a second production implementation.
+
 The same filter also runs
 [`TemplateMethodProblemTests.swift`](../../Tests/DesignPatternsTests/TemplateMethodProblemTests.swift)
 and
@@ -268,4 +276,5 @@ other catalogue example with warnings treated as failures.
 - [`TemplateMethodTests.swift`](../../Tests/DesignPatternsTests/TemplateMethodTests.swift) — final pattern behavior and invariant-order evidence.
 - [`TemplateMethodProblemTests.swift`](../../Tests/DesignPatternsTests/TemplateMethodProblemTests.swift) and [`TemplateMethodPressureTests.swift`](../../Tests/DesignPatternsTests/TemplateMethodPressureTests.swift) — executable baseline and pressure history.
 - [`template-method-problem.md`](../../Documentation/template-method-problem.md) and [`template-method-pressure.md`](../../Documentation/template-method-pressure.md) — requirements, duplication count, and decision boundary.
+- [`template-method-composition-review.md`](../../Documentation/template-method-composition-review.md) — executable higher-order alternative, costs, and reversal condition.
 - [`template-method-header.png`](../../Documentation/Assets/Patterns/behavioral/template-method-header.png) — editorial header.

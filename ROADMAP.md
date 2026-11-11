@@ -614,7 +614,10 @@ pattern.
   [storage review](Documentation/memento-storage-review.md) demonstrates
   monotonic content growth, linear bounded-history growth for small edits, and
   the evidence required before adopting deltas or durable persistence.
-- [ ] **Bonus 008 — Compare Template Method with higher-order composition.**
+- [x] **Bonus 008 — Compare Template Method with higher-order composition.**
+  The [composition review](Documentation/template-method-composition-review.md)
+  proves an ordinary closure-based rail can preserve order and atomicity, then
+  narrows Template Method to a closed nominal importer family.
 - [ ] **Bonus 009 — Demonstrate Visitor's extension direction.**
 - [ ] **Bonus 010 — Review the hardened catalogue.**
 
