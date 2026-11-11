@@ -622,7 +622,10 @@ pattern.
   [extension review](Documentation/visitor-extension-review.md) makes operation
   growth executable and records the compiler-enforced cost of adding an element
   without inventing a fifth node kind.
-- [ ] **Bonus 010 — Review the hardened catalogue.**
+- [x] **Bonus 010 — Review the hardened catalogue.** The
+  [final bonus review](Documentation/bonus-track-review.md) records a
+  warning-free build, 359 tests in 194 suites, complete guide/link/diagram/asset
+  checks, the unchanged skill-validation boundary, and v1.0 requalification.
 
 ## Review checkpoints
 

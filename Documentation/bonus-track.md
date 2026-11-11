@@ -163,3 +163,13 @@ compiler-enforced change surface for a new element kind.
 
 No fake element was added. Visitor remains justified only while operations grow
 faster than the stable paragraph, link, image, and table family.
+
+## Bonus 010 decision
+
+The [final review](bonus-track-review.md) revalidates the complete catalogue
+after every hardening stage. Build, tests, canonical guide contracts, links,
+Mermaid, assets, public Singleton API, historical isolation, and ignored
+workspaces all pass their applicable gates.
+
+The bonus track is complete. The refreshed v1.0 candidate now awaits explicit
+human approval; no release action is automatic.

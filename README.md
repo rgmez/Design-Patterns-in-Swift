@@ -169,6 +169,9 @@ when you want to understand the series plan or add an example:
 - [Bonus-track plan](Documentation/bonus-track.md): ten evidence-led stages that
   isolate historical material and strengthen the eight narrowest canonical
   examples without adding speculative abstractions.
+- [Bonus-track final review](Documentation/bonus-track-review.md): the hardened
+  example decisions, repository-wide verification, known tooling limits, and
+  v1.0 requalification result.
 - [Catalogue audit](Documentation/catalogue-audit.md): the starting assessment
   of the historical examples and the decisions behind their replacements.
 - [Complete catalogue review](Documentation/catalogue-review.md): the validated
