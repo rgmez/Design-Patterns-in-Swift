@@ -101,7 +101,7 @@ From the repository root:
 ## 🧪 Tests
 
 ```sh
-swift test -Xswiftc -warnings-as-errors --filter [VerifiedTestOrSuiteFilter]
+[Exact test command verified for this repository and target]
 ```
 
 The tests prove:
@@ -110,7 +110,7 @@ The tests prove:
 - [Failure, edge case, or invariant.]
 - [The pressure that justified the pattern, when testable.]
 
-Reference the exact test files and keep every command synchronized with the package.
+Reference the exact test files and keep every command synchronized with the repository's actual toolchain, whether SwiftPM, `xcodebuild`, or another verified runner.
 
 ## ⚖️ Trade-offs
 
