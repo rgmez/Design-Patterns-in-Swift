@@ -6,7 +6,7 @@
   <a href="https://github.com/rgmez/Design-Patterns-in-Swift/releases/tag/v1.0.0"><img alt="Release v1.0.0" src="https://img.shields.io/badge/release-v1.0.0-C2410C"></a>
   <img alt="Swift 6.0" src="https://img.shields.io/badge/Swift-6.0-F05138?logo=swift&logoColor=white">
   <img alt="macOS 14 or later" src="https://img.shields.io/badge/macOS-14%2B-1F2937?logo=apple&logoColor=white">
-  <a href="https://github.com/rgmez/Design-Patterns-in-Swift/actions/workflows/ci.yml"><img alt="Continuous integration" src="https://github.com/rgmez/Design-Patterns-in-Swift/actions/workflows/ci.yml/badge.svg?branch=feature%2Fpragmatic_design_patterns_series"></a>
+  <a href="https://github.com/rgmez/Design-Patterns-in-Swift/actions/workflows/ci.yml"><img alt="359 tests passing" src="https://img.shields.io/badge/tests-359%20passing-C2410C?logo=githubactions&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-555555"></a>
 </p>
 
