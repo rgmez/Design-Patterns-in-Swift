@@ -130,3 +130,14 @@ invariant.
 Split signals now depend on observable responsibility drift: domain rules,
 independent coordination clusters, external side effects, suspension, or passive
 participants. File size alone is not a reason to add another abstraction.
+
+## Bonus 007 decision
+
+The [Memento storage review](memento-storage-review.md) proves that encoded
+payload grows with complete draft content and that even a small title edit adds
+another full snapshot. The current four-entry bound remains acceptable and
+keeps restoration atomic.
+
+Deltas or operation logs require measured budget pressure, deeper history,
+small relative edits, and owned replay/compaction semantics. Durable data across
+launches or devices belongs to an explicit persistence boundary instead.

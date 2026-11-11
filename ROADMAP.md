@@ -610,7 +610,10 @@ pattern.
   [responsibility review](Documentation/mediator-responsibility-review.md)
   proves local participant rules independently and defines evidence-based split
   signals before coordination becomes a god object.
-- [ ] **Bonus 007 — Quantify Memento snapshot growth.**
+- [x] **Bonus 007 — Quantify Memento snapshot growth.** The
+  [storage review](Documentation/memento-storage-review.md) demonstrates
+  monotonic content growth, linear bounded-history growth for small edits, and
+  the evidence required before adopting deltas or durable persistence.
 - [ ] **Bonus 008 — Compare Template Method with higher-order composition.**
 - [ ] **Bonus 009 — Demonstrate Visitor's extension direction.**
 - [ ] **Bonus 010 — Review the hardened catalogue.**

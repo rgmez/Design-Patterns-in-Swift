@@ -56,6 +56,9 @@ The 250-stop fixture measures one complete direct snapshot at 8,774 encoded
 bytes and four retained checkpoints at 35,096 bytes. That cost is acceptable;
 schema ownership, not size, is the demonstrated problem. A delta log or
 migration framework would add more risk than it removes.
+The [storage review](../../Documentation/memento-storage-review.md) also proves
+monotonic growth across 0, 50, and 250 stops and linear depth growth when only a
+same-length title changes.
 
 ## 🧭 Pattern intent
 
@@ -146,7 +149,9 @@ proves:
 - a complete checkpoint restores after the original editor is discarded;
 - later editor mutations cannot change an already captured checkpoint;
 - a two-entry history restores newest first and evicts the oldest;
-- four equal full snapshots retain exactly four times one snapshot's bytes;
+- four small title edits retain exactly four times one complete snapshot's
+  bytes;
+- encoded payload grows as complete draft content grows;
 - past and future schema versions do not mutate the editor or consume history;
   and
 - malformed payloads also leave both owners unchanged.
@@ -218,4 +223,5 @@ log would solve a different requirement rather than becoming a richer memento.
 - [`MementoPressureTests.swift`](../../Tests/DesignPatternsTests/MementoPressureTests.swift) — external-history pressure and V1 coupling evidence.
 - [`memento-problem.md`](../../Documentation/memento-problem.md) — requirements and initial no-pattern decision.
 - [`memento-pressure.md`](../../Documentation/memento-pressure.md) — measured pressure that earns the opaque boundary.
+- [`memento-storage-review.md`](../../Documentation/memento-storage-review.md) — content/depth growth and the delta or persistence handoff.
 - [`memento-header.png`](../../Documentation/Assets/Patterns/behavioral/memento-header.png) — editorial header.

@@ -60,6 +60,20 @@ struct MementoTests {
         )
     }
 
+    private static func encodedByteCount(
+        stopCount: Int
+    ) throws -> Int {
+        var editor = ItineraryDraftEditor(title: originalTitle)
+        for index in 0 ..< stopCount {
+            editor.appendStop(
+                ItineraryStop(city: "Waypoint \(index)", nights: 1)
+            )
+        }
+        var history = ItineraryDraftHistory(restorePointLimit: 1)
+        try history.save(editor)
+        return history.retainedEncodedByteCount
+    }
+
     @Suite("Opaque external history")
     struct OpaqueExternalHistory {
         @Test("Restores a complete draft after the editor is recreated")
@@ -125,9 +139,9 @@ struct MementoTests {
             #expect(try history.restoreLatest(into: &editor) == false)
         }
 
-        @Test("Retains one complete opaque payload per restore point")
+        @Test("Retains one complete opaque payload for each small edit")
         func measuresFullSnapshotGrowth() throws {
-            var editor = ItineraryDraftEditor(title: originalTitle)
+            var editor = ItineraryDraftEditor(title: "Route version 0")
             for index in 0 ..< 250 {
                 editor.appendStop(
                     ItineraryStop(city: "Waypoint \(index)", nights: 1)
@@ -137,7 +151,8 @@ struct MementoTests {
             try history.save(editor)
             let oneMementoByteCount = history.retainedEncodedByteCount
 
-            for _ in 1 ..< 4 {
+            for version in 1 ..< 4 {
+                editor.rename(to: "Route version \(version)")
                 try history.save(editor)
             }
 
@@ -145,6 +160,23 @@ struct MementoTests {
             #expect(
                 history.retainedEncodedByteCount == oneMementoByteCount * 4
             )
+        }
+
+        @Test("Encoded snapshot payload grows with complete draft content")
+        func measuresContentGrowth() throws {
+            let emptyDraftBytes = try MementoTests.encodedByteCount(
+                stopCount: 0
+            )
+            let mediumDraftBytes = try MementoTests.encodedByteCount(
+                stopCount: 50
+            )
+            let largeDraftBytes = try MementoTests.encodedByteCount(
+                stopCount: 250
+            )
+
+            #expect(emptyDraftBytes > 0)
+            #expect(mediumDraftBytes > emptyDraftBytes)
+            #expect(largeDraftBytes > mediumDraftBytes)
         }
     }
 
