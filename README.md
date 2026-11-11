@@ -120,7 +120,7 @@ The diagrams explain relationships, sequences, or states. The editorial headers 
 
 | Location | What it contains |
 | --- | --- |
-| `Creational Patterns/`, `Structural Patterns/`, `Behavioral Patterns/` | Canonical pattern guides alongside clearly marked historical material. |
+| [Creational Patterns/](Creational%20Patterns/), [Structural Patterns/](Structural%20Patterns/), [Behavioral Patterns/](Behavioral%20Patterns/) | Canonical pattern guides alongside clearly marked historical material. |
 | [`Sources/DesignPatterns/`](Sources/DesignPatterns/) | Package-backed implementations organized by pattern. |
 | [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify behavior and decision boundaries. |
 | [`Documentation/`](Documentation/) | Problem definitions, pressure reviews, QA evidence, and visual guidance. |
