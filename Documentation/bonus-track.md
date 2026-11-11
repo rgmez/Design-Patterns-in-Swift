@@ -119,3 +119,14 @@ not grow to support them.
 Interpreter remains appropriate for the bounded domain expressions. Maintained
 parser infrastructure should replace only the parsing mechanics when one of
 those features becomes supported product behavior or the grammar must be shared.
+
+## Bonus 006 decision
+
+The [Mediator responsibility review](mediator-responsibility-review.md) proves
+delivery, payment, and promotion rules without constructing the mediator. The
+mediator remains responsible only for routing and the final-selection ordering
+invariant.
+
+Split signals now depend on observable responsibility drift: domain rules,
+independent coordination clusters, external side effects, suspension, or passive
+participants. File size alone is not a reason to add another abstraction.

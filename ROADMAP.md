@@ -606,7 +606,10 @@ pattern.
   [handoff review](Documentation/interpreter-parser-handoff.md) turns nesting,
   precedence, quoting, escaping, and multi-error recovery into executable
   rejection boundaries without expanding the current grammar.
-- [ ] **Bonus 006 — Bound Mediator coordination responsibility.**
+- [x] **Bonus 006 — Bound Mediator coordination responsibility.** The
+  [responsibility review](Documentation/mediator-responsibility-review.md)
+  proves local participant rules independently and defines evidence-based split
+  signals before coordination becomes a god object.
 - [ ] **Bonus 007 — Quantify Memento snapshot growth.**
 - [ ] **Bonus 008 — Compare Template Method with higher-order composition.**
 - [ ] **Bonus 009 — Demonstrate Visitor's extension direction.**

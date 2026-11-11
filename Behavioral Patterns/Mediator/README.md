@@ -85,6 +85,11 @@ and no new abstraction around domain validation. The retained pressure file
 allows the same participant behavior to be compared under both interaction
 policies.
 
+The [responsibility review](../../Documentation/mediator-responsibility-review.md)
+also exercises delivery, payment, and promotion without a mediator. It defines
+the concrete signals for splitting this coordinator before domain rules or
+external side effects accumulate here.
+
 ## ⚙️ How the Swift implementation works
 
 1. An address change enters the mediator's callback and updates delivery's
@@ -181,6 +186,9 @@ promotion-driven correction, preference across zones, preference clearing and
 replacement, no eligible window, and module/mediator release. Every test
 creates its own checkout.
 
+The `ParticipantOwnedRules` suite separately proves that delivery, payment, and
+promotion preserve their own validation without the mediator.
+
 The same filter also runs
 [`MediatorProblemTests.swift`](../../Tests/DesignPatternsTests/MediatorProblemTests.swift)
 and [`MediatorPressureTests.swift`](../../Tests/DesignPatternsTests/MediatorPressureTests.swift)
@@ -238,4 +246,5 @@ of the catalogue, with warnings treated as errors.
 - [`DeliveryCheckoutDirect.swift`](../../Sources/DesignPatterns/Mediator/DeliveryCheckoutDirect.swift) — original value model and shared domain values.
 - [`MediatorTests.swift`](../../Tests/DesignPatternsTests/MediatorTests.swift) — final behavior and ownership evidence.
 - [`mediator-problem.md`](../../Documentation/mediator-problem.md) and [`mediator-pressure.md`](../../Documentation/mediator-pressure.md) — the requirements that earned the boundary.
+- [`mediator-responsibility-review.md`](../../Documentation/mediator-responsibility-review.md) — standalone participant evidence and god-object split signals.
 - [`mediator-header.png`](../../Documentation/Assets/Patterns/behavioral/mediator-header.png) — editorial header.

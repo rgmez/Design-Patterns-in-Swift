@@ -26,6 +26,73 @@ struct MediatorTests {
         DeliveryCheckoutMediator(slots: [express, evening, nextDay], promotions: [offer])
     }
 
+    @Suite("Participant-owned rules")
+    struct ParticipantOwnedRules {
+        @Test("Delivery filters zones and rejects unavailable slots without a mediator")
+        func deliveryOwnsAvailability() {
+            let delivery = CheckoutDeliveryModule(
+                slots: [
+                    MediatorTests.express,
+                    MediatorTests.evening,
+                    MediatorTests.nextDay
+                ]
+            )
+
+            delivery.updateAddress(MediatorTests.central)
+
+            #expect(
+                delivery.availableSlots == [
+                    MediatorTests.express,
+                    MediatorTests.evening
+                ]
+            )
+            #expect(delivery.select(id: MediatorTests.nextDay.id) == false)
+            #expect(delivery.select(id: MediatorTests.evening.id))
+        }
+
+        @Test("Payment rejects and clears unavailable methods without a mediator")
+        func paymentOwnsAvailability() {
+            let payment = CheckoutPaymentModule()
+
+            payment.updateSlot(MediatorTests.evening)
+            #expect(payment.select(.cashOnDelivery))
+
+            payment.updateSlot(MediatorTests.express)
+
+            #expect(payment.availableMethods == [.card])
+            #expect(payment.selectedMethod == nil)
+            #expect(payment.select(.cashOnDelivery) == false)
+        }
+
+        @Test("Promotion evaluates offers and requests an eligible slot without a mediator")
+        func promotionOwnsEligibility() {
+            let promotion = CheckoutPromotionModule(
+                offers: [MediatorTests.offer]
+            )
+            var requestedSlotID: String?
+            promotion.onSlotRequested = { requestedSlotID = $0 }
+            promotion.apply(code: MediatorTests.code)
+            promotion.updateSlot(
+                MediatorTests.express,
+                availableSlots: [
+                    MediatorTests.express,
+                    MediatorTests.evening
+                ]
+            )
+
+            #expect(
+                promotion.status == .unavailable(
+                    code: MediatorTests.code,
+                    issue: .deliverySlotNotEligible
+                )
+            )
+
+            promotion.preferEligibleDeliverySlot()
+
+            #expect(requestedSlotID == MediatorTests.evening.id)
+        }
+    }
+
     @Suite("Coordination")
     struct Coordination {
         @Test("Address invalidation clears the slot, payment, and promotion eligibility")
