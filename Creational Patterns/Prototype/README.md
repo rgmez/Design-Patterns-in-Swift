@@ -183,3 +183,10 @@ Prototype and copy-on-write solve different problems. Swift collections may defe
 - [`prototype-pressure.md`](../../Documentation/prototype-pressure.md) — measured centralized-switch pressure.
 - [`prototype-header.png`](../../Documentation/Assets/Patterns/creational/prototype-header.png) — editorial header.
 - [`Prototype.md`](Prototype.md) and [`TaskPrototype.swift`](TaskPrototype.swift) — historical task-cloning draft retained for comparison, not part of the package.
+---
+
+## Continue exploring
+
+**Previous:** [Factory Method](../Factory%20Method/README.md) · **Next:** [Singleton](../Singleton/README.md) · **Compare with:** [Memento](../../Behavioral%20Patterns/Memento/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

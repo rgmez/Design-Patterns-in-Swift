@@ -162,3 +162,10 @@ Command represents *what to do* and how to reverse that accepted operation. Meme
 - [`command-problem.md`](../../Documentation/command-problem.md) — requirements, invariants, and initial no-pattern decision.
 - [`command-pressure.md`](../../Documentation/command-pressure.md) — evidence that earns the final abstraction.
 - [`command-header.png`](../../Documentation/Assets/Patterns/behavioral/command-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md) · **Next:** [Interpreter](../Interpreter/README.md) · **Compare with:** [Memento](../Memento/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

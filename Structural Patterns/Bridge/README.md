@@ -145,3 +145,10 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 - [`NotificationBridge.swift`](../../Sources/DesignPatterns/Bridge/NotificationBridge.swift) — composition bridge.
 - [`BridgeTests.swift`](../../Tests/DesignPatternsTests/BridgeTests.swift) — executable acceptance tests.
 - [`bridge-header.png`](../../Documentation/Assets/Patterns/structural/bridge-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Adapter](../Adapter/README.md) · **Next:** [Composite](../Composite/README.md) · **Compare with:** [Strategy](../../Behavioral%20Patterns/Strategy/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

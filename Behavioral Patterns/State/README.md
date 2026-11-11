@@ -158,3 +158,10 @@ The earlier problem and pressure suites remain executable so the direct reducer 
 - [`state-problem.md`](../../Documentation/state-problem.md) — requirements, invariants, and direct solution decision.
 - [`state-pressure.md`](../../Documentation/state-pressure.md) — measured pressure and smaller alternatives.
 - [`state-header.png`](../../Documentation/Assets/Patterns/behavioral/state-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Observer](../Observer/README.md) · **Next:** [Strategy](../Strategy/README.md) · **Compare with:** [Strategy](../Strategy/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

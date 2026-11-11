@@ -174,3 +174,10 @@ Command captures *what to do*; Memento captures *what state existed*. If the iti
 - [`memento-pressure.md`](../../Documentation/memento-pressure.md) — measured pressure that earns the opaque boundary.
 - [`memento-storage-review.md`](../../Documentation/memento-storage-review.md) — content/depth growth and the delta or persistence handoff.
 - [`memento-header.png`](../../Documentation/Assets/Patterns/behavioral/memento-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Mediator](../Mediator/README.md) · **Next:** [Observer](../Observer/README.md) · **Compare with:** [Command](../Command/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

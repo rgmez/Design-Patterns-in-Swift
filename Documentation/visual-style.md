@@ -17,10 +17,11 @@ duplicate this specification elsewhere.
 | --- | --- | --- |
 | [`adapter-header-reference.png`](Assets/Brand/adapter-header-reference.png) | Approved composition and quality reference | Compare every final header against it; do not edit it. |
 | [`rg-logo.png`](Assets/Brand/rg-logo.png) | Original RG brand mark | Composite this exact file; never redraw, regenerate, crop, stretch, or rewrite it. |
+| [`repository-social-preview.jpg`](Assets/Brand/repository-social-preview.jpg) | GitHub and social-sharing preview | Keep the final asset at 1280 × 640 pixels and under 1 MB; regenerate the scene without text, then apply title and the original logo deterministically. |
 
-Both files are byte-for-byte local copies of the approved source assets. Keeping
-them in the repository makes reviews reproducible without depending on a local
-visualization workspace.
+The reference header and logo are byte-for-byte local copies of the approved source assets. Keeping them in the repository makes reviews reproducible without depending on a local visualization workspace.
+
+The social preview is a derived repository asset rather than a pattern header. It uses the same palette, type hierarchy, original logo, and evidence-gate metaphor without adding a second visual system.
 
 ## Editorial header contract
 

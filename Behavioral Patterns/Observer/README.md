@@ -119,3 +119,10 @@ The tests prove current-state delivery to late subscribers, fan-out to active su
 - [`ObserverProblemTests.swift`](../../Tests/DesignPatternsTests/ObserverProblemTests.swift) — direct baseline behavior.
 - [`ObserverPressureTests.swift`](../../Tests/DesignPatternsTests/ObserverPressureTests.swift) — lifecycle pressure.
 - [`ObserverTests.swift`](../../Tests/DesignPatternsTests/ObserverTests.swift) — subscription, duplicate, and cancellation semantics.
+---
+
+## Continue exploring
+
+**Previous:** [Memento](../Memento/README.md) · **Next:** [State](../State/README.md) · **Compare with:** [Mediator](../Mediator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

@@ -187,3 +187,10 @@ The full suite verifies that the new pattern still compiles alongside the rest o
 - [`mediator-problem.md`](../../Documentation/mediator-problem.md) and [`mediator-pressure.md`](../../Documentation/mediator-pressure.md) — the requirements that earned the boundary.
 - [`mediator-responsibility-review.md`](../../Documentation/mediator-responsibility-review.md) — standalone participant evidence and god-object split signals.
 - [`mediator-header.png`](../../Documentation/Assets/Patterns/behavioral/mediator-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Iterator](../Iterator/README.md) · **Next:** [Memento](../Memento/README.md) · **Compare with:** [Facade](../../Structural%20Patterns/Facade/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

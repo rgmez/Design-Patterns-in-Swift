@@ -188,3 +188,10 @@ Facade hides a collaboration behind one simpler entry point. Decorator preserves
 - [`decorator-problem.md`](../../Documentation/decorator-problem.md) — requirements, invariants, and direct-solution decision.
 - [`decorator-pressure.md`](../../Documentation/decorator-pressure.md) — measured combination and ordering pressure.
 - [`decorator-header.png`](../../Documentation/Assets/Patterns/structural/decorator-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Composite](../Composite/README.md) · **Next:** [Facade](../Facade/README.md) · **Compare with:** [Proxy](../Proxy/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

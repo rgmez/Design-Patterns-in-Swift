@@ -173,3 +173,10 @@ Fluent chaining is deliberately absent. Mutating operations map more honestly to
 - [`builder-problem.md`](../../Documentation/builder-problem.md) — atomic initializer baseline and initial visual thesis.
 - [`builder-pressure.md`](../../Documentation/builder-pressure.md) — measured invalid-sequence pressure and solution boundary.
 - [`builder-header.png`](../../Documentation/Assets/Patterns/creational/builder-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Abstract Factory](../Abstract%20Factory/README.md) · **Next:** [Factory Method](../Factory%20Method/README.md) · **Compare with:** [State](../../Behavioral%20Patterns/State/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

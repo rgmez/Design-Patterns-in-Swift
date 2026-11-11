@@ -220,3 +220,10 @@ It is not a Singleton either. The catalogue is created inside one build and is d
 - *Design Patterns* — Gamma, Helm, Johnson, Vlissides.
 - Swift documentation for [`Dictionary`](https://developer.apple.com/documentation/swift/dictionary), used as the bounded category lookup.
 - Apple documentation for [`ObjectIdentifier`](https://developer.apple.com/documentation/swift/objectidentifier), used only in tests to verify shared reference identity.
+---
+
+## Continue exploring
+
+**Previous:** [Facade](../Facade/README.md) · **Next:** [Proxy](../Proxy/README.md) · **Compare with:** [Prototype](../../Creational%20Patterns/Prototype/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

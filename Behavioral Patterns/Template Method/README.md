@@ -212,3 +212,10 @@ The full suite checks that this inheritance boundary compiles beside every other
 - [`template-method-problem.md`](../../Documentation/template-method-problem.md) and [`template-method-pressure.md`](../../Documentation/template-method-pressure.md) — requirements, duplication count, and decision boundary.
 - [`template-method-composition-review.md`](../../Documentation/template-method-composition-review.md) — executable higher-order alternative, costs, and reversal condition.
 - [`template-method-header.png`](../../Documentation/Assets/Patterns/behavioral/template-method-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Strategy](../Strategy/README.md) · **Next:** [Visitor](../Visitor/README.md) · **Compare with:** [Strategy](../Strategy/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

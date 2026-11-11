@@ -169,3 +169,10 @@ A single concrete factory would not justify Abstract Factory. With only EU, a di
 - [`abstract-factory-problem.md`](../../Documentation/abstract-factory-problem.md) — direct baseline and initial visual thesis.
 - [`abstract-factory-pressure.md`](../../Documentation/abstract-factory-pressure.md) — measured invalid-combination pressure.
 - [`abstract-factory-header.png`](../../Documentation/Assets/Patterns/creational/abstract-factory-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Singleton](../Singleton/README.md) · **Next:** [Builder](../Builder/README.md) · **Compare with:** [Factory Method](../Factory%20Method/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

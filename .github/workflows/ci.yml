@@ -24,6 +24,9 @@ jobs:
       - name: Report Swift version
         run: swift --version
 
+      - name: Validate README experience
+        run: ruby scripts/validate_readmes.rb
+
       - name: Build with warnings as errors
         run: swift build -Xswiftc -warnings-as-errors
 

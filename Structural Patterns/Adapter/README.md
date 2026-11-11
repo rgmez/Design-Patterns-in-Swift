@@ -148,3 +148,10 @@ Factory Method is also deliberately absent: provider selection is composition wi
 - [`CheckoutPaymentService.swift`](../../Sources/DesignPatterns/Adapter/CheckoutPaymentService.swift) — validated client-facing operation.
 - [`AdapterTests.swift`](../../Tests/DesignPatternsTests/AdapterTests.swift) — executable acceptance and substitution tests.
 - [`adapter-header.png`](../../Documentation/Assets/Patterns/structural/adapter-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Proxy](../Proxy/README.md) · **Next:** [Bridge](../Bridge/README.md) · **Compare with:** [Facade](../Facade/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

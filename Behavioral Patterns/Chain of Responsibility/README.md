@@ -227,3 +227,10 @@ Decorator and a typical middleware pipeline may also be ordered, but order alone
 - [`chain-of-responsibility-problem.md`](../../Documentation/chain-of-responsibility-problem.md) — initial requirements, direct-design decision, and visual thesis.
 - [`chain-of-responsibility-pressure.md`](../../Documentation/chain-of-responsibility-pressure.md) — measured central branching and pattern boundary.
 - [`chain-of-responsibility-header.png`](../../Documentation/Assets/Patterns/behavioral/chain-of-responsibility-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Visitor](../Visitor/README.md) · **Next:** [Command](../Command/README.md) · **Compare with:** [Decorator](../../Structural%20Patterns/Decorator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

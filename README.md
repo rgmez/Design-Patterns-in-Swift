@@ -23,7 +23,7 @@ Each guide starts with direct Swift, introduces one verified requirement, and ad
 ## Choose your path
 
 - **New to design patterns?** Start with [Adapter](Structural%20Patterns/Adapter/README.md), [Strategy](Behavioral%20Patterns/Strategy/README.md), and [Observer](Behavioral%20Patterns/Observer/README.md). They introduce external boundaries, interchangeable policy, and independent subscriber lifetimes.
-- **Solving a concrete app problem?** Jump to the [pattern catalogue](#pattern-catalogue) and choose the scenario closest to yours.
+- **Solving a concrete app problem?** Use the [pressure-led pattern finder](Documentation/find-pattern-by-pressure.md) or jump to the [pattern catalogue](#pattern-catalogue).
 - **Reviewing an architecture proposal?** Read the [no-pattern decision](Documentation/no-pattern-decision.md), then use the [`choose-swift-design-pattern` skill](.codex/skills/choose-swift-design-pattern/SKILL.md).
 - **Evaluating the evidence?** Run the package locally, inspect the linked tests, and read the [complete catalogue review](Documentation/catalogue-review.md).
 
@@ -125,6 +125,7 @@ The diagrams explain relationships, sequences, or states. The editorial headers 
 | [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify behavior and decision boundaries. |
 | [`Documentation/`](Documentation/) | Problem definitions, pressure reviews, QA evidence, and visual guidance. |
 | [Historical examples](Documentation/historical-examples.md) | Superseded sketches, what they actually demonstrate, and their canonical replacements. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Evidence-first workflow, verification commands, README contract, and commit conventions. |
 
 <details>
 <summary><strong>Project history, QA, and contributor references</strong></summary>
@@ -142,6 +143,7 @@ The diagrams explain relationships, sequences, or states. The editorial headers 
 - [Starting catalogue audit](Documentation/catalogue-audit.md)
 - [Complete catalogue review](Documentation/catalogue-review.md)
 - [Real-app domain map](Documentation/app-domain-map.md)
+- [Find a pattern by pressure](Documentation/find-pattern-by-pressure.md)
 - [Pattern decision signals](Documentation/skill-decision-signals.md)
 - [Independent skill scenarios](Documentation/skill-evaluation-scenarios.md)
 - [Skill validation](Documentation/skill-validation.md)
@@ -149,6 +151,7 @@ The diagrams explain relationships, sequences, or states. The editorial headers 
 
 ### Authoring and quality system
 
+- [Contribution guide](CONTRIBUTING.md)
 - [Pattern README template](Documentation/pattern-readme-template.md)
 - [README experience](Documentation/readme-experience.md)
 - [Visual style](Documentation/visual-style.md)

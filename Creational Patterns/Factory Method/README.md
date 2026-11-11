@@ -158,3 +158,10 @@ Factory Method differs from Simple Factory by moving the creation decision into 
 - [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md) — measured workflow pressure and Simple Factory comparison.
 - [`factory-method-closure-comparison.md`](../../Documentation/factory-method-closure-comparison.md) — executable nearest-alternative comparison and reversal condition.
 - [`factory-method-header.png`](../../Documentation/Assets/Patterns/creational/factory-method-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Builder](../Builder/README.md) · **Next:** [Prototype](../Prototype/README.md) · **Compare with:** [Template Method](../../Behavioral%20Patterns/Template%20Method/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

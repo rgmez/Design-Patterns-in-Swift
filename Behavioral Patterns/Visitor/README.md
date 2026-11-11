@@ -204,3 +204,10 @@ The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatter
 - [`visitor-problem.md`](../../Documentation/visitor-problem.md) and [`visitor-pressure.md`](../../Documentation/visitor-pressure.md) — evidence that earned the pattern.
 - [`visitor-extension-review.md`](../../Documentation/visitor-extension-review.md) — executable operation extension and compiler-enforced element cost.
 - [`visitor-header.png`](../../Documentation/Assets/Patterns/behavioral/visitor-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Template Method](../Template%20Method/README.md) · **Next:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md) · **Compare with:** [Iterator](../Iterator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

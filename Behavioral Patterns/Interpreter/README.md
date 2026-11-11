@@ -211,3 +211,10 @@ The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/Des
 - [`interpreter-problem.md`](../../Documentation/interpreter-problem.md) and [`interpreter-pressure.md`](../../Documentation/interpreter-pressure.md) — evidence that earned the pattern.
 - [`interpreter-parser-handoff.md`](../../Documentation/interpreter-parser-handoff.md) — executable thresholds for replacing hand-written parser mechanics.
 - [`interpreter-header.png`](../../Documentation/Assets/Patterns/behavioral/interpreter-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Command](../Command/README.md) · **Next:** [Iterator](../Iterator/README.md) · **Compare with:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

@@ -186,3 +186,10 @@ Singleton is also not a replacement for dependency injection. Here injection is 
 - [`singleton-problem.md`](../../Documentation/singleton-problem.md) — direct injected baseline and requirements.
 - [`singleton-pressure.md`](../../Documentation/singleton-pressure.md) — measured identity failure and rejected alternatives.
 - [`singleton-header.png`](../../Documentation/Assets/Patterns/creational/singleton-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Prototype](../Prototype/README.md) · **Next:** [Abstract Factory](../Abstract%20Factory/README.md) · **Compare with:** [No pattern](../../Documentation/no-pattern-decision.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

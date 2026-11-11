@@ -150,3 +150,10 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 - [`strategy-problem.md`](../../Documentation/strategy-problem.md) — direct baseline and visual thesis.
 - [`strategy-pressure.md`](../../Documentation/strategy-pressure.md) — requirement that earned the boundary.
 - [`strategy-header.png`](../../Documentation/Assets/Patterns/behavioral/strategy-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [State](../State/README.md) · **Next:** [Template Method](../Template%20Method/README.md) · **Compare with:** [State](../State/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

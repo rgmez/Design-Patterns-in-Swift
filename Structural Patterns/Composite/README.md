@@ -220,3 +220,10 @@ Composite and Decorator can both nest values behind one interface. Composite for
 - [`composite-problem.md`](../../Documentation/composite-problem.md) — requirements, invariants, and direct-design decision.
 - [`composite-pressure.md`](../../Documentation/composite-pressure.md) — measured duplication and pattern boundary.
 - [`composite-header.png`](../../Documentation/Assets/Patterns/structural/composite-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Bridge](../Bridge/README.md) · **Next:** [Decorator](../Decorator/README.md) · **Compare with:** [Iterator](../../Behavioral%20Patterns/Iterator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

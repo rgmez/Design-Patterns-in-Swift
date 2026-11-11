@@ -212,3 +212,10 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 - [`iterator-problem.md`](../../Documentation/iterator-problem.md) — initial requirements and no-pattern decision.
 - [`iterator-pressure.md`](../../Documentation/iterator-pressure.md) — measured cursor and termination pressure.
 - [`iterator-header.png`](../../Documentation/Assets/Patterns/behavioral/iterator-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Interpreter](../Interpreter/README.md) · **Next:** [Mediator](../Mediator/README.md) · **Compare with:** [Composite](../../Structural%20Patterns/Composite/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

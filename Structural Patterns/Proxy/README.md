@@ -187,3 +187,10 @@ Decorator and Proxy can have similar forwarding shapes. Their product decisions 
 - [`proxy-problem.md`](../../Documentation/proxy-problem.md) — requirements, invariants, and direct-design decision.
 - [`proxy-pressure.md`](../../Documentation/proxy-pressure.md) — measured duplication and pattern boundary.
 - [`proxy-header.png`](../../Documentation/Assets/Patterns/structural/proxy-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Flyweight](../Flyweight/README.md) · **Next:** [Adapter](../Adapter/README.md) · **Compare with:** [Decorator](../Decorator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)

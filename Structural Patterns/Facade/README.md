@@ -167,3 +167,10 @@ Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds 
 - [`facade-problem.md`](../../Documentation/facade-problem.md) — original requirements, invariants, and no-pattern decision.
 - [`facade-pressure.md`](../../Documentation/facade-pressure.md) — measured coupling that earns the facade.
 - [`facade-header.png`](../../Documentation/Assets/Patterns/structural/facade-header.png) — editorial header.
+---
+
+## Continue exploring
+
+**Previous:** [Decorator](../Decorator/README.md) · **Next:** [Flyweight](../Flyweight/README.md) · **Compare with:** [Mediator](../../Behavioral%20Patterns/Mediator/README.md)
+
+[↑ Category index](../README.md) · [All patterns](../../README.md#pattern-catalogue)
