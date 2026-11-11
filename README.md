@@ -192,9 +192,9 @@ when you want to understand the series plan or add an example:
 - [Pattern-selection skill refinement](Documentation/skill-refinement.md): the
   evidence-backed corrections that improve neighbour comparisons and keep
   decision-only recommendations independent from their Swift representation.
-- [v1.0 release candidate](Documentation/v1.0-release-candidate.md): the release
-  notes, repository-wide QA evidence, known validation limit, and approval gate
-  before any tag or release.
+- [v1.0.0 release notes](Documentation/v1.0-release-candidate.md): published
+  highlights, repository-wide QA evidence, known validation limits, and links
+  into the tagged catalogue.
 - [100-day retrospective](Documentation/retrospective.md): what the programme
   simplified, deliberately rejected, learned about pattern ownership, and
   recommends investigating next without preselecting another pattern.
