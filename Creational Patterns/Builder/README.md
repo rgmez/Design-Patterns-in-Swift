@@ -1,4 +1,6 @@
-# Builder
+# 🛠️ Builder
+
+<a id="builder"></a>
 
 ![A support upload travels through consent-gated assembly stations before one sealed request is weighed and completed.](../../Documentation/Assets/Patterns/creational/builder-header.png)
 
@@ -8,6 +10,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** A support request is assembled across screens and must enforce consent, payload limits, and a sealed final state.
@@ -15,7 +19,17 @@
 - **Use Builder when:** Inputs arrive in ordered stages and partial construction has real validation or privacy rules.
 - **Keep it simple when:** Defaults, optional fields, or fluent syntax are the only motivation.
 
-## The app problem
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
+## 🎯 The app problem
 
 A commerce app lets a customer report a failed checkout. A support ticket starts with a required message and may later gain redacted diagnostics, screenshots, and a screen recording as the customer moves through separate screens.
 
@@ -23,7 +37,9 @@ Each attachment category requires explicit consent before its first payload. The
 
 HTTP encoding, retries, authentication, persistence, and raw-log redaction stay outside this example. They would obscure the construction decision without changing it.
 
-## Start with direct Swift
+<a id="start-with-direct-swift"></a>
+
+## 🪶 Start with direct Swift
 
 When every value arrived on one Submit action, a throwing initializer with optional values was the clearest solution:
 
@@ -43,19 +59,25 @@ The initializer could validate once and return one immutable value. Default argu
 
 The [problem baseline](../../Documentation/builder-problem.md) records that simpler API and its acceptance rules.
 
-## The turning point
+<a id="the-turning-point"></a>
+
+## ⚡ The turning point
 
 Construction moved across ordered UI interactions. The direct extension passed an array of six `SupportUploadAssemblyStep` cases to the request initializer. That made four invalid order families representable: a step before the message, a duplicate message, a step after finalization, and no finalization at all.
 
 The [pressure review](../../Documentation/builder-pressure.md) preserves the measurements. The issue was no longer optional data. The public input had become an invalid-state-rich construction language that every caller had to assemble correctly.
 
-## Pattern intent
+<a id="pattern-intent"></a>
+
+## 🧭 Pattern intent
 
 Builder moves incremental construction into one dedicated value and exposes the finished product only through `build()`. In this example, `SupportUploadRequestBuilder` owns the evolving multipart parts, consent state, byte-limit checks, and sealed state while `SupportUploadRequest` remains an immutable product.
 
 The message is required by the builder initializer, so three of the four raw sequence failures disappear from the public API. Runtime checks remain for the privacy, size, and sealing rules that a small Swift type graph cannot usefully prove at compile time.
 
-## Participants and responsibilities
+<a id="participants-and-responsibilities"></a>
+
+## 🧩 Participants and responsibilities
 
 | App role | Swift type | Responsibility |
 | --- | --- | --- |
@@ -66,7 +88,9 @@ The message is required by the builder initializer, so three of the four raw seq
 
 There is one concrete builder because the app produces one product shape. A builder protocol would create a substitution point with no second implementation, and a director would merely replay a UI sequence the screens already own.
 
-## How the Swift implementation works
+<a id="how-the-swift-implementation-works"></a>
+
+## ⚙️ How the Swift implementation works
 
 1. `SupportUploadRequestBuilder.init` requires the message and a positive byte limit. It creates the first multipart part and rejects an oversized message immediately.
 2. `grantConsent(for:)` records a category-specific decision on the builder value.
@@ -86,7 +110,9 @@ let request = try builder.build()
 
 The builder is a `struct`. Copying a draft creates independent construction state, which is useful for local preview or branching without introducing shared mutable reference state.
 
-## Diagram
+<a id="diagram"></a>
+
+## 🗺️ Diagram
 
 ```mermaid
 flowchart LR
@@ -103,7 +129,9 @@ Observe that every optional payload enters through the same builder boundary, wh
 
 **Accessible description:** A required support message creates the builder. Consent decisions and three kinds of optional private attachments enter that builder over time. The builder validates consent and total bytes as parts are accepted, then one build operation produces a sealed immutable support request.
 
-## Run the example
+<a id="run-the-example"></a>
+
+## ▶️ Run the example
 
 From the repository root:
 
@@ -114,7 +142,9 @@ swift test -Xswiftc -warnings-as-errors --filter BuilderTests
 
 The example is local and deterministic. It needs no support vendor, network, credentials, media framework, or filesystem access.
 
-## Tests
+<a id="tests"></a>
+
+## 🧪 Tests
 
 [`BuilderTests.swift`](../../Tests/DesignPatternsTests/BuilderTests.swift) proves:
 
@@ -127,7 +157,9 @@ The example is local and deterministic. It needs no support vendor, network, cre
 
 The three attachment-consent cases use one parameterized Swift Testing behavior, keeping the category contract visible without duplicating test bodies.
 
-## Trade-offs
+<a id="trade-offs"></a>
+
+## ⚖️ Trade-offs
 
 ### What improves
 
@@ -144,7 +176,9 @@ The three attachment-consent cases use one parameterized Swift Testing behavior,
 - Privacy and size rules still need runtime errors; Builder organizes them but does not turn domain consent into a compile-time proof.
 - A copied builder can create a separate valid request branch, which must be an intentional use of value semantics.
 
-## Alternatives considered
+<a id="alternatives-considered"></a>
+
+## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
@@ -157,7 +191,9 @@ The three attachment-consent cases use one parameterized Swift Testing behavior,
 
 Fluent chaining is deliberately absent. Mutating operations map more honestly to events arriving on different screens and keep thrown intermediate failures at the line that caused them.
 
-## When not to use it
+<a id="when-not-to-use-it"></a>
+
+## 🚫 When not to use it
 
 - Keep a throwing initializer when all required and optional values arrive at once.
 - Use default arguments when the only issue is a readable list of optional parameters.
@@ -166,16 +202,21 @@ Fluent chaining is deliberately absent. Mutating operations map more honestly to
 - Prefer a small validated form value when the UI edits fields but does not need ordered intermediate effects.
 - Do not replace meaningful consent or byte-limit errors with a large staged-type graph unless compile-time ordering has demonstrated product value.
 
-## Source map
+<a id="source-map"></a>
+
+## 🗂️ Source map
 
 - [`SupportUploadRequest.swift`](../../Sources/DesignPatterns/Builder/SupportUploadRequest.swift) — domain values, concrete builder, intermediate validation, and immutable product.
 - [`BuilderTests.swift`](../../Tests/DesignPatternsTests/BuilderTests.swift) — construction, privacy, validation, sealing, and value-semantics evidence.
 - [`builder-problem.md`](../../Documentation/builder-problem.md) — atomic initializer baseline and initial visual thesis.
 - [`builder-pressure.md`](../../Documentation/builder-pressure.md) — measured invalid-sequence pressure and solution boundary.
 - [`builder-header.png`](../../Documentation/Assets/Patterns/creational/builder-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Abstract Factory](../Abstract%20Factory/README.md) · **Next:** [Factory Method](../Factory%20Method/README.md) · **Compare with:** [State](../../Behavioral%20Patterns/State/README.md)
 

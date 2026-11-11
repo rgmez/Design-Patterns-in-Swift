@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** A runtime-created callback cannot receive the injected actor that owns one process-wide audio session.
 - **Direct baseline:** One actor created at the composition root and injected everywhere else.
 - **Use Singleton when:** One accountable process identity must cross a construction root that offers no injection or registration seam.
 - **Keep it simple when:** Constructor injection works or the state belongs to a user, document, window, scene, or request.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -32,11 +44,15 @@ Most app code is created by a composition root and can receive one injected `Aud
 
 Audio capture, permissions, route policy, interruptions, and UI state are outside this example. They do not change who owns the single session.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 The [problem baseline](../../Documentation/singleton-problem.md) used one actor created at the app composition root and injected into recording and preview clients. The actor reserved ownership before awaiting the platform adapter, so reentrancy could not admit a second client. That direct solution was preferable while the app controlled every construction root.
 
 An actor was already necessary for mutable coordination; Singleton was not. Actor isolation serializes access to one instance, whereas dependency injection makes that instance explicit. Neither feature makes two separately constructed actors share state.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -44,11 +60,15 @@ The [pressure evidence](../../Documentation/singleton-pressure.md) introduced th
 
 This is identity pressure, not concurrency pressure. The app cannot inject into that one callback, and the runtime offers no registration seam that could capture the existing controller. “Remember to construct only one” is not an enforced invariant across those two roots.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 `AudioSessionController.production` is the one immutable production identity for the process resource. Both the property and initializer are hidden in its source file. A package-only composition root obtains that actor for injection into ordinary clients; only `LegacyPreviewResumeCallback()` reaches the same identity directly because the runtime prevents constructor injection.
 
 The package-only `isolated(systemSession:)` factory creates fresh controllers for tests and executable evidence. It cannot replace `production`, mutate static storage, or leak state between tests. Singleton therefore contains one proven construction gap instead of becoming a general dependency strategy.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -61,6 +81,8 @@ The package-only `isolated(systemSession:)` factory creates fresh controllers fo
 | Platform seam | [`SystemAudioSessionApplying`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) | Isolates the external process resource and gives tests a deterministic actor substitute. |
 
 There is no service locator, global dependency dictionary, mutable singleton, reset hook, controller protocol, or custom global actor. The platform protocol exists because it is both an external boundary and an immediate test seam.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -94,6 +116,8 @@ package static func isolated(
 
 `ProcessSystemAudioSession` is the executable package's minimal stand-in for the operating-system adapter. A real app would keep its AVFoundation integration behind the same `SystemAudioSessionApplying` boundary.
 
+<a id="diagram"></a>
+
 ## 🗺️ Diagram
 
 ```mermaid
@@ -112,6 +136,8 @@ Observe the creation paths rather than the activation sequence. Static initializ
 
 **Accessible description:** Static initialization creates one file-private audio-session controller. A package composition root injects that same actor into the recorder and preview player. A legacy runtime constructs a callback with no arguments, so that callback alone reaches the hidden production actor. The actor controls the one process audio session, while parallel tests create separate controllers and spies through the package-only isolated factory.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -122,6 +148,8 @@ swift test -Xswiftc -warnings-as-errors --filter Singleton
 ```
 
 The package requires Swift 6.0 and macOS 14 or later. It uses no credentials, network, audio hardware, or UI framework; deterministic actor spies prove the ownership behavior.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -134,6 +162,8 @@ The package requires Swift 6.0 and macOS 14 or later. It uses no credentials, ne
 - the original controller still rejects competing owners and preserves coherent state across platform failures.
 
 Swift Testing runs these suites in parallel. No suite is serialized because no test mutates shared production state.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -153,6 +183,8 @@ Swift Testing runs these suites in parallel. No suite is serialized because no t
 - External integration tests cannot replace the shared platform adapter. They should exercise injected clients or the package's isolated tests instead.
 - A second legitimate audio-session scope would invalidate the singleton assumption and require a different composition model.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -166,6 +198,8 @@ Swift Testing runs these suites in parallel. No suite is serialized because no t
 
 Singleton is also not a replacement for dependency injection. Here injection is the default distribution mechanism; Singleton supplies one identity only where the external runtime makes injection impossible.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Do not add `shared` when the composition root can inject the dependency.
@@ -177,6 +211,8 @@ Singleton is also not a replacement for dependency injection. Here injection is 
 - Remove this shared path if the legacy runtime gains a registration seam.
 - Never add a mutable `static var`, test reset, or service locator to make a singleton easier to test.
 
+<a id="source-map"></a>
+
 ## 🗂️ Source map
 
 - [`AudioSessionController.swift`](../../Sources/DesignPatterns/Singleton/AudioSessionController.swift) — ownership actor, file-private process identity, package composition root, isolated test factory, platform seam, and legacy callback.
@@ -186,9 +222,12 @@ Singleton is also not a replacement for dependency injection. Here injection is 
 - [`singleton-problem.md`](../../Documentation/singleton-problem.md) — direct injected baseline and requirements.
 - [`singleton-pressure.md`](../../Documentation/singleton-pressure.md) — measured identity failure and rejected alternatives.
 - [`singleton-header.png`](../../Documentation/Assets/Patterns/creational/singleton-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Prototype](../Prototype/README.md) · **Next:** [Abstract Factory](../Abstract%20Factory/README.md) · **Compare with:** [No pattern](../../Documentation/no-pattern-decision.md)
 

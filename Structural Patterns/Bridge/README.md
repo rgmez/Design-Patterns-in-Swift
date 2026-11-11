@@ -1,4 +1,6 @@
-# Bridge
+<a id="bridge"></a>
+
+# 🌁 Bridge
 
 ![Three notification purposes cross one red bridge and fan out into four independent delivery rails.](../../Documentation/Assets/Patterns/structural/bridge-header.png)
 
@@ -8,6 +10,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Notification purpose and delivery channel vary independently and otherwise multiply concrete combinations.
@@ -15,27 +19,45 @@
 - **Use Bridge when:** Two dimensions both grow, combine freely, and deserve separate ownership.
 - **Keep it simple when:** Only one behavior family varies or the product matrix is small and closed.
 
-## The app problem
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
+## 🎯 The app problem
 
 The commerce app sends security alerts, order updates, and promotional reminders. Each purpose may travel through push, email, the in-app inbox, or SMS. Product meaning and delivery infrastructure evolve on different schedules: a new purpose should not edit every transport, and a new channel should not rewrite the meaning of every message.
 
 The direct baseline in [the pressure review](../../Documentation/bridge-pressure.md) made the problem executable: twelve purpose-channel combinations passed, but adding SMS required a branch in all three purpose helpers and copied sender policy into each one.
 
-## Start with direct Swift
+<a id="start-with-direct-swift"></a>
+
+## 🪶 Start with direct Swift
 
 The original `prepareNotification(_:for:)` function used closed enums and one channel switch per purpose. That is the smallest honest solution while the matrix is small. Its compiler-checked exhaustiveness and local rules are useful; the problem is the direction of change, not the number of lines.
 
 Day 016 proved the pressure. A fifth channel would touch every purpose, while a fourth purpose would have to know every channel. The direct implementation is preserved in Git history and explained in [the baseline](../../Documentation/bridge-problem.md), but the canonical example below separates the two axes.
 
-## The turning point
+<a id="the-turning-point"></a>
+
+## ⚡ The turning point
 
 The purpose axis owns semantic content: the category label and the app-owned request values. The channel axis owns transport policy: subjects, sounds, sender IDs, opt-out copy, and the asynchronous dispatch boundary. These axes can now change independently without a class for every combination.
 
-## Pattern intent
+<a id="pattern-intent"></a>
+
+## 🧭 Pattern intent
 
 Bridge separates an abstraction from its implementation so both can vary independently. Here `NotificationBridge` joins one purpose composer with one channel delivery implementation. It does not select a provider, hide business rules in a registry, or create a hierarchy of twelve message classes.
 
-## Participants and responsibilities
+<a id="participants-and-responsibilities"></a>
+
+## 🧩 Participants and responsibilities
 
 | Role | Swift type | Responsibility |
 | --- | --- | --- |
@@ -47,7 +69,9 @@ Bridge separates an abstraction from its implementation so both can vary indepen
 
 The protocols have multiple concrete implementations because the app already has three purpose rules and four delivery channels. No protocol exists only to mock one type.
 
-## How the Swift implementation works
+<a id="how-the-swift-implementation-works"></a>
+
+## ⚙️ How the Swift implementation works
 
 1. The composition root chooses a purpose composer and a channel delivery value.
 2. `NotificationBridge.send(_:)` asks the composer for `NotificationContent`.
@@ -56,7 +80,9 @@ The protocols have multiple concrete implementations because the app already has
 
 The `makeNotificationPurposeComposer(for:)` switch is only a closed enum selection helper. It is not Factory Method: callers do not subclass a creator, and provider construction is not the variation being taught.
 
-## Diagram
+<a id="diagram"></a>
+
+## 🗺️ Diagram
 
 ```mermaid
 sequenceDiagram
@@ -79,7 +105,9 @@ The sequence shows the independent boundary: purpose composition finishes before
 
 **Accessible description:** A notification client sends a request to `NotificationBridge`. The bridge asks an order-purpose composer for semantic content, passes that content to an SMS delivery implementation, and waits for an injected asynchronous dispatch closure. The delivery returns a receipt or propagates its error back to the client.
 
-## Run the example
+<a id="run-the-example"></a>
+
+## ▶️ Run the example
 
 From the repository root:
 
@@ -89,7 +117,9 @@ swift build -Xswiftc -warnings-as-errors
 
 The default dispatch closures are deterministic no-ops. They model the async transport boundary without credentials, network calls, or process-lifetime coordination.
 
-## Tests
+<a id="tests"></a>
+
+## 🧪 Tests
 
 ```sh
 swift test -Xswiftc -warnings-as-errors --filter BridgeTests
@@ -103,7 +133,9 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 - asynchronous channel failures reach the caller unchanged;
 - the input request remains an immutable value.
 
-## Trade-offs
+<a id="trade-offs"></a>
+
+## ⚖️ Trade-offs
 
 ### What improves
 
@@ -119,7 +151,11 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 - Channel implementations still need semantic metadata such as urgency and promotional opt-out rules; Bridge does not remove domain decisions.
 - A protocol boundary can obscure a simple flow when the axes are actually closed and stable.
 
-## Alternatives
+<a id="alternatives"></a>
+
+<a id="alternatives-considered"></a>
+
+## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it is not the canonical choice here |
 | --- | --- | --- |
@@ -130,14 +166,18 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 | Proxy | Access, caching, or lazy loading controls a stable subject. | The problem is independent variation, not access control. |
 | Chain of Responsibility | Ordered handlers may handle or pass a request. | Every selected channel must deliver; there is no pass-through chain. |
 
-## When not to use it
+<a id="when-not-to-use-it"></a>
+
+## 🚫 When not to use it
 
 - Keep the direct function when there is one purpose and one transport.
 - Keep enums and switches when both axes are closed, synchronous, and edited by the same team at the same time.
 - Prefer a simple function value when only one behavior varies and it does not need a second family of implementations.
 - Do not introduce Bridge to hide a few repeated literals; extract a local helper first and measure whether independent changes still touch both axes.
 
-## Source map
+<a id="source-map"></a>
+
+## 🗂️ Source map
 
 - [`NotificationDelivery.swift`](../../Sources/DesignPatterns/Bridge/NotificationDelivery.swift) — immutable domain values.
 - [`NotificationPurposeComposing.swift`](../../Sources/DesignPatterns/Bridge/NotificationPurposeComposing.swift) — purpose axis and selection helper.
@@ -145,9 +185,12 @@ swift test -Xswiftc -warnings-as-errors --filter BridgeTests
 - [`NotificationBridge.swift`](../../Sources/DesignPatterns/Bridge/NotificationBridge.swift) — composition bridge.
 - [`BridgeTests.swift`](../../Tests/DesignPatternsTests/BridgeTests.swift) — executable acceptance tests.
 - [`bridge-header.png`](../../Documentation/Assets/Patterns/structural/bridge-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Adapter](../Adapter/README.md) · **Next:** [Composite](../Composite/README.md) · **Compare with:** [Strategy](../../Behavioral%20Patterns/Strategy/README.md)
 

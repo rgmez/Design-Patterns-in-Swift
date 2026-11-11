@@ -1,4 +1,6 @@
-# Find a Pattern by Pressure
+# ⚡ Find a Pattern by Pressure
+
+<a id="find-a-pattern-by-pressure"></a>
 
 [← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [No-pattern decision](no-pattern-decision.md) · [Decision skill](../.codex/skills/choose-swift-design-pattern/SKILL.md)
 
@@ -12,6 +14,8 @@ Before following any link, confirm four facts:
 4. A test, type constraint, ownership rule, or measurement can verify the improvement.
 
 If one fact is missing, choose **no pattern yet** or **insufficient evidence**.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
 
 ## External systems and access
 

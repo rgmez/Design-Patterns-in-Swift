@@ -1,4 +1,6 @@
-# Adapter Design Pattern
+# 📖 Adapter Design Pattern
+
+<a id="adapter-design-pattern"></a>
 
 > [!WARNING]
 > Historical, non-canonical example. It preserves a recognizable Adapter shape
@@ -6,6 +8,8 @@
 > [Adapter guide](README.md); the
 > [catalogue audit](../../Documentation/catalogue-audit.md#adapter--rebuild)
 > explains why this sketch was rebuilt.
+
+[← Historical examples](../../Documentation/historical-examples.md) · [Pattern catalogue](../../README.md#pattern-catalogue)
 
 ## Introduction
 

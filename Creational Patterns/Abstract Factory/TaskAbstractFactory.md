@@ -1,4 +1,6 @@
-# Abstract Factory Design Pattern
+# 📖 Abstract Factory Design Pattern
+
+<a id="abstract-factory-design-pattern"></a>
 
 > [!WARNING]
 > Historical, non-canonical example. It contains one task factory rather than
@@ -6,6 +8,8 @@
 > [Abstract Factory guide](README.md); the
 > [catalogue audit](../../Documentation/catalogue-audit.md#abstract-factory--replace)
 > explains why this file was superseded.
+
+[← Historical examples](../../Documentation/historical-examples.md) · [Pattern catalogue](../../README.md#pattern-catalogue)
 
 ## Introduction
 The Abstract Factory Design Pattern is a creational pattern that extends the concept of factory methods. It provides an interface for creating families of related or dependent objects without specifying their concrete classes. This pattern is particularly useful when a system needs to integrate with multiple families of related products or when it's designed to be extensible with new product families.

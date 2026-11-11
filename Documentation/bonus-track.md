@@ -1,37 +1,44 @@
-# Bonus Track: Harden the Examples
+# 📖 Bonus Track: Harden the Examples
+
+<a id="bonus-track-harden-the-examples"></a>
 
 Start date: 2026-11-11
 
-The first 100 days produced a complete, executable catalogue. This bonus track
-does not reopen all 23 examples or add new patterns. It addresses the concrete
-teaching risks found during the final usefulness review:
+The first 100 days produced a complete, executable catalogue. This bonus track does not reopen all 23 examples or add new patterns. It addresses the concrete teaching risks found during the final usefulness review:
 
 - historical examples can still be mistaken for the canonical implementation;
-- eight canonical examples are useful only while their narrow boundary remains
-  explicit; and
-- a few trade-offs are documented but could be demonstrated more directly with
-  executable comparisons or measurements.
+- eight canonical examples are useful only while their narrow boundary remains explicit; and
+- a few trade-offs are documented but could be demonstrated more directly with executable comparisons or measurements.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
+
+**On this page**
+
+- [Operating rule](#operating-rule)
+- [Release relationship](#release-relationship)
+- [Scope](#scope)
+- [Bonus 001 decision](#bonus-001-decision)
+- [Bonus 002 decision](#bonus-002-decision)
+- [Bonus 003 decision](#bonus-003-decision)
+- [Bonus 004 decision](#bonus-004-decision)
+- [Bonus 005 decision](#bonus-005-decision)
+- [Bonus 006 decision](#bonus-006-decision)
+- [Bonus 007 decision](#bonus-007-decision)
+- [Bonus 008 decision](#bonus-008-decision)
+- [Bonus 009 decision](#bonus-009-decision)
+- [Bonus 010 decision](#bonus-010-decision)
 
 ## Operating rule
 
 Every bonus change must improve a reader's decision, not merely add detail.
 
-A change is accepted only when it identifies the current ambiguity, preserves
-the smallest direct Swift baseline, adds observable evidence, and names the
-condition that would reverse the conclusion. Documentation alone is enough when
-the problem is navigation or interpretation. Code is required only when a test
-or measurement can resolve a real uncertainty.
+A change is accepted only when it identifies the current ambiguity, preserves the smallest direct Swift baseline, adds observable evidence, and names the condition that would reverse the conclusion. Documentation alone is enough when the problem is navigation or interpretation. Code is required only when a test or measurement can resolve a real uncertainty.
 
-Work on one stage at a time. A stage is complete only after its relevant tests,
-links, documentation, and complete diff have been reviewed.
+Work on one stage at a time. A stage is complete only after its relevant tests, links, documentation, and complete diff have been reviewed.
 
 ## Release relationship
 
-The bonus track started before a v1.0 tag or release was approved. The Day 099
-release candidate remains the validated baseline, but it no longer describes
-the final repository `HEAD`. Release approval is paused until Bonus 010 reruns
-the repository-wide gates and refreshes the candidate evidence. The track does
-not authorize a tag, release, pull request, or publication.
+The bonus track started before a v1.0 tag or release was approved. The Day 099 release candidate remains the validated baseline, but it no longer describes the final repository `HEAD`. Release approval is paused until Bonus 010 reruns the repository-wide gates and refreshes the candidate evidence. The track does not authorize a tag, release, pull request, or publication.
 
 ## Scope
 
@@ -50,126 +57,70 @@ The track contains ten independently reviewable stages:
 | Bonus 009 | Visitor | Demonstrate the cheap operation-extension direction and the deliberate cost of adding an element kind. |
 | Bonus 010 | Final review | Re-run the suite, links, diagrams, and example-quality checklist; retain only improvements supported by evidence. |
 
-The outcome of a stage may be to keep the current implementation. A bonus stage
-fails if it invents a new requirement merely to make the named pattern look
-stronger.
+The outcome of a stage may be to keep the current implementation. A bonus stage fails if it invents a new requirement merely to make the named pattern look stronger.
 
 ## Bonus 001 decision
 
-The historical files remain valuable as evidence of the repository's starting
-point, but they are not runnable catalogue entries. Moving or deleting them
-would erase useful review context and create unnecessary link churn. Leaving
-them unlabelled lets a reader encounter a misclassified example before its
-tested replacement.
+The historical files remain valuable as evidence of the repository's starting point, but they are not runnable catalogue entries. Moving or deleting them would erase useful review context and create unnecessary link churn. Leaving them unlabelled lets a reader encounter a misclassified example before its tested replacement.
 
 Bonus 001 therefore keeps the files in place and adds three safeguards:
 
-1. one [historical example map](historical-examples.md) states what each old
-   example actually demonstrates;
+1. one [historical example map](historical-examples.md) states what each old example actually demonstrates;
 2. every historical Markdown document links to its canonical replacement; and
-3. every historical Swift file declares that it is excluded from the package
-   and points readers to the package-backed source.
+3. every historical Swift file declares that it is excluded from the package and points readers to the package-backed source.
 
-No runtime code, test behavior, canonical guide, or visual changes in this
-stage.
+No runtime code, test behavior, canonical guide, or visual changes in this stage.
 
 ## Bonus 002 decision
 
-The [Factory Method closure comparison](factory-method-closure-comparison.md)
-makes the closest Swift alternative executable without adding it to production
-source. Correctly paired preparation and parser-creation closures reproduce the
-canonical result through one configuration value, but independently configured
-closures also make a provider/parser mismatch representable at the call site.
+The [Factory Method closure comparison](factory-method-closure-comparison.md) makes the closest Swift alternative executable without adding it to production source. Correctly paired preparation and parser-creation closures reproduce the canonical result through one configuration value, but independently configured closures also make a provider/parser mismatch representable at the call site.
 
-Factory Method remains justified for the documented requirement because one
-provider workflow owns both preparation and the parser it creates. The verdict
-reverses when preparation disappears, becomes shared, or dynamic composition of
-the two behaviors becomes a real client requirement.
+Factory Method remains justified for the documented requirement because one provider workflow owns both preparation and the parser it creates. The verdict reverses when preparation disappears, becomes shared, or dynamic composition of the two behaviors becomes a real client requirement.
 
 ## Bonus 003 decision
 
-The [Singleton visibility review](singleton-visibility-review.md) removes the
-public `shared` API. The one production identity is now file-private, while a
-package composition root supplies it for ordinary dependency injection and the
-zero-argument legacy callback remains the only exceptional lookup.
+The [Singleton visibility review](singleton-visibility-review.md) removes the public `shared` API. The one production identity is now file-private, while a package composition root supplies it for ordinary dependency injection and the zero-argument legacy callback remains the only exceptional lookup.
 
-Actor isolation, rollback behavior, and parallel-test isolation remain
-unchanged. The Singleton still reverses to one injected actor if the external
-runtime gains any registration or dependency seam.
+Actor isolation, rollback behavior, and parallel-test isolation remain unchanged. The Singleton still reverses to one injected actor if the external runtime gains any registration or dependency seam.
 
 ## Bonus 004 decision
 
-The [Flyweight measurement review](flyweight-measurement-review.md) replaces
-`MemoryProfile` and `.memory` with payload-specific API names. The deterministic
-tests continue to prove object identities, decode constructions, and exact RGBA
-element counts, but no longer imply that they measure allocations, process RSS,
-framework caches, renderer copies, or GPU memory.
+The [Flyweight measurement review](flyweight-measurement-review.md) replaces `MemoryProfile` and `.memory` with payload-specific API names. The deterministic tests continue to prove object identities, decode constructions, and exact RGBA element counts, but no longer imply that they measure allocations, process RSS, framework caches, renderer copies, or GPU memory.
 
-Flyweight remains justified for the example's explicit decoded-buffer boundary.
-Real applications must profile their actual rendering stack before transferring
-the same conclusion.
+Flyweight remains justified for the example's explicit decoded-buffer boundary. Real applications must profile their actual rendering stack before transferring the same conclusion.
 
 ## Bonus 005 decision
 
-The [Interpreter parser handoff](interpreter-parser-handoff.md) makes five
-infrastructure thresholds executable as deterministic rejection cases: nesting,
-precedence, quoting, escaping, and multi-error recovery. The current parser does
-not grow to support them.
+The [Interpreter parser handoff](interpreter-parser-handoff.md) makes five infrastructure thresholds executable as deterministic rejection cases: nesting, precedence, quoting, escaping, and multi-error recovery. The current parser does not grow to support them.
 
-Interpreter remains appropriate for the bounded domain expressions. Maintained
-parser infrastructure should replace only the parsing mechanics when one of
-those features becomes supported product behavior or the grammar must be shared.
+Interpreter remains appropriate for the bounded domain expressions. Maintained parser infrastructure should replace only the parsing mechanics when one of those features becomes supported product behavior or the grammar must be shared.
 
 ## Bonus 006 decision
 
-The [Mediator responsibility review](mediator-responsibility-review.md) proves
-delivery, payment, and promotion rules without constructing the mediator. The
-mediator remains responsible only for routing and the final-selection ordering
-invariant.
+The [Mediator responsibility review](mediator-responsibility-review.md) proves delivery, payment, and promotion rules without constructing the mediator. The mediator remains responsible only for routing and the final-selection ordering invariant.
 
-Split signals now depend on observable responsibility drift: domain rules,
-independent coordination clusters, external side effects, suspension, or passive
-participants. File size alone is not a reason to add another abstraction.
+Split signals now depend on observable responsibility drift: domain rules, independent coordination clusters, external side effects, suspension, or passive participants. File size alone is not a reason to add another abstraction.
 
 ## Bonus 007 decision
 
-The [Memento storage review](memento-storage-review.md) proves that encoded
-payload grows with complete draft content and that even a small title edit adds
-another full snapshot. The current four-entry bound remains acceptable and
-keeps restoration atomic.
+The [Memento storage review](memento-storage-review.md) proves that encoded payload grows with complete draft content and that even a small title edit adds another full snapshot. The current four-entry bound remains acceptable and keeps restoration atomic.
 
-Deltas or operation logs require measured budget pressure, deeper history,
-small relative edits, and owned replay/compaction semantics. Durable data across
-launches or devices belongs to an explicit persistence boundary instead.
+Deltas or operation logs require measured budget pressure, deeper history, small relative edits, and owned replay/compaction semantics. Durable data across launches or devices belongs to an explicit persistence boundary instead.
 
 ## Bonus 008 decision
 
-The [Template Method composition review](template-method-composition-review.md)
-proves that a higher-order value can enforce the same normalization,
-deduplication, atomic append, and reporting order. Inheritance is not required
-for safety.
+The [Template Method composition review](template-method-composition-review.md) proves that a higher-order value can enforce the same normalization, deduplication, atomic append, and reporting order. Inheritance is not required for safety.
 
-Template Method remains for the closed built-in provider set because it offers
-one nominal importer type and a final module-controlled operation. Prefer the
-closure representation when providers are injected, composed externally, or
-better expressed with value semantics.
+Template Method remains for the closed built-in provider set because it offers one nominal importer type and a final module-controlled operation. Prefer the closure representation when providers are injected, composed externally, or better expressed with value semantics.
 
 ## Bonus 009 decision
 
-The [Visitor extension review](visitor-extension-review.md) groups the existing
-test-only operation into an explicit extension-direction suite. It adds a new
-operation without editing production elements and records the opposite,
-compiler-enforced change surface for a new element kind.
+The [Visitor extension review](visitor-extension-review.md) groups the existing test-only operation into an explicit extension-direction suite. It adds a new operation without editing production elements and records the opposite, compiler-enforced change surface for a new element kind.
 
-No fake element was added. Visitor remains justified only while operations grow
-faster than the stable paragraph, link, image, and table family.
+No fake element was added. Visitor remains justified only while operations grow faster than the stable paragraph, link, image, and table family.
 
 ## Bonus 010 decision
 
-The [final review](bonus-track-review.md) revalidates the complete catalogue
-after every hardening stage. Build, tests, canonical guide contracts, links,
-Mermaid, assets, public Singleton API, historical isolation, and ignored
-workspaces all pass their applicable gates.
+The [final review](bonus-track-review.md) revalidates the complete catalogue after every hardening stage. Build, tests, canonical guide contracts, links, Mermaid, assets, public Singleton API, historical isolation, and ignored workspaces all pass their applicable gates.
 
-The bonus track is complete. The refreshed v1.0 candidate now awaits explicit
-human approval; no release action is automatic.
+The bonus track is complete. The refreshed v1.0 candidate now awaits explicit human approval; no release action is automatic.

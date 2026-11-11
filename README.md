@@ -22,7 +22,7 @@ Each guide starts with direct Swift, introduces one verified requirement, and ad
 
 <a id="choose-your-path"></a>
 
-## Choose your path
+## 🧭 Choose your path
 
 - **New to design patterns?** Start with [Adapter](Structural%20Patterns/Adapter/README.md), [Strategy](Behavioral%20Patterns/Strategy/README.md), and [Observer](Behavioral%20Patterns/Observer/README.md). They introduce external boundaries, interchangeable policy, and independent subscriber lifetimes.
 - **Solving a concrete app problem?** Use the [pressure-led pattern finder](Documentation/find-pattern-by-pressure.md) or jump to the [pattern catalogue](#pattern-catalogue).
@@ -39,7 +39,7 @@ Each guide starts with direct Swift, introduces one verified requirement, and ad
 
 <a id="quickstart"></a>
 
-## Quickstart
+## 🚀 Quickstart
 
 The examples live in one Swift Package and require Swift 6.0 or later on macOS 14 or later.
 
@@ -58,7 +58,7 @@ The package contains deterministic library examples rather than live SDKs, crede
 
 <a id="pattern-catalogue"></a>
 
-## Pattern catalogue
+## 📚 Pattern catalogue
 
 Choose by the problem that is changing, not by the class diagram you remember.
 
@@ -108,7 +108,9 @@ Choose by the problem that is changing, not by the class diagram you remember.
 
 <a id="reading-guide"></a>
 
-## How every guide works
+<a id="how-every-guide-works"></a>
+
+## 📖 How every guide works
 
 1. **App problem** — the user outcome and invariants that matter.
 2. **Direct Swift** — the smallest value, enum, function, actor, `AsyncSequence`, or platform API that already works.
@@ -119,7 +121,9 @@ Choose by the problem that is changing, not by the class diagram you remember.
 
 The diagrams explain relationships, sequences, or states. The editorial headers communicate one memorable thesis. Neither replaces the code or the tests.
 
-## Repository map
+<a id="repository-map"></a>
+
+## 🗂️ Repository map
 
 | Location | What it contains |
 | --- | --- |
@@ -167,7 +171,9 @@ The diagrams explain relationships, sequences, or states. The editorial headers 
 
 </details>
 
-## Resources and license
+<a id="resources-and-license"></a>
+
+## 🔗 Resources and license
 
 - [Swift documentation](https://swift.org/documentation/)
 - [Roberto Gómez on LinkedIn](https://www.linkedin.com/in/rgmez)

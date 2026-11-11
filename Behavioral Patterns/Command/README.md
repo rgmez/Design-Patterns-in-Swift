@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Video edits arrive from several entry points and need bounded undo, redo, and portable offline intent.
 - **Direct baseline:** Direct functions or closures are enough when invocation is immediate and history is unnecessary.
 - **Use Command when:** Operations need durable intent, queueing, or operation-specific reversal data.
 - **Keep it simple when:** Direct invocation works or restoring complete state is the real requirement.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -27,11 +39,15 @@ A mobile video editor lets creators trim footage, move clips, split one clip in 
 - Offline records serialize portable intent, never local undo state.
 - History remains bounded and grows with edit count rather than timeline size.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`VideoTimelineDirect.swift`](../../Sources/DesignPatterns/Command/VideoTimelineDirect.swift) starts with `TimelineClip` and `VideoTimeline` values plus focused editor methods. One optional previous timeline provides atomic one-step undo. This is the clearer design while the editor has one input path and shallow history: there is no reusable operation type, invoker, or reversal protocol.
 
 [`VideoTimelinePressure.swift`](../../Sources/DesignPatterns/Command/VideoTimelinePressure.swift) then extends that direct approach with bounded full-timeline snapshots. Swift value semantics keep restoration safe, but the retained structure grows with `timeline size × undo depth`.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -39,9 +55,13 @@ The concrete pressure is both executable and measured. A four-entry history on a
 
 A shared routing enum alone would remove duplicated cases, but execution and reversal would still live elsewhere. Once the value owns how intent is applied and produces the exact prior state needed for reversal, it is the smallest useful Swift form of Command.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Command makes a timeline edit a portable value. The value carries the intent and arguments required to execute; a successful execution creates one private history entry with only the prior fields needed to undo that edit. The editor owns ordering, the history limit, redo invalidation, and the current timeline.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -54,6 +74,8 @@ Command makes a timeline edit a portable value. The value carries the intent and
 
 There is no command protocol or class per edit. The closed, four-operation vocabulary needs exhaustive value semantics, equality, and `Codable`, so one enum is more honest than a protocol hierarchy.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. Any input surface creates the same `TimelineCommand` value and passes it to `TimelineCommandEditor.execute(_:)`.
@@ -63,6 +85,8 @@ There is no command protocol or class per edit. The closed, four-operation vocab
 5. Undo applies that private reversal to a candidate timeline and moves the entry to redo. Redo executes the portable command again and captures a fresh reversal for the current state.
 
 `TimelineCommand` is serializable because it contains only portable intent. The private reversal enum is `Sendable` but not `Codable`, preventing local undo state from accidentally becoming part of an offline collaboration record.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -89,6 +113,8 @@ Notice that all input surfaces stop at one command value. `VideoTimeline` contin
 
 **Accessible description:** A toolbar, keyboard shortcut, or offline replay sends one `TimelineCommand` to the editor. The command validates and edits a candidate timeline, then returns focused reversal state for the undo stack. Undo applies that state and moves the entry to redo. Redo executes the original command again.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -99,6 +125,8 @@ swift test -Xswiftc -warnings-as-errors --filter CommandTests
 ```
 
 The package has no media or UI dependency. Frame indexes make every edit, reversal, and validation outcome deterministic.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -112,6 +140,8 @@ The package has no media or UI dependency. Frame indexes make every edit, revers
 - the portable command vocabulary survives a `Codable` round trip.
 
 The earlier problem and pressure suites remain executable so the direct one-step design and full-snapshot cost do not become unverified prose.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -131,6 +161,8 @@ The earlier problem and pressure suites remain executable so the direct one-step
 - The enum is intentionally closed. Third-party runtime command registration would require a different representation and a concrete product need.
 - Focused reversals can be harder to evolve across persisted document schema changes, so they remain local and ephemeral.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -143,6 +175,8 @@ The earlier problem and pressure suites remain executable so the direct one-step
 
 Command represents *what to do* and how to reverse that accepted operation. Memento represents a snapshot of *what state existed*. The Day 040 direct history is therefore closer to Memento; the final design earns Command only because reusable intent and focused reversal solve both measured pressures.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep a direct method call when an action has one caller and no need for undo, queuing, logging, or replay.
@@ -150,6 +184,8 @@ Command represents *what to do* and how to reverse that accepted operation. Meme
 - Prefer bounded snapshots when state is compact and a correct inverse would be riskier than copying the value.
 - Do not create a protocol and concrete type per trivial setter when a closed enum communicates the complete operation vocabulary.
 - Do not add a command bus, middleware, runtime registration, or remote conflict model until the product demonstrates those requirements.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -162,9 +198,12 @@ Command represents *what to do* and how to reverse that accepted operation. Meme
 - [`command-problem.md`](../../Documentation/command-problem.md) — requirements, invariants, and initial no-pattern decision.
 - [`command-pressure.md`](../../Documentation/command-pressure.md) — evidence that earns the final abstraction.
 - [`command-header.png`](../../Documentation/Assets/Patterns/behavioral/command-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md) · **Next:** [Interpreter](../Interpreter/README.md) · **Compare with:** [Memento](../Memento/README.md)
 

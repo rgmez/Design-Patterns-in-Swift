@@ -1,4 +1,6 @@
-# Contributing
+# 🤝 Contributing
+
+<a id="contributing"></a>
 
 Thanks for helping make this catalogue more useful. Contributions should improve an engineering decision, not increase the pattern count.
 

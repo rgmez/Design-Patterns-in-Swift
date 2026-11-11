@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Clients need the same operation for one file and for arbitrarily nested workspace folders.
 - **Direct baseline:** Collections, recursion, or an explicit enum keep a small hierarchy visible.
 - **Use Composite when:** Leaves and containers must respond uniformly without repeated client branching.
 - **Keep it simple when:** The structure is flat or traversal order—not part/whole substitution—is the real concern.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -34,11 +46,15 @@ Three clients need the same hierarchy:
 - Treat an empty folder as an unavailable offline selection.
 - Keep opening a file as a leaf-only operation rather than pretending folders can open like documents.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`WorkspaceOfflineDirect.swift`](../../Sources/DesignPatterns/Composite/WorkspaceOfflineDirect.swift) uses a closed `DirectWorkspaceEntry` indirect enum with file and folder cases. `DirectOfflineSelectionPreview` switches once and recursively reduces child summaries. With one client, this is the clearest design: the compiler checks the complete hierarchy and no protocol or existential is needed.
 
 The direct version is not a failed architecture. It is the preferred option while the tree is closed and one or two short recursive functions remain easy to audit.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -51,11 +67,15 @@ The direct version is not a failed architecture. It is the preferred option whil
 
 Moving every rule into one enum method would replace repeated branching with a multi-purpose helper full of flags, callbacks, or optional accumulators. The pressure is not that recursion is difficult; it is that structural traversal has three owners.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Composite lets a client treat one leaf and a nested container through the same component boundary. A `WorkspaceFile` yields one located file. A `WorkspaceFolder` asks each child for its locations, prefixes its own name, and combines the results. Clients consume those locations without branching on the shape of the tree.
 
 The common operation owns only traversal. It does not decide whether a file may be downloaded, whether it belongs in search, how cleanup works, or how a file opens.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -69,6 +89,8 @@ The common operation owns only traversal. It does not decide whether a file may 
 | Leaf-only request | [`WorkspaceFileOpenRequest`](../../Sources/DesignPatterns/Composite/WorkspaceComposite.swift) | Represents opening one concrete file and deliberately does not belong to the component protocol. |
 
 The protocol has two immediate participants and one demonstrated operation. That operation varies structurally between a leaf and a container, so this is not a protocol created for a single implementation.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -97,6 +119,8 @@ let records = WorkspaceSearchIndexer().records(in: visit)
 ```
 
 No client asks whether `visit` is a file or folder. The folder owns recursion; the clients still own what each file means to their feature.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -139,6 +163,8 @@ Observe that both the file and folder satisfy one narrow component boundary. Onl
 
 **Accessible description:** A workspace component can be either a file or a folder. A folder contains more workspace components, so nesting can continue to any depth. Both file and folder yield file locations to the offline, search, and cleanup clients. Only a concrete file can create an open request.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -148,6 +174,8 @@ swift test -Xswiftc -warnings-as-errors --filter CompositeTests
 ```
 
 The example uses deterministic in-memory values. It requires no filesystem, network connection, database, or Apple document framework.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -169,6 +197,8 @@ swift test -Xswiftc -warnings-as-errors --filter CompositePressureTests
 
 The problem and pressure suites retain the direct enum baseline and the three client-owned recursive walks that earned the pattern.
 
+<a id="trade-offs"></a>
+
 ## ⚖️ Trade-offs
 
 ### What improves
@@ -186,6 +216,8 @@ The problem and pressure suites retain the direct enum baseline and the three cl
 - The protocol opens a hierarchy that the original enum closed exhaustively. New conformers must preserve path and ordering invariants.
 - This value-oriented example trusts app-owned acyclic composition. Importing arbitrary graph data would require cycle validation and identity rules.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -200,6 +232,8 @@ The problem and pressure suites retain the direct enum baseline and the three cl
 
 Composite and Decorator can both nest values behind one interface. Composite forms a part-whole tree where containers aggregate peer components. Decorator forms a wrapper chain where each layer adds behavior around one wrapped value.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the indirect enum when file and folder are the complete, stable set and recursive clients remain few.
@@ -208,6 +242,8 @@ Composite and Decorator can both nest values behind one interface. Composite for
 - Do not put file-only operations on `WorkspaceComponent`; a folder should not fake opening, decoding, or downloading one file.
 - Do not eagerly flatten a hierarchy that is too large for memory or backed by pagination; use a lazy `Sequence` or `AsyncSequence` instead.
 - Do not use Composite merely because one type owns an array. The children must share the same meaningful operation as the container.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -220,9 +256,12 @@ Composite and Decorator can both nest values behind one interface. Composite for
 - [`composite-problem.md`](../../Documentation/composite-problem.md) — requirements, invariants, and direct-design decision.
 - [`composite-pressure.md`](../../Documentation/composite-pressure.md) — measured duplication and pattern boundary.
 - [`composite-header.png`](../../Documentation/Assets/Patterns/structural/composite-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Bridge](../Bridge/README.md) · **Next:** [Decorator](../Decorator/README.md) · **Compare with:** [Iterator](../../Behavioral%20Patterns/Iterator/README.md)
 

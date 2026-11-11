@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Twenty thousand map annotations repeat four immutable RGBA artwork payloads while their location state stays unique.
 - **Direct baseline:** Ordinary values or platform asset caching remain clearer until repetition is measured.
 - **Use Flyweight when:** Many live objects repeat a small, immutable, exactly countable intrinsic payload.
 - **Keep it simple when:** The renderer already deduplicates resources, the live set is small, or most intrinsic data is unique.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -32,11 +44,15 @@ The rendering boundary expects a decoded 32 × 32 RGBA buffer. A representative 
 
 Map clustering, viewport queries, image files, localization, networking, spatial indexes, annotation-view reuse, and UI framework caches remain outside this example. Those concerns can change the best production solution, but they do not change the ownership boundary demonstrated here.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`FestivalMapDirect.swift`](../../Sources/DesignPatterns/Flyweight/FestivalMapDirect.swift) uses `DirectFestivalMapBuilder` to map every location once. An exhaustive enum switch selects its category descriptor, a fresh 4,096-byte buffer is decoded, and one `DirectFestivalMarkerArtwork` is attached to the annotation.
 
 That is the better design for a small or short-lived map. Ownership is obvious, there is no lookup table, and the caller receives complete annotation values. Visible repetition alone does not justify Flyweight, especially when an asset catalogue or map SDK may already share decoded resources.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -51,6 +67,8 @@ That is the better design for a small or short-lived map. Ownership is obvious, 
 
 The shareable representation removes 99.98% of the decoded pixel payload in this workload. The count excludes object headers, array capacity, allocator rounding, strings, renderer copies, and framework caches, so it is not presented as a process-memory measurement. It is the exact payload owned by this model. The [measurement review](../../Documentation/flyweight-measurement-review.md) defines the included counters, excluded runtime costs, and the profiling needed before transferring this conclusion to an Apple UI or map framework.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Flyweight separates state that many objects can share from state that remains specific to each use. `FestivalMarkerArtwork` contains the immutable intrinsic category resource. `FestivalMapAnnotation` keeps the extrinsic identifier, title, coordinate, crowd status, and accessible summary.
@@ -58,6 +76,8 @@ Flyweight separates state that many objects can share from state that remains sp
 `FestivalMarkerArtworkCatalog` creates one artwork object for every category present in the current feed. The builder performs one category lookup per location and attaches the returned reference without copying its pixels.
 
 The catalog is scoped to one build rather than stored globally. Returned annotations retain their shared artwork, and releasing the annotation result also permits those resources to be released. This is deliberate Flyweight sharing without turning the catalogue into a Singleton or general cache.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -70,6 +90,8 @@ The catalog is scoped to one build rather than stored globally. Returned annotat
 | Client | [`FestivalMapBuilder`](../../Sources/DesignPatterns/Flyweight/FestivalMapFlyweight.swift) | Discovers used categories, creates the request-scoped catalogue, and assembles annotations in feed order. |
 
 There is no protocol because neither artwork creation nor lookup has a second implementation or an external boundary. The closed category enum and one small dictionary express the immediate variation completely.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -92,6 +114,8 @@ annotations[0].artwork === annotations[2].artwork // false: stage vs food
 ```
 
 For `n` locations and `k` used categories, construction is `O(n + k)`, lookup is expected `O(1)` per annotation, and intrinsic resource storage is `O(k)`. Here `k` is bounded by the four-case enum. The 20,000-location fixture therefore trades 20,000 small dictionary reads for 19,996 fewer decodes and artwork objects.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -130,6 +154,8 @@ Observe the two different multiplicities: the builder creates one annotation per
 
 **Accessible description:** The festival-map builder creates a temporary artwork catalogue and one annotation for every location. The catalogue owns one immutable artwork object for each used venue category. Many annotations share one of those artwork objects while keeping their own identifiers, coordinates, crowd statuses, and accessibility labels.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -139,6 +165,8 @@ swift test -Xswiftc -warnings-as-errors --filter FlyweightTests
 ```
 
 The example is synchronous and deterministic. It needs no map framework, asset catalogue, filesystem, network connection, database, or global cache.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -158,6 +186,8 @@ swift test -Xswiftc -warnings-as-errors --filter FlyweightPressureTests
 
 The problem and pressure suites retain the complete direct baseline and its quantitative evidence. They are not alternate production architectures.
 
+<a id="trade-offs"></a>
+
 ## ⚖️ Trade-offs
 
 ### What improves
@@ -176,6 +206,8 @@ The problem and pressure suites retain the complete direct baseline and its quan
 - Reference identity now matters for resource sharing, while annotation state remains value-oriented.
 - Adding a category requires updating the exhaustive descriptor switch, which is desirable while the category set remains closed.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -192,6 +224,8 @@ Flyweight also differs from Prototype. Prototype creates another object with an 
 
 It is not a Singleton either. The catalogue is created inside one build and is discarded immediately afterwards. Making it globally unique would add hidden lifetime and test coupling without improving the four-resource result.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the direct builder when only dozens of markers are visible or real renderer profiling shows no material retained-resource benefit.
@@ -201,6 +235,8 @@ It is not a Singleton either. The catalogue is created inside one build and is d
 - Do not use an unbounded external identifier as the key without retention, invalidation, and eviction requirements.
 - Do not introduce a protocol, generic cache, actor, weak table, repository, or dependency-injection layer merely to rename this four-entry catalogue.
 - Prefer a direct enum switch when the framework accepts lightweight category identifiers and performs resource resolution itself.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -215,14 +251,19 @@ It is not a Singleton either. The catalogue is created inside one build and is d
 - [`flyweight-measurement-review.md`](../../Documentation/flyweight-measurement-review.md) — exact measurement boundary, excluded runtime costs, and reversal evidence.
 - [`flyweight-header.png`](../../Documentation/Assets/Patterns/structural/flyweight-header.png) — editorial header.
 
+<a id="further-reading"></a>
+
 ## 📚 Further reading
 
 - *Design Patterns* — Gamma, Helm, Johnson, Vlissides.
 - Swift documentation for [`Dictionary`](https://developer.apple.com/documentation/swift/dictionary), used as the bounded category lookup.
 - Apple documentation for [`ObjectIdentifier`](https://developer.apple.com/documentation/swift/objectidentifier), used only in tests to verify shared reference identity.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Facade](../Facade/README.md) · **Next:** [Proxy](../Proxy/README.md) · **Compare with:** [Prototype](../../Creational%20Patterns/Prototype/README.md)
 

@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** A support filter gains local OR grouping, outer AND semantics, and exact diagnostic positions.
 - **Direct baseline:** A field switch or typed predicates are clearer while terms remain independent atoms.
 - **Use Interpreter when:** Users author a bounded language whose structure must be parsed, inspected, and evaluated.
 - **Keep it simple when:** Filters remain atomic; adopt maintained parser infrastructure if nesting, precedence, escaping, or recovery becomes real.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -41,11 +53,15 @@ Terms use AND. Alternatives inside one status group use OR. Repeated fields rema
 - Preserve local OR, query-wide AND, repeated-field behavior, and input order.
 - Keep the grammar visible without building a general parser framework.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`SupportTicketFilterDirect.swift`](../../Sources/DesignPatterns/Interpreter/SupportTicketFilterDirect.swift) starts with two atomic fields in one loop. It splits whitespace-delimited `field:value` terms, validates a small vocabulary, and filters the working ticket array after every term. That is the clearest solution for `status:open assignee:me`: no expression types, lexer, AST, registry, or parser dependency improve two independent branches.
 
 The [problem definition](../../Documentation/interpreter-problem.md) fixes the domain invariants and acceptance tests before considering the pattern.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -62,11 +78,15 @@ Parsing shape, source-position bookkeeping, domain validation, and immediate fil
 
 The [pressure review](../../Documentation/interpreter-pressure.md) records the grammar boundary and the point at which a maintained parser library should replace hand-written parsing. The [executable parser handoff](../../Documentation/interpreter-parser-handoff.md) keeps nesting, precedence, quoting, escaping, and multi-error recovery outside that boundary until one becomes a real supported requirement.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Interpreter represents the bounded query as domain expressions and gives each expression one way to evaluate a ticket. `SupportTicketQueryParser` owns syntax and positions. `SupportTicketQuery` interprets its terms as one conjunction. `SupportTicketFilterExpression` interprets either a set of accepted statuses or one assignee alias.
 
 The representation follows the grammar without mirroring every token. A colon, parenthesis, and pipe remain parser details. There is no class per terminal, recursive expression tree, generic context dictionary, visitor, runtime rule registration, or protocol with one implementation.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -80,6 +100,8 @@ The representation follows the grammar without mirroring every token. A colon, p
 | Diagnostic vocabulary | [`SupportTicketQueryError`](../../Sources/DesignPatterns/Interpreter/SupportTicketInterpreter.swift) | Separates grammar failures from unsupported fields and values at exact character offsets. |
 
 The existing `SupportTicket` and `SupportTicketStatus` domain values remain the evaluation input. The current-agent identifier is supplied to the filter and passed explicitly during interpretation, so expressions stay deterministic and `Sendable` without a shared session service.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -104,6 +126,8 @@ public func interpret(
 ```
 
 Status OR is data inside one terminal expression, not a second recursive operator. That choice matches today's grammar and prevents a speculative tree whose only possible nesting would be immediately rejected.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -132,6 +156,8 @@ Observe the separation between reading the language and applying its meaning: th
 
 **Accessible description:** The support inbox sends a query and ordered ticket list to the filter. The parser converts the query into status and assignee expressions once. For each ticket in original order, the query asks every term expression whether it matches. Only tickets accepted by all terms return to the inbox, still in their source order.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root, using Swift 6 on macOS 14 or later:
@@ -142,6 +168,8 @@ swift test -Xswiftc -warnings-as-errors --filter Interpreter
 ```
 
 The package is a library. Tests parse saved-view strings and inspect expression values, matching tickets, stable ordering, and typed diagnostic positions; no executable app or console output is required.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -156,6 +184,8 @@ The package is a library. Tests parse saved-view strings and inspect expression 
 - infrastructure-level grammar requests remain explicit rejection cases rather than silently expanding the hand-written scanner.
 
 The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/DesignPatternsTests/InterpreterProblemTests.swift) and [`InterpreterPressureTests.swift`](../../Tests/DesignPatternsTests/InterpreterPressureTests.swift), keeping the direct baseline and the measured pressure executable.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -175,6 +205,8 @@ The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/Des
 - `Set` makes alternative order irrelevant, which is correct for matching but would not preserve authoring order for a query formatter.
 - Hand-written character scanning remains responsible for one-error-at-a-time diagnostics.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why Interpreter wins here |
@@ -192,6 +224,8 @@ The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/Des
 - **Chain of Responsibility** gives successive handlers a chance to own a request. Every query term must evaluate, so no handler claims or forwards the ticket.
 - **Specification** often combines reusable business predicates directly in code. Interpreter is justified here because users author a textual language that must be parsed and diagnosed.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep a switch or dictionary when filters are independent field-value atoms.
@@ -202,6 +236,8 @@ The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/Des
 - Do not introduce one class per keyword, delimiter, or status value.
 - Do not add a visitor, generic AST, registry, repository, async pipeline, or dependency container to this two-field in-memory example.
 
+<a id="source-map"></a>
+
 ## 🗂️ Source map
 
 - [`SupportTicketInterpreter.swift`](../../Sources/DesignPatterns/Interpreter/SupportTicketInterpreter.swift) — final expressions, parser, diagnostics, and client filter.
@@ -211,9 +247,12 @@ The same test filter also runs [`InterpreterProblemTests.swift`](../../Tests/Des
 - [`interpreter-problem.md`](../../Documentation/interpreter-problem.md) and [`interpreter-pressure.md`](../../Documentation/interpreter-pressure.md) — evidence that earned the pattern.
 - [`interpreter-parser-handoff.md`](../../Documentation/interpreter-parser-handoff.md) — executable thresholds for replacing hand-written parser mechanics.
 - [`interpreter-header.png`](../../Documentation/Assets/Patterns/behavioral/interpreter-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Command](../Command/README.md) · **Next:** [Iterator](../Iterator/README.md) · **Compare with:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md)
 

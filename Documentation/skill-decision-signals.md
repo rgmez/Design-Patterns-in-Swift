@@ -1,61 +1,49 @@
-# Evidence-Based Pattern Decision Signals
+# 🧭 Evidence-Based Pattern Decision Signals
+
+<a id="evidence-based-pattern-decision-signals"></a>
 
 Extraction date: 2026-11-03
 
-This document closes Internal Day 092 by turning the completed catalogue into
-decision evidence for the future `choose-swift-design-pattern` skill. It is not
-a second pattern catalogue. The [complete catalogue review](catalogue-review.md)
-and each canonical guide remain the source for implementation details, tests,
-and trade-offs.
+This document closes Internal Day 092 by turning the completed catalogue into decision evidence for the future `choose-swift-design-pattern` skill. It is not a second pattern catalogue. The [complete catalogue review](catalogue-review.md) and each canonical guide remain the source for implementation details, tests, and trade-offs.
 
-The purpose here is narrower: identify the observable pressure that can earn a
-pattern, the rejection signal that keeps ordinary Swift, and the nearest design
-that must be ruled out before recommending added structure.
+The purpose here is narrower: identify the observable pressure that can earn a pattern, the rejection signal that keeps ordinary Swift, and the nearest design that must be ruled out before recommending added structure.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
+
+**On this page**
+
+- [Evidence gate before naming a pattern](#evidence-gate-before-naming-a-pattern)
+- [Cross-cutting rejection signals](#cross-cutting-rejection-signals)
+- [Creational signals](#creational-signals)
+- [Structural signals](#structural-signals)
+- [Behavioral signals](#behavioral-signals)
+- [Required neighbour checks](#required-neighbour-checks)
+- [Decision record contract for the future skill](#decision-record-contract-for-the-future-skill)
+- [Scope boundary and next evidence](#scope-boundary-and-next-evidence)
 
 ## Evidence gate before naming a pattern
 
 A pattern is a justified outcome only when all four statements are true:
 
-1. **A current requirement creates observable pressure.** The evidence is a
-   real integration mismatch, invalid state, repeated coordination rule,
-   independent change axis, ownership problem, or measured resource cost—not a
-   speculative future feature.
-2. **The direct Swift solution has a specific failure mode.** A value, enum,
-   function, initializer, collection operation, actor, `AsyncSequence`, or
-   platform API was considered first, and its remaining coupling or risk can be
-   named.
-3. **The pattern moves responsibility to a better owner.** It removes or
-   localizes the demonstrated pressure instead of merely renaming the same
-   branches behind protocols and extra types.
-4. **The improvement is verifiable.** Tests, type constraints, ownership rules,
-   or quantitative evidence can show the behavior the boundary protects.
+1. **A current requirement creates observable pressure.** The evidence is a real integration mismatch, invalid state, repeated coordination rule, independent change axis, ownership problem, or measured resource cost—not a speculative future feature.
+2. **The direct Swift solution has a specific failure mode.** A value, enum, function, initializer, collection operation, actor, `AsyncSequence`, or platform API was considered first, and its remaining coupling or risk can be named.
+3. **The pattern moves responsibility to a better owner.** It removes or localizes the demonstrated pressure instead of merely renaming the same branches behind protocols and extra types.
+4. **The improvement is verifiable.** Tests, type constraints, ownership rules, or quantitative evidence can show the behavior the boundary protects.
 
-If any statement is false, the decision is **no pattern yet**. Record the
-missing pressure and the concrete signal that would justify reconsideration.
-The [product-share decision](no-pattern-decision.md) is the catalogue's
-executable example: localization adds domain vocabulary, but all values still
-arrive together and one immutable request plus one pure function owns the work.
+If any statement is false, the decision is **no pattern yet**. Record the missing pressure and the concrete signal that would justify reconsideration. The [product-share decision](no-pattern-decision.md) is the catalogue's executable example: localization adds domain vocabulary, but all values still arrive together and one immutable request plus one pure function owns the work.
 
 ## Cross-cutting rejection signals
 
-Keep the direct design when the proposed pattern is justified only by one of
-these arguments:
+Keep the direct design when the proposed pattern is justified only by one of these arguments:
 
-- “We may need more implementations later,” when only one stable implementation
-  exists and no external boundary needs a test seam.
-- “The initializer or switch is getting long,” when its inputs still arrive
-  together and its rules remain local, closed, and easy to test.
-- “This is the textbook shape,” when Swift value semantics, functions, enums,
-  protocol extensions, actors, or native sequences already express the change.
-- “It makes the API fluent or consistent,” when the added mutable lifetime or
-  indirection protects no product invariant.
-- “There are many objects,” without measured memory, identity, lifecycle, or
-  coordination cost.
-- “It decouples things,” without naming which dependency changes independently,
-  which owner should absorb it, and which test proves the improvement.
+- “We may need more implementations later,” when only one stable implementation exists and no external boundary needs a test seam.
+- “The initializer or switch is getting long,” when its inputs still arrive together and its rules remain local, closed, and easy to test.
+- “This is the textbook shape,” when Swift value semantics, functions, enums, protocol extensions, actors, or native sequences already express the change.
+- “It makes the API fluent or consistent,” when the added mutable lifetime or indirection protects no product invariant.
+- “There are many objects,” without measured memory, identity, lifecycle, or coordination cost.
+- “It decouples things,” without naming which dependency changes independently, which owner should absorb it, and which test proves the improvement.
 
-These signals reject premature structure, not future evolution. A recommendation
-must state what new evidence would reverse the no-pattern verdict.
+These signals reject premature structure, not future evolution. A recommendation must state what new evidence would reverse the no-pattern verdict.
 
 ## Creational signals
 
@@ -67,10 +55,7 @@ must state what new evidence would reverse the no-pattern verdict.
 | [Prototype](../Creational%20Patterns/Prototype/README.md) | A reference-backed graph needs controlled independent duplication, runtime subtype preservation, identity remapping, and explicit resource sharing. | The model has value semantics or a normal initializer can reconstruct it without graph-copy rules. | Assignment for values or explicit construction for simple references. |
 | [Singleton](../Creational%20Patterns/Singleton/README.md) | A process-wide resource has one accountable owner and a runtime-created callback cannot receive it through the normal composition root. | The shared lookup is merely convenient, or every consumer can receive the dependency explicitly. | Composition-root injection, registration, or isolated instances. |
 
-The creation question is not “How many arguments are there?” It is “What rule
-does creation itself own?” Product selection, coherent families, staged
-construction, controlled copying, and constrained process ownership are five
-different change boundaries.
+The creation question is not “How many arguments are there?” It is “What rule does creation itself own?” Product selection, coherent families, staged construction, controlled copying, and constrained process ownership are five different change boundaries.
 
 ## Structural signals
 
@@ -84,9 +69,7 @@ different change boundaries.
 | [Flyweight](../Structural%20Patterns/Flyweight/README.md) | Many unique objects repeat a small set of immutable resources, and measurement proves meaningful identity or memory reduction. | Object count is the only evidence, shared data is mutable, or caching is speculative. | Ordinary values and platform caching. |
 | [Proxy](../Structural%20Patterns/Proxy/README.md) | A substitute with the same operation must control access or lifecycle for one real subject without leaking that policy to clients. | The behavior should be independently composable, or the client can call the subject directly without duplicated policy. | A guard, focused wrapper function, or direct subject. |
 
-Structural similarity is insufficient evidence. Wrapper-like shapes must still
-answer whether all layers run (Decorator), one substitute controls one subject
-(Proxy), or one ordered handler owns the request (Chain of Responsibility).
+Structural similarity is insufficient evidence. Wrapper-like shapes must still answer whether all layers run (Decorator), one substitute controls one subject (Proxy), or one ordered handler owns the request (Chain of Responsibility).
 
 ## Behavioral signals
 
@@ -106,8 +89,7 @@ answer whether all layers run (Decorator), one substitute controls one subject
 
 ## Required neighbour checks
 
-Before choosing among commonly confused patterns, ask the discriminating
-question rather than comparing their class diagrams:
+Before choosing among commonly confused patterns, ask the discriminating question rather than comparing their class diagrams:
 
 | Candidate group | Discriminating question |
 | --- | --- |
@@ -122,8 +104,7 @@ question rather than comparing their class diagrams:
 
 ## Decision record contract for the future skill
 
-A useful recommendation should be reviewable without trusting the pattern name.
-It must report:
+A useful recommendation should be reviewable without trusting the pattern name. It must report:
 
 - the observed app pressure and its evidence;
 - the direct Swift design that should be tried or retained;
@@ -132,14 +113,8 @@ It must report:
 - the closest alternative and the discriminating reason it loses; and
 - the concrete requirement that would reverse the verdict.
 
-The skill must not recommend several patterns as a menu when the evidence can
-distinguish them. When evidence cannot distinguish them, it should request the
-missing fact instead of inventing one.
+The skill must not recommend several patterns as a menu when the evidence can distinguish them. When evidence cannot distinguish them, it should request the missing fact instead of inventing one.
 
 ## Scope boundary and next evidence
 
-This extraction changes no production code and does not initialize the skill.
-It gives Day 093 a tested catalogue vocabulary from which to design independent
-prompts for Adapter, State, no-pattern, and Bridge-versus-Strategy decisions.
-Those scenarios and their expected evaluation criteria have not been written
-yet.
+This extraction changes no production code and does not initialize the skill. It gives Day 093 a tested catalogue vocabulary from which to design independent prompts for Adapter, State, no-pattern, and Bridge-versus-Strategy decisions. Those scenarios and their expected evaluation criteria have not been written yet.

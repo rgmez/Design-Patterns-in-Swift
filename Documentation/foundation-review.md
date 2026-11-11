@@ -1,8 +1,12 @@
-# Foundation Review
+# 🔎 Foundation Review
+
+<a id="foundation-review"></a>
 
 Review date: 2026-08-18
 
 This review closes Day 007 of the internal roadmap. It records what was verified, what was deliberately left historical, and why the repository is ready to begin the Adapter cycle.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
 
 ## Checks performed
 

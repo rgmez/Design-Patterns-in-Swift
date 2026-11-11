@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Accessibility, plain-text, and localization operations repeat concrete dispatch across four stable publishing elements.
 - **Direct baseline:** Exhaustive enum switches are clearer while operations or element kinds remain few.
 - **Use Visitor when:** Operations grow faster than a stable element family and each operation needs cohesive state or results.
 - **Keep it simple when:** Element kinds change frequently, behavior is intrinsic, or a small fold removes the repetition.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -34,6 +46,8 @@ The four element kinds have remained fixed while independent operations have gro
 - Add another whole-document operation without editing existing elements.
 - Make the cost of adding a fifth element kind explicit.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`PublishingDocumentDirect.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentDirect.swift) models document nodes as a four-case `PublishingDocumentNode` enum. One `DirectDocumentAccessibilityAuditor` loop and one exhaustive switch are the smallest correct design for the initial requirement.
@@ -41,6 +55,8 @@ The four element kinds have remained fixed while independent operations have gro
 That version remains preferable with one or two operations. The switch is local, value semantics are obvious, and the compiler identifies every place that must handle a new node case. Visitor would only distribute a decision that one function already expresses clearly.
 
 The [problem definition](../../Documentation/visitor-problem.md) records that baseline and its accessibility invariants.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -58,6 +74,8 @@ The repeated detail is concrete-type selection, not the operations' different ru
 
 The [pressure review](../../Documentation/visitor-pressure.md) compares the enum with protocol requirements, a four-closure fold, free functions, and Visitor before accepting the new boundary. The [extension-direction review](../../Documentation/visitor-extension-review.md) turns the cheap operation direction into a dedicated executable suite and records the compiler-enforced change surface for a new element kind.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Visitor moves concrete-element dispatch into the stable elements and keeps each external operation in one cohesive type. `PublishingArticle.accept(_:)` walks the elements. Every element's `accept` implementation calls the matching overload on `PublishingDocumentVisiting`.
@@ -68,6 +86,8 @@ That two-step call is the double dispatch:
 2. that implementation selects `visit(_:)` for its own concrete value.
 
 The operation no longer switches or casts. The element does not learn any accessibility, extraction, or localization policy.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -82,6 +102,8 @@ The operation no longer switches or casts. The element does not learn any access
 | Localization operation | [`PublishingLocalizationVisitor`](../../Sources/DesignPatterns/Visitor/PublishingDocumentVisitor.swift) | Accumulates strings with source metadata. |
 
 The three concrete visitors are reference types because each traversal owns a mutable accumulator with a different result type. Elements and articles remain immutable values. There is no superclass, generic result algebra, type erasure, registry, dependency container, asynchronous layer, or shared global visitor.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -110,6 +132,8 @@ A new outbound-link operation conforms to `PublishingDocumentVisiting` and imple
 
 Each concrete visitor is single-use. Reusing one instance would append a second article's result and carry heading state across documents. A production API could hide construction behind operation functions, but three tiny factories would add no teaching value here. Concurrent traversal would require one visitor per task or explicit isolation; these mutable visitor classes are not `Sendable`.
 
+<a id="diagram"></a>
+
 ## 🗺️ Diagram
 
 ```mermaid
@@ -132,6 +156,8 @@ Observe the two runtime decisions inside the loop: the article reaches the concr
 
 **Accessible description:** The publishing app creates a plain-text visitor and passes it to the article. The article first sends its title to the visitor. It then visits each paragraph, link, image, and table in source order. Each concrete element accepts the visitor and invokes the overload for its own type. After the walk, the app reads the accumulated text. The other two operations use the same element path but separate visitors.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root, using Swift 6 on macOS 14 or later:
@@ -142,6 +168,8 @@ swift test -Xswiftc -warnings-as-errors --filter Visitor
 ```
 
 The package is a library. Tests construct publishing articles, run visitors, and inspect typed results; no executable app or console output is required.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -155,6 +183,8 @@ The package is a library. Tests construct publishing articles, run visitors, and
 - localization metadata with blank authored copy omitted.
 
 The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatternsTests/VisitorProblemTests.swift) and [`VisitorPressureTests.swift`](../../Tests/DesignPatternsTests/VisitorPressureTests.swift), so the direct enum baseline and measured pressure remain executable evidence. The final implementation does not make the direct alternative artificially fail or disappear.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -173,6 +203,8 @@ The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatter
 - Stateful visitors have a one-traversal lifetime and are not automatically safe to share across concurrent tasks.
 - Protocol existentials mean `PublishingArticle` does not gain synthesized `Equatable`; this example compares observable operation results instead.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why Visitor wins here |
@@ -185,6 +217,8 @@ The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatter
 | Strategy | One interchangeable algorithm should handle the same input contract. | These operations coexist, produce unrelated result types, and each specializes across four element types. |
 | Composite | Individual and nested containers need one uniform operation. | This article has a flat, fixed element family; the pressure is adding external operations, not recursive structure. |
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the enum and exhaustive switches while they remain easier to understand.
@@ -195,6 +229,8 @@ The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatter
 - Do not share a mutable visitor across articles, tasks, or actors without an explicit reset and isolation policy.
 - Do not erase result types into `Any` merely to make one universal visitor API.
 
+<a id="source-map"></a>
+
 ## 🗂️ Source map
 
 - [`PublishingDocumentVisitor.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentVisitor.swift) — final element contract, double dispatch, and three visitors.
@@ -204,9 +240,12 @@ The same filter also runs [`VisitorProblemTests.swift`](../../Tests/DesignPatter
 - [`visitor-problem.md`](../../Documentation/visitor-problem.md) and [`visitor-pressure.md`](../../Documentation/visitor-pressure.md) — evidence that earned the pattern.
 - [`visitor-extension-review.md`](../../Documentation/visitor-extension-review.md) — executable operation extension and compiler-enforced element cost.
 - [`visitor-header.png`](../../Documentation/Assets/Patterns/behavioral/visitor-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Template Method](../Template%20Method/README.md) · **Next:** [Chain of Responsibility](../Chain%20of%20Responsibility/README.md) · **Compare with:** [Iterator](../Iterator/README.md)
 

@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Checkout must select ranking policies whose rules and external campaign data vary independently.
 - **Direct baseline:** An enum switch or injected function is ideal for closed, local policies.
 - **Use Strategy when:** The caller selects one interchangeable policy that owns its inputs and tie-breaking rules.
 - **Keep it simple when:** Policies are fixed or lifecycle history—not the caller—selects behavior.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -30,11 +42,15 @@ Ranking changes presentation order only. Eligibility, delivery promises, selecti
 - Resolve equal scores by stable option identity.
 - Return a reordered copy rather than mutate the source response.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 The initial solution was an enum and a pure function with one exhaustive `switch`. It was the clearest design while three built-in policies each read one integer from `DeliveryOption`. No protocol, object, registry, or type erasure was needed.
 
 Day 012 added `partnerSponsored` and `DeliveryRankingContext` without hiding the cost. That direct implementation is preserved in commit `7719540` and explained in the [pressure review](../../Documentation/strategy-pressure.md).
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -42,9 +58,13 @@ The fourth case did more than add another sort key. The central function learned
 
 An enum remained possible, but it no longer kept the independently changing policy knowledge together. Passing a comparison closure directly would remove the switch, yet every caller would have to preserve the shared identity tie-breaker and direction rules. The useful boundary is therefore a small named value that carries one scoring function and its immutable inputs.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Strategy makes a family of ranking algorithms interchangeable at runtime so the ranker can use one selected behavior without knowing which policy supplied it. In Swift, that behavior can be a captured `@Sendable` function inside a value type; the pattern does not require a protocol or class hierarchy.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -58,12 +78,16 @@ Strategy makes a family of ranking algorithms interchangeable at runtime so the 
 
 There are no `ConcreteStrategy` types. Static values represent the three data-local policies, and one constructor captures campaign data for the fourth. That collapse is deliberate: the algorithms share one shape and need no independent lifecycle.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. Checkout composition selects `.lowestCost`, `.earliestArrival`, or `.lowestCarbon`, or builds `.partnerSponsored(pointsByOptionID:)` from the current campaign snapshot.
 2. `rankDeliveryOptions(_:using:)` asks that value to order each comparison; it contains no preference enum, campaign context, or policy switch.
 3. The strategy evaluates its captured score function, applies ascending or descending order, and uses `DeliveryOption.id` when scores tie.
 4. `sorted` returns a new array, so both the fulfillment response and captured campaign dictionary remain immutable and parallel-test safe.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -86,6 +110,8 @@ Observe that checkout chooses behavior once and the ranker never branches on a p
 
 **Accessible description:** Checkout first selects a DeliveryRankingStrategy, optionally capturing partner campaign scores. It passes delivery options and that strategy to rankDeliveryOptions. During sorting, the ranker delegates each comparison to the strategy, which applies its score direction and stable ID tie-breaker. Checkout receives a newly ordered array.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -97,6 +123,8 @@ swift test -Xswiftc -warnings-as-errors --filter StrategyTests
 
 The example uses app-owned values and deterministic dictionaries. It needs no network, UI framework, credentials, or process-wide mutable state.
 
+<a id="tests"></a>
+
 ## 🧪 Tests
 
 [`StrategyTests`](../../Tests/DesignPatternsTests/StrategyTests.swift) prove:
@@ -106,6 +134,8 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 - Ranking leaves the fulfillment response unchanged.
 - The sponsored strategy owns its campaign snapshot and missing-score fallback.
 - A new snapshot changes sponsored ordering without editing the ranker.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -123,6 +153,8 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 - The current design compares one integer score per strategy. Multi-stage or asynchronous ranking would require an explicit contract change.
 - Captured campaign snapshots are intentionally immutable; callers must create a new strategy when campaign data changes.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -134,6 +166,8 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 | Bridge | Two independent dimensions must vary and combine without a class explosion. | This example varies one behavior family over one stable array operation. |
 | Template Method | A stable multi-step algorithm needs subclass-overridable steps. | There is one replaceable scoring behavior and no inheritance workflow. |
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep an enum and exhaustive `switch` when the policy set is small, closed, and based on the same local values.
@@ -141,6 +175,8 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 - Use `sorted(by:)` directly for a one-off ordering that needs no runtime selection.
 - Do not create a protocol and several types merely to rename simple closures.
 - Do not use Strategy to model lifecycle transitions; that pressure belongs to State.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -150,9 +186,12 @@ The example uses app-owned values and deterministic dictionaries. It needs no ne
 - [`strategy-problem.md`](../../Documentation/strategy-problem.md) — direct baseline and visual thesis.
 - [`strategy-pressure.md`](../../Documentation/strategy-pressure.md) — requirement that earned the boundary.
 - [`strategy-header.png`](../../Documentation/Assets/Patterns/behavioral/strategy-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [State](../State/README.md) · **Next:** [Template Method](../Template%20Method/README.md) · **Compare with:** [State](../State/README.md)
 

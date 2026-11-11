@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Authentication, retry, and metrics must compose around upload behavior, and wrapper order changes policy.
 - **Direct baseline:** One focused function or explicit fixed pipeline keeps mandatory behavior obvious.
 - **Use Decorator when:** Selectable behaviors share one operation, every selected layer participates, and composition order matters.
 - **Keep it simple when:** Behavior is fixed, one guard controls access, or processing should stop at one responsible handler.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -26,6 +38,8 @@ A creator app uploads large videos to a media service. Its production client mus
 - Make composition order visible because metrics outside retry describe one logical upload, while metrics inside retry describe individual attempts.
 - Retry only `transportUnavailable`; HTTP rejection and malformed success stay terminal.
 - Reuse the same authenticated request across attempts under the current Bearer token policy.
+
+<a id="start-with-direct-swift"></a>
 
 ## 🪶 Start with direct Swift
 
@@ -41,15 +55,21 @@ public struct MediaUploadBehaviorSelection: Equatable, Sendable {
 
 This remains cheaper when the choices are closed, their order cannot change, and conditional token and retry configuration are acceptable. No pattern is earned merely because one method performs authentication, retry, and metrics.
 
+<a id="the-turning-point"></a>
+
 ## ⚡ The turning point
 
 Three independent switches create eight possible pipelines, five of which are already required. The flag client carries a token that matters only when one flag is on, a retry limit that matters only when another is on, and four conditional behavior sites across request construction and terminal exits.
 
 More importantly, the configuration states *which* behaviors exist but cannot state *which one encloses another*. Moving metrics inside the retry loop changes one success-after-retry event into a failed-attempt event followed by a success event. That is observable product behavior, not a cosmetic implementation detail.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Decorator gives every upload behavior the same forwarding boundary. A wrapper owns one policy, delegates the rest of the operation, and can be included or omitted at the composition root. The nested construction makes order reviewable without creating a subclass for every combination or a generic middleware engine.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -63,6 +83,8 @@ Decorator gives every upload behavior the same forwarding boundary. A wrapper ow
 | Metrics wrapper | [`MeasuredMediaUpload`](../../Sources/DesignPatterns/Decorator/MediaUploadDecorator.swift) | Records the success or supported failure visible at its position in the stack. |
 
 The protocol exists because four concrete participants vary immediately behind the same operation. Generics retain value semantics and the concrete stack shape; no existential box or type-erased wrapper is needed for the fixed deployment profiles in this example.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -88,6 +110,8 @@ var client = MeasuredMediaUpload(
 
 Reading from the outside in reveals the semantic scope: metrics enclose the logical upload, authentication prepares the request before retry, and retry encloses only transport attempts.
 
+<a id="diagram"></a>
+
 ## 🗺️ Diagram
 
 ```mermaid
@@ -108,6 +132,8 @@ Observe that every box keeps the same upload direction, while nesting defines sc
 
 **Accessible description:** The creator app sends an upload through an outer metrics wrapper, then an authentication wrapper, then a connection-loss retry wrapper, and finally a one-attempt transport client that reaches the media API. The receipt or typed error returns through the same stack. Because metrics are outermost, they observe one logical result rather than each retry attempt.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -117,6 +143,8 @@ swift test -Xswiftc -warnings-as-errors --filter DecoratorTests
 ```
 
 The suite builds several concrete wrapper stacks and verifies their requests, attempt counts, metrics, receipts, and errors. No network connection or Apple platform framework is required.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -140,6 +168,8 @@ swift test -Xswiftc -warnings-as-errors --filter DecoratorPressureTests
 
 The problem and pressure suites retain the verified direct baselines that earned the pattern; the final suite verifies the smaller composed replacement.
 
+<a id="trade-offs"></a>
+
 ## ⚖️ Trade-offs
 
 ### What improves
@@ -156,6 +186,8 @@ The problem and pressure suites retain the verified direct baselines that earned
 - Order is a correctness rule that callers assembling a stack must understand and test.
 - Exposing `wrapped` for deterministic inspection couples tests to the concrete composition shape; behavior assertions should remain the primary contract.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -169,6 +201,8 @@ The problem and pressure suites retain the verified direct baselines that earned
 
 Facade hides a collaboration behind one simpler entry point. Decorator preserves one interface while stacking behavior around it. Proxy usually controls access to one subject, and Chain of Responsibility searches an ordered set for a handler. The similar shapes do not imply the same responsibility.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep `DirectMediaUploadClient` when authentication, retry, and metrics are always mandatory in one stable order.
@@ -176,6 +210,8 @@ Facade hides a collaboration behind one simpler entry point. Decorator preserves
 - Prefer a function when the behavior is a stateless transformation that does not need to invoke the next operation or retain per-call scope.
 - Do not build a wrapper framework in anticipation of features with no current deployment or acceptance test.
 - Do not use nested generic wrappers when product code must choose arbitrary stacks at runtime unless the type-erasure and discoverability costs are justified explicitly.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -188,9 +224,12 @@ Facade hides a collaboration behind one simpler entry point. Decorator preserves
 - [`decorator-problem.md`](../../Documentation/decorator-problem.md) — requirements, invariants, and direct-solution decision.
 - [`decorator-pressure.md`](../../Documentation/decorator-pressure.md) — measured combination and ordering pressure.
 - [`decorator-header.png`](../../Documentation/Assets/Patterns/structural/decorator-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Composite](../Composite/README.md) · **Next:** [Facade](../Facade/README.md) · **Compare with:** [Proxy](../Proxy/README.md)
 

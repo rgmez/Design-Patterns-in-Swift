@@ -8,6 +8,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Backup transitions, screen actions, and worker operations must stay coherent with event-selected lifecycle phase.
@@ -15,11 +17,23 @@
 - **Use State when:** Several behavior families change together with internal history and need one phase owner.
 - **Keep it simple when:** Transitions are the only varying behavior or a few enum computed properties remain cohesive.
 
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
 ## 🎯 The app problem
 
 A secure backup app prepares local files, encrypts them, uploads the encrypted payload, and records a remote identifier. Connectivity can disappear during transfer, so pause, resume, failure, and retry must preserve the last accepted byte without allowing lifecycle jumps.
 
 The backup screen and a background worker also need different answers from the same lifecycle: the screen may offer Start, Pause, Resume, or Retry, while the worker may prepare, encrypt, or upload. Those answers must never disagree about whether work is paused, recoverable, or complete.
+
+<a id="start-with-direct-swift"></a>
 
 ## 🪶 Start with direct Swift
 
@@ -27,17 +41,23 @@ The backup screen and a background worker also need different answers from the s
 
 There are no state objects in the baseline. One switch keeps the complete lifecycle visible, associated values make progress valid only where it exists, and unsupported event-and-phase pairs throw without mutating anything.
 
+<a id="the-turning-point"></a>
+
 ## ⚡ The turning point
 
 The [pressure review](../../Documentation/state-pressure.md) added persistence, a primary screen action, and a background operation. A six-flag snapshot could encode 64 combinations although only seven were coherent. In an `isUploading && isPaused` snapshot, the screen offered Resume while the worker continued Upload.
 
 Replacing the flags with `BackupUploadPhase` would remove impossible values, but free functions or computed properties would leave three separate switch owners: transitions, UI behavior, and worker behavior. The useful State boundary appears when those rules change together per phase.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 State lets a backup change its behavior when its internal phase changes. The `BackupUpload` context delegates each event and each phase-dependent decision to its current private state, then replaces that state only after a successful transition.
 
 This is a lifecycle, not a runtime-selected policy. The client does not choose an Uploading or Failed algorithm; prior events determine the current state and therefore which behavior is legal next.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -51,6 +71,8 @@ This is a lifecycle, not a runtime-selected policy. The client does not choose a
 
 The protocol and concrete state types are private. Callers cannot manufacture a custom lifecycle, and the public API stays smaller than the implementation mechanism used to organize its rules.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. `BackupUpload()` starts with `ReadyBackupUploadState`, whose only screen action is Start.
@@ -60,6 +82,8 @@ The protocol and concrete state types are private. Callers cannot manufacture a 
 5. Restoration contains the implementation's only all-phase switch. That switch is a serialization boundary: it validates persisted associated data and rebuilds the matching private state, rather than deciding ongoing app behavior.
 
 `BackupUpload` is a value type. Copying it produces an independent lifecycle, which is clearer for this local domain model than introducing shared reference identity solely to resemble a class-oriented pattern diagram.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -86,6 +110,8 @@ Observe that every arrow begins at the state that owns the event. Pause and conn
 
 **Accessible description:** A backup starts Ready, then moves through Preparing and Encrypting to Uploading. Uploading can advance, pause, fail, or complete after all bytes arrive. Paused resumes at the same progress. Failed retries the exact Preparing, Encrypting, or Uploading recovery point. Completed is terminal.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -96,6 +122,8 @@ swift test -Xswiftc -warnings-as-errors --filter StateTests
 ```
 
 The example uses Foundation only for whitespace validation and `Codable`. File I/O, cryptography, network transport, background scheduling, and UI remain outside the teaching unit.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -110,6 +138,8 @@ The example uses Foundation only for whitespace validation and `Codable`. File I
 - invalid restored terminal data is rejected.
 
 The earlier problem and pressure suites remain executable so the direct reducer and impossible-flag evidence do not become unverified prose.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -129,6 +159,8 @@ The earlier problem and pressure suites remain executable so the direct reducer 
 - New cross-state invariants may still require shared helpers or context-level validation.
 - A public phase snapshot and private state objects describe the same current lifecycle for different purposes and must remain aligned.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -139,6 +171,8 @@ The earlier problem and pressure suites remain executable so the direct reducer 
 | Strategy | A caller selects one interchangeable policy for the same operation. | Backup behavior changes because events move internal state; callers do not select phases. |
 | Workflow framework | Persistence, retries, distributed workers, and observability require a production orchestration engine. | This teaching unit has one in-process lifecycle and no evidence for framework-level machinery. |
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep an enum and exhaustive reducer when legal transitions are the only behavior that varies.
@@ -146,6 +180,8 @@ The earlier problem and pressure suites remain executable so the direct reducer 
 - Do not create a protocol and type per enum case merely because a lifecycle has named phases.
 - Use Strategy when clients select behavior without changing internal state.
 - Use a durable workflow engine when recovery spans processes, devices, or distributed services and needs operational guarantees beyond `Codable`.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -158,9 +194,12 @@ The earlier problem and pressure suites remain executable so the direct reducer 
 - [`state-problem.md`](../../Documentation/state-problem.md) — requirements, invariants, and direct solution decision.
 - [`state-pressure.md`](../../Documentation/state-pressure.md) — measured pressure and smaller alternatives.
 - [`state-header.png`](../../Documentation/Assets/Patterns/behavioral/state-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Observer](../Observer/README.md) · **Next:** [Strategy](../Strategy/README.md) · **Compare with:** [Strategy](../Strategy/README.md)
 

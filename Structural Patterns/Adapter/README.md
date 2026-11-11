@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Payment SDKs disagree on requests, responses, errors, and asynchronous contracts while checkout needs one vocabulary.
 - **Direct baseline:** Call one provider directly and keep its mapping local.
 - **Use Adapter when:** Multiple external interfaces must translate into one app-owned contract without leaking vendor types.
 - **Keep it simple when:** One stable integration needs only a small local mapping.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -29,11 +41,15 @@ AtlasPay exposes `AtlasChargeRequest`, `AtlasChargeResult`, and vendor error cas
 - Select a provider once at the composition root, not during checkout.
 - Reject invalid domain input before invoking a vendor SDK.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 The first provider was intentionally integrated directly. Day 009 extended that solution with a `CheckoutPaymentProvider` enum and a `switch` in `CheckoutPaymentService`, so each vendor request and error mapping remained visible in one file. That direct version is preserved in history by commit `b377a2a` and described in [the pressure review](../../Documentation/adapter-pressure.md).
 
 It was the right starting point for one provider: no protocol, type erasure, factory, or payment framework was needed. The second provider changed the decision. Checkout now imported and branched on vendor types, and every new SDK would extend the same service.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -41,9 +57,13 @@ The pressure is not that `submit(_:)` and `authorize(payment:)` have different n
 
 The direct implementation made that coupling executable: adding Boreal required a second provider case, a second request mapping, a second success mapping, and a second error taxonomy inside checkout. A local helper could make a branch shorter, but it could not stop checkout from knowing which SDK vocabulary to branch on.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Adapter gives checkout one app-owned authorization operation and lets each provider translate its own request, result, and errors at the integration edge. The pattern contains incompatibility; it does not make the vendors identical or choose a provider for business logic.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -57,6 +77,8 @@ Adapter gives checkout one app-owned authorization operation and lets each provi
 
 The protocol exists because two concrete integrations already vary at this boundary and because the composition root must substitute one for the other. There is no protocol for domain values or for provider selection.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. The composition root wraps either SDK in `AtlasPayAdapter` or `BorealPayAdapter` and injects it into `CheckoutPaymentService`.
@@ -64,6 +86,8 @@ The protocol exists because two concrete integrations already vary at this bound
 3. The selected adapter builds its vendor request, awaits the SDK, and maps the vendor result or error into `PaymentAuthorization` or `PaymentError`.
 
 The adapters are value types holding `Sendable` client closures. Async work stays at the vendor boundary; checkout owns no provider-specific cancellation or retry policy beyond the domain error it receives.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -83,6 +107,8 @@ The important relationship is the direction of dependency: checkout sees only `P
 
 **Accessible description:** The composition root selects either AtlasPayAdapter or BorealPayAdapter. Both conform to PaymentAuthorizing, which is the only contract CheckoutPaymentService uses. Each adapter talks to its own vendor SDK and returns the same authorization or domain error outcome.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -92,6 +118,8 @@ swift build -Xswiftc -warnings-as-errors
 ```
 
 The package contains deterministic SDK closures rather than live payment traffic. The executable proof is the Swift Testing suite, so no network or credentials are required.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -105,6 +133,8 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 - Provider-specific rejection, pending, and transport semantics do not leak.
 - Invalid checkout input stops before a vendor client is invoked.
 - Checkout can swap adapters without changing its operation or branching on a provider.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -121,6 +151,8 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 - Domain error mapping can hide provider detail that a future product feature may need to model explicitly.
 - Adapters must preserve async cancellation and error semantics as SDKs evolve.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -133,11 +165,15 @@ swift test -Xswiftc -warnings-as-errors --filter AdapterTests
 
 Factory Method is also deliberately absent: provider selection is composition wiring, not a creator workflow that subclasses extend.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the direct SDK call when one provider is stable and its mapping is local.
 - Prefer a function or enum when the variation is closed, synchronous, and does not leak external vocabulary beyond one call site.
 - Do not add a protocol only for mocking a single concrete SDK; use the SDK closure seam until a second real integration exists.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -148,9 +184,12 @@ Factory Method is also deliberately absent: provider selection is composition wi
 - [`CheckoutPaymentService.swift`](../../Sources/DesignPatterns/Adapter/CheckoutPaymentService.swift) — validated client-facing operation.
 - [`AdapterTests.swift`](../../Tests/DesignPatternsTests/AdapterTests.swift) — executable acceptance and substitution tests.
 - [`adapter-header.png`](../../Documentation/Assets/Patterns/structural/adapter-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Proxy](../Proxy/README.md) · **Next:** [Bridge](../Bridge/README.md) · **Compare with:** [Facade](../Facade/README.md)
 

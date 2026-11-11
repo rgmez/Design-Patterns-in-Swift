@@ -1,11 +1,23 @@
-# Complete GoF Catalogue Review
+# 🔎 Complete GoF Catalogue Review
+
+<a id="complete-gof-catalogue-review"></a>
 
 Review date: 2026-11-02
 
-This review closes Internal Day 091 by validating the complete initial Gang of
-Four catalogue as one teaching system. The goal is not to make the examples
-share a framework. It is to prove that each of the 23 patterns has a distinct,
-tested reason to exist and an equally explicit reason not to be used.
+This review closes Internal Day 091 by validating the complete initial Gang of Four catalogue as one teaching system. The goal is not to make the examples share a framework. It is to prove that each of the 23 patterns has a distinct, tested reason to exist and an equally explicit reason not to be used.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
+
+**On this page**
+
+- [Completion decision](#completion-decision)
+- [Catalogue decision matrix](#catalogue-decision-matrix)
+- [Conceptual distinctions that survived review](#conceptual-distinctions-that-survived-review)
+- [Documentation and status-link audit](#documentation-and-status-link-audit)
+- [Visual review](#visual-review)
+- [Validation](#validation)
+- [Architectural decision and avoided complexity](#architectural-decision-and-avoided-complexity)
+- [Readiness decision](#readiness-decision)
 
 ## Completion decision
 
@@ -18,17 +30,11 @@ The catalogue is complete at its initial 23-pattern boundary:
 | Behavioral | 11 | 11 | 11 | Complete |
 | **Total** | **23** | **23** | **23** | **Complete** |
 
-“Complete” means that every pattern has a real app problem, a direct Swift
-baseline, measured or executable pressure, a minimal pattern implementation,
-behavioral tests, one canonical README, one editorial header, one technical
-diagram, trade-offs, alternatives, and explicit `When not to use it` guidance.
-It does not mean that every app should use every pattern.
+“Complete” means that every pattern has a real app problem, a direct Swift baseline, measured or executable pressure, a minimal pattern implementation, behavioral tests, one canonical README, one editorial header, one technical diagram, trade-offs, alternatives, and explicit `When not to use it` guidance. It does not mean that every app should use every pattern.
 
 ## Catalogue decision matrix
 
-The shortest useful catalogue is a set of decision boundaries, not definitions.
-Each row records the pressure that earned the pattern, the smallest Swift shape
-that addresses it, and the nearby design that would solve a different problem.
+The shortest useful catalogue is a set of decision boundaries, not definitions. Each row records the pressure that earned the pattern, the smallest Swift shape that addresses it, and the nearby design that would solve a different problem.
 
 ### Creational patterns
 
@@ -70,67 +76,32 @@ that addresses it, and the nearby design that would solve a different problem.
 
 ## Conceptual distinctions that survived review
 
-The catalogue's most important result is not the number 23. It is that nearby
-patterns do not collapse into interchangeable names:
+The catalogue's most important result is not the number 23. It is that nearby patterns do not collapse into interchangeable names:
 
-- **Simple Factory, Factory Method, and Abstract Factory:** central selection,
-  creation inside an extensible workflow, and creation of a coherent product
-  family are three different change boundaries.
-- **Builder and State:** Builder protects the lifecycle of a value that does not
-  exist yet; State changes the behavior of an already existing context.
-- **Strategy, State, and Bridge:** a caller-selected policy, event-selected
-  lifecycle behavior, and two independently varying dimensions are not the same
-  reason to introduce indirection.
-- **Decorator, Proxy, and Chain of Responsibility:** all wrappers run, one
-  substitute controls a subject, or one ordered handler owns the request.
-- **Command and Memento:** portable or reversible intent differs from an opaque
-  snapshot of complete owner state.
-- **Adapter, Facade, and Mediator:** translation at a boundary, a simplified
-  subsystem entry point, and peer coordination solve different coupling.
-- **Composite, Iterator, and Visitor:** uniform part-whole behavior, controlled
-  value production, and operations over stable element kinds have different
-  extension directions.
-- **Template Method, Strategy, and Factory Method:** a fixed algorithm with one
-  varying step, a replaceable whole behavior, and creator-owned product
-  construction should not share one generic “algorithm” abstraction.
+- **Simple Factory, Factory Method, and Abstract Factory:** central selection, creation inside an extensible workflow, and creation of a coherent product family are three different change boundaries.
+- **Builder and State:** Builder protects the lifecycle of a value that does not exist yet; State changes the behavior of an already existing context.
+- **Strategy, State, and Bridge:** a caller-selected policy, event-selected lifecycle behavior, and two independently varying dimensions are not the same reason to introduce indirection.
+- **Decorator, Proxy, and Chain of Responsibility:** all wrappers run, one substitute controls a subject, or one ordered handler owns the request.
+- **Command and Memento:** portable or reversible intent differs from an opaque snapshot of complete owner state.
+- **Adapter, Facade, and Mediator:** translation at a boundary, a simplified subsystem entry point, and peer coordination solve different coupling.
+- **Composite, Iterator, and Visitor:** uniform part-whole behavior, controlled value production, and operations over stable element kinds have different extension directions.
+- **Template Method, Strategy, and Factory Method:** a fixed algorithm with one varying step, a replaceable whole behavior, and creator-owned product construction should not share one generic “algorithm” abstraction.
 
 ## Documentation and status-link audit
 
-All 23 canonical guides contain the required problem, direct solution, turning
-point, intent, responsibilities, Swift walkthrough, execution commands, tests,
-trade-offs, alternatives, `When not to use it`, and source map. Each guide has
-exactly one Mermaid diagram and one editorial header with descriptive alt text
-and a one-sentence caption.
+All 23 canonical guides contain the required problem, direct solution, turning point, intent, responsibilities, Swift walkthrough, execution commands, tests, trade-offs, alternatives, `When not to use it`, and source map. Each guide has exactly one Mermaid diagram and one editorial header with descriptive alt text and a one-sentence caption.
 
-The root README lists all 5 creational, 7 structural, and 11 behavioral patterns
-and reports 23 complete, zero in progress, and zero planned. Every root status
-link resolves to its canonical guide. Historical examples remain clearly
-separate from the package-backed implementation and are not counted as a second
-catalogue.
+The root README lists all 5 creational, 7 structural, and 11 behavioral patterns and reports 23 complete, zero in progress, and zero planned. Every root status link resolves to its canonical guide. Historical examples remain clearly separate from the package-backed implementation and are not counted as a second catalogue.
 
-No README was expanded into a generic design-pattern definition or copied book
-taxonomy during this review. The canonical unit remains the app problem and the
-specific change that made the direct Swift solution insufficient.
+No README was expanded into a generic design-pattern definition or copied book taxonomy during this review. The canonical unit remains the app problem and the specific change that made the direct Swift solution insufficient.
 
 ## Visual review
 
-All 23 pattern headers were inspected against the approved Adapter reference for
-composition, palette, hierarchy, logo treatment, and detail. Every file is
-1672 × 941 pixels, uses the upper-left type block and upper-right RG mark, stays
-inside the charcoal/white/gray/red/orange palette, and gives its category an
-appropriate technical metaphor. The local Adapter reference remains byte-for-
-byte identical to the approved master asset.
+All 23 pattern headers were inspected against the approved Adapter reference for composition, palette, hierarchy, logo treatment, and detail. Every file is 1672 × 941 pixels, uses the upper-left type block and upper-right RG mark, stays inside the charcoal/white/gray/red/orange palette, and gives its category an appropriate technical metaphor. The local Adapter reference remains byte-for- byte identical to the approved master asset.
 
-No header needed regeneration. Recreating accepted images would risk typography
-and logo consistency without changing any documented behavior. No catalogue-
-review header was added because this review is evidence for the existing 23
-patterns, not a twenty-fourth visual teaching unit.
+No header needed regeneration. Recreating accepted images would risk typography and logo consistency without changing any documented behavior. No catalogue- review header was added because this review is evidence for the existing 23 patterns, not a twenty-fourth visual teaching unit.
 
-Every canonical README also contains one Mermaid diagram using domain names,
-followed by an explanation and accessible equivalent. Structural validation
-confirms that every fence is balanced and starts with a supported declaration.
-Renderer-level Mermaid validation is not claimed because Mermaid CLI is not
-installed.
+Every canonical README also contains one Mermaid diagram using domain names, followed by an explanation and accessible equivalent. Structural validation confirms that every fence is balanced and starts with a supported declaration. Renderer-level Mermaid validation is not claimed because Mermaid CLI is not installed.
 
 ## Validation
 
@@ -144,34 +115,19 @@ git check-ignore -v Editorial/
 - The warning-as-error build succeeds.
 - The complete suite passes 350 tests in 188 suites.
 - The repository has no `.swiftlint.yml`, so no project SwiftLint gate applies.
-- All 735 local links across 99 consumable Markdown files resolve after
-  excluding the intentionally fictitious paths in the README template.
-- All 51 Mermaid fences are structurally balanced and use supported declarations;
-  renderer-level validation remains unavailable as noted above.
-- All 23 editorial headers have the required 1672 × 941 dimensions and pass the
-  five-part visual comparison.
-- `Editorial/` is ignored, contains no tracked files, and remains outside the
-  review commit.
+- All 735 local links across 99 consumable Markdown files resolve after excluding the intentionally fictitious paths in the README template.
+- All 51 Mermaid fences are structurally balanced and use supported declarations; renderer-level validation remains unavailable as noted above.
+- All 23 editorial headers have the required 1672 × 941 dimensions and pass the five-part visual comparison.
+- `Editorial/` is ignored, contains no tracked files, and remains outside the review commit.
 
 ## Architectural decision and avoided complexity
 
-No production type or test changed during this review. The direct, pressure,
-and pattern implementations remain executable evidence of the decision path;
-they are not competing application architectures.
+No production type or test changed during this review. The direct, pressure, and pattern implementations remain executable evidence of the decision path; they are not competing application architectures.
 
-The review deliberately adds no pattern registry, shared `Pattern` protocol,
-cross-example dependency-injection container, diagram generator, test base
-class, or taxonomy module. Those structures would make unlike examples look
-uniform while hiding the exact pressure each pattern solves. A catalogue index
-and consistent documentation contract are enough to connect the examples.
+The review deliberately adds no pattern registry, shared `Pattern` protocol, cross-example dependency-injection container, diagram generator, test base class, or taxonomy module. Those structures would make unlike examples look uniform while hiding the exact pressure each pattern solves. A catalogue index and consistent documentation contract are enough to connect the examples.
 
 ## Readiness decision
 
-Internal Day 091 is complete when this evidence, the root index, and the roadmap
-change are committed together. The repository is ready to extract decision
-signals for the `choose-swift-design-pattern` skill without changing the
-catalogue examples first.
+Internal Day 091 is complete when this evidence, the root index, and the roadmap change are committed together. The repository is ready to extract decision signals for the `choose-swift-design-pattern` skill without changing the catalogue examples first.
 
-Day 092 will derive those evidence-based triggers and rejection signals. It has
-not started. Day 091 is Public Day 026, so its English draft is stored only in
-the ignored `Editorial/series/` workspace and is not part of the commit.
+Day 092 will derive those evidence-based triggers and rejection signals. It has not started. Day 091 is Public Day 026, so its English draft is stored only in the ignored `Editorial/series/` workspace and is not part of the commit.

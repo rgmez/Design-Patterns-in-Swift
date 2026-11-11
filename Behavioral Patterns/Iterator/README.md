@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Screens need lazy ordered photos while cursors, empty pages, cancellation, and retry policy stay out of presentation code.
 - **Direct baseline:** A collection, `Sequence`, or one explicit async loop handles materialized or single-consumer data.
 - **Use Iterator when:** Lazy production must hide pagination progress while preserving order and cancellation.
 - **Keep it simple when:** Data is already materialized or one loop owns the complete traversal.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -33,11 +45,15 @@ One grid screen originally requested a single page whenever the traveller scroll
 - Let a consumer stop early without draining or prefetching the album.
 - Keep retry-versus-fail policy at the consumer boundary.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`PhotoLibraryDirect.swift`](../../Sources/DesignPatterns/Iterator/PhotoLibraryDirect.swift) uses one `DirectPhotoLibraryScreen`. Its `loadNextPage()` method guards terminal state, fetches with the current cursor, appends a successful page, and stores the returned cursor. For one user-driven page request, that explicit state is smaller and easier to inspect than an asynchronous iterator.
 
 An already-loaded `[LibraryPhoto]` also needs no pattern. Swift's `Collection` iteration already provides the traversal boundary, and returning an array is preferable when every caller genuinely needs all values in memory.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -52,11 +68,15 @@ An already-loaded `[LibraryPhoto]` also needs no pattern. Swift's `Collection` i
 
 The retry policies deliberately differ: the screen surfaces every rate limit, the indexer fails its run, and interactive selection retries once. Iterator has earned the stable traversal mechanics, not the right to absorb those product decisions.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Iterator exposes elements one at a time without making the consumer understand the source's traversal representation. Here Swift's native `AsyncSequence` and `AsyncIteratorProtocol` are the pattern boundary: clients ask for the next `LibraryPhoto`, while the concrete iterator owns page buffering, opaque cursors, empty-page traversal, termination, and cancellation checks.
 
 The implementation adds no app-specific iterator protocol. Using the language's existing asynchronous iteration contract keeps `for try await` available and avoids a second abstraction that would express the same operation.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -69,6 +89,8 @@ The implementation adds no app-specific iterator protocol. Using the language's 
 | Consumers | `for try await` loops or a manually held iterator | Own accumulation, early exit, and any retry policy. |
 
 `PhotoLibrarySequence` and its iterator are concrete values. There is no protocol hierarchy, repository, page-loader abstraction, type erasure, actor, or unstructured producer task because this example has one sequential remote traversal and no shared mutable owner.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -100,6 +122,8 @@ for try await photo in library {
 }
 ```
 
+<a id="diagram"></a>
+
 ## 🗺️ Diagram
 
 ```mermaid
@@ -128,6 +152,8 @@ Observe that the indexer asks only for photos. The iterator crosses the empty pa
 
 **Accessible description:** The metadata indexer asks an iterator for one photo at a time. The iterator requests the first remote page without a cursor and returns photo A. Its next request receives an empty page with another cursor, so it continues to the final page. It returns photos B and C individually, then returns no value after the final page's missing cursor.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -138,6 +164,8 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 ```
 
 The package uses a deterministic local source. It needs no photo framework, network access, persistence, retry scheduler, or UI runtime.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -159,6 +187,8 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorPressureTests
 swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 ```
 
+<a id="trade-offs"></a>
+
 ## ⚖️ Trade-offs
 
 ### What improves
@@ -178,6 +208,8 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 - Sequential iteration intentionally leaves parallel page fetching and speculative prefetching unsupported.
 - Cancellation after a remote service has accepted a request cannot undo that external side effect; it only prevents the iterator from committing or continuing local traversal.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -191,6 +223,8 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 
 `AsyncSequence` also appears in event delivery, but pull-based iteration is not automatically Observer. This example has one consumer advancing its own iterator and no broadcast subscription. Observer is preferable when multiple independent receivers must react to the same changing source over their own lifetimes.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep an array or another `Collection` when all values are already in memory.
@@ -200,6 +234,8 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 - Do not add `AsyncThrowingStream`, a producer task, actors, or buffering policy to a naturally pull-driven traversal.
 - Do not hide retry, backoff, analytics, caching, or persistence inside the iterator unless every consumer demonstrably shares that policy.
 - Do not generalize cursor and page types until another domain proves the same semantics rather than merely similar names.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -212,9 +248,12 @@ swift test -Xswiftc -warnings-as-errors --filter IteratorTests
 - [`iterator-problem.md`](../../Documentation/iterator-problem.md) — initial requirements and no-pattern decision.
 - [`iterator-pressure.md`](../../Documentation/iterator-pressure.md) — measured cursor and termination pressure.
 - [`iterator-header.png`](../../Documentation/Assets/Patterns/behavioral/iterator-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Interpreter](../Interpreter/README.md) · **Next:** [Mediator](../Mediator/README.md) · **Compare with:** [Composite](../../Structural%20Patterns/Composite/README.md)
 

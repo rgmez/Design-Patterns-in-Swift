@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** An editable reference graph must preserve runtime block types, remap identities, reconnect links, and deliberately share immutable media.
 - **Direct baseline:** Swift value assignment or an explicit initializer already handles value-only models.
 - **Use Prototype when:** A reference graph needs a controlled copy policy that belongs to each runtime subtype.
 - **Keep it simple when:** Value semantics, copy-on-write collections, or ordinary reconstruction already produce an independent value.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -31,6 +43,8 @@ The duplicate must preserve each runtime block kind and its state, but ordinary 
 
 Persistence, collaboration, serialization, upload, and editor UI lifecycle are outside this example. They do not change the controlled-copy boundary.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 The first product was a value-only `DocumentConfiguration`. Ordinary assignment already gives it an independent copy:
@@ -45,17 +59,23 @@ Swift value semantics and collection copy-on-write satisfy that version of the p
 
 When live block identity became a requirement, the first correct extension was still a direct function. It allocated fresh identifiers and reconstructed four known concrete block classes in one exhaustive switch. That operation correctly remapped links and shared media, so Prototype was not introduced merely because classes appeared.
 
+<a id="the-turning-point"></a>
+
 ## ⚡ The turning point
 
 The [pressure review](../../Documentation/prototype-pressure.md) measures the remaining coupling: every independently introduced block type required another branch in `duplicateEditableDocument(_:)`. The central routine had to know each subtype's initializer, private state, and ownership policy even though the subtype already owned those decisions.
 
 A fifth quote block made the extension point concrete. It should be able to join the document graph and preserve itself without editing the graph duplicator. That is the pressure that earns Prototype here—not construction cost, a desire for `clone()` syntax, or speculative subclassing.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 `EditableDocumentBlock` is the explicit prototype boundary for the reference- backed part of the model. Each conforming block creates the right runtime type when given one `EditableDocumentCopyContext`. The document remains responsible for graph-wide identity allocation; concrete blocks remain responsible for their own state and ownership policy.
 
 The API uses the domain-specific `copy(using:)` name instead of a context-free `clone()`. A block cannot copy itself correctly without the old-to-new identity map, and that requirement should remain visible at the call site.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -68,6 +88,8 @@ The API uses the domain-specific `copy(using:)` name instead of a context-free `
 | Shared resource | `DocumentMediaResource` | Represents an immutable upload identity intentionally referenced by source and duplicate. |
 
 There is one protocol because four immediate implementations vary at runtime. There is no prototype registry, factory, base class, or copy coordinator.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -85,6 +107,8 @@ let copiedBlocks = try source.blocks.map {
 ```
 
 The context initializer is file-private. Clients ask to duplicate a document; they do not construct partial identity maps or invoke graph-copy phases out of order.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -108,6 +132,8 @@ Observe that the document creates the shared context before dispatching to the r
 
 **Accessible description:** The source document first produces a complete map of fresh block identities. That context and every runtime block enter the prototype boundary. Text, checklist, link, and media blocks then create their appropriate copies, with the link target remapped and one immutable media resource retained, before the results form the duplicate document.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -118,6 +144,8 @@ swift test -Xswiftc -warnings-as-errors --filter Prototype
 ```
 
 The example is local and deterministic apart from the generated fresh UUID values. It needs no editor framework, persistence layer, media upload, network, or credentials.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -130,6 +158,8 @@ The example is local and deterministic apart from the generated fresh UUID value
 - internal links target the duplicate graph and immutable media remains shared;
 - a new quote block participates by conforming to `EditableDocumentBlock`, with no change to `duplicateEditableDocument(_:)`;
 - duplicate source IDs and external link targets fail explicitly.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -149,6 +179,8 @@ The example is local and deterministic apart from the generated fresh UUID value
 - Copying allocates one new block object and UUID per editable node.
 - The two-phase ID-map rule is an invariant that a context-free clone cannot express.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -163,6 +195,8 @@ The example is local and deterministic apart from the generated fresh UUID value
 
 Prototype and copy-on-write solve different problems. Swift collections may defer storage copying efficiently, but they do not turn a collection of class instances into independent objects or repair identity-based relationships.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Use ordinary assignment for value-only models such as `DocumentConfiguration`.
@@ -171,6 +205,8 @@ Prototype and copy-on-write solve different problems. Swift collections may defe
 - Do not introduce a generic `Cloning` protocol for types whose copy policy is unrelated or context-free.
 - Avoid Prototype when callers actually need a factory-selected fresh default, a persisted snapshot, or undo/redo semantics.
 - Do not deep-copy immutable resources solely because they are reachable from a mutable graph.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -183,9 +219,12 @@ Prototype and copy-on-write solve different problems. Swift collections may defe
 - [`prototype-pressure.md`](../../Documentation/prototype-pressure.md) — measured centralized-switch pressure.
 - [`prototype-header.png`](../../Documentation/Assets/Patterns/creational/prototype-header.png) — editorial header.
 - [`Prototype.md`](Prototype.md) and [`TaskPrototype.swift`](TaskPrototype.swift) — historical task-cloning draft retained for comparison, not part of the package.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Factory Method](../Factory%20Method/README.md) · **Next:** [Singleton](../Singleton/README.md) · **Compare with:** [Memento](../../Behavioral%20Patterns/Memento/README.md)
 

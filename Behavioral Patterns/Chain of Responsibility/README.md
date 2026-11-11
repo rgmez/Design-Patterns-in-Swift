@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Independently growing universal-link features need explicit precedence, pass-through, and one terminal decision.
 - **Direct baseline:** An ordered loop or conditional router keeps a small route set visible.
 - **Use Chain of Responsibility when:** Ordered handlers own separate features and processing stops after one handles or rejects the request.
 - **Keep it simple when:** One function owns the request or every processing step must run.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -32,11 +44,15 @@ Two routes make that order observable. Featured products must run before the gen
 - Return `.unhandled` when every feature passes or one feature rejects.
 - Make specialized-before-generic order visible at composition time.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`UniversalLinkDirect.swift`](../../Sources/DesignPatterns/ChainOfResponsibility/UniversalLinkDirect.swift) uses one `DirectCommerceLinkRouter` and one exhaustive switch. For four stable route families owned together, that is the clearest design: the compiler-visible branch set, authentication guard, and terminal result fit in one place.
 
 The direct version deliberately has no handler protocol, linked nodes, middleware array, type erasure, or dependency container. Several switch cases do not justify a pattern by themselves.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -51,11 +67,15 @@ The direct version deliberately has no handler protocol, linked nodes, middlewar
 
 The switch still works, but its source order has become cross-feature policy. A merchandising change can shadow ordinary products, while a growth route can turn malformed referrals into valid campaign pages. This is the point where an explicit ordered chain gives ownership back to features without hiding order.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Chain of Responsibility passes a request through ordered handlers until one of them produces a terminal decision. The sender knows the chain boundary and its order, not which concrete feature will accept a given link.
 
 This example uses an array instead of mutable `next` references. The behavioral contract is the same, while composition remains readable as one ordered list and value types need no post-initialization linking.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -69,6 +89,8 @@ This example uses an array instead of mutable `next` references. The behavioral 
 | Independent handlers | `OrderLinkHandler`, `AccountRecoveryLinkHandler`, and `StoreLinkHandler` | Own authentication, token validation, and retail routing without editing sibling handlers. |
 
 The protocol has several immediate implementations because the pressure is independent feature ownership. The array uses Swift's protocol existential directly; there is no custom type-erased box or general-purpose pipeline type.
+
+<a id="how-the-swift-implementation-works"></a>
 
 ## ⚙️ How the Swift implementation works
 
@@ -98,6 +120,8 @@ let router = CommerceLinkRouter(
 ```
 
 Putting `ProductLinkHandler` first would deliberately interpret `/products/featured` as an ordinary product. The order is therefore data at the composition boundary rather than incidental case order inside one router.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -143,6 +167,8 @@ Observe that only `.pass` advances the request. A handled product never reaches 
 
 **Accessible description:** The app gives one validated universal link to an ordered router. The featured-products handler sees it first. If that handler passes, the generic product handler gets a chance. Campaign handlers are asked later in the same specialized-before-generic order. A handled or rejected link stops immediately; only an explicit pass reaches the next feature.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -152,6 +178,8 @@ swift test -Xswiftc -warnings-as-errors --filter ChainTests
 ```
 
 The suite uses local URLs and value types. It needs no navigation framework, authentication backend, web fallback, analytics service, or network access.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -174,6 +202,8 @@ swift test -Xswiftc -warnings-as-errors --filter ChainPressureTests
 
 The problem and pressure suites preserve the direct baseline and the centralized branching evidence that earned the handler boundary.
 
+<a id="trade-offs"></a>
+
 ## ⚖️ Trade-offs
 
 ### What improves
@@ -192,6 +222,8 @@ The problem and pressure suites preserve the direct baseline and the centralized
 - Route families split across modules still need one owner for the final order.
 - `.reject` must remain rare and precisely defined; using it as a generic error channel would obscure failures.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -206,6 +238,8 @@ The problem and pressure suites preserve the direct baseline and the centralized
 
 Decorator and a typical middleware pipeline may also be ordered, but order alone does not define this pattern. Decorators compose behavior around one known operation. Middleware commonly performs cross-cutting work before or after a downstream stage. This chain asks “which feature owns this link?” and stops at the first terminal answer.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the exhaustive switch while the route set is small, stable, and owned by one team.
@@ -215,6 +249,8 @@ Decorator and a typical middleware pipeline may also be ordered, but order alone
 - Do not use a chain when every consumer must observe the event; use Observation, `AsyncStream`, or another broadcast mechanism.
 - Do not hide precedence in runtime registration, dependency injection, or mutable `next` links when one explicit array is sufficient.
 - Do not convert parsing failures or feature errors into `.pass`; only genuinely unowned links should continue.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -227,9 +263,12 @@ Decorator and a typical middleware pipeline may also be ordered, but order alone
 - [`chain-of-responsibility-problem.md`](../../Documentation/chain-of-responsibility-problem.md) — initial requirements, direct-design decision, and visual thesis.
 - [`chain-of-responsibility-pressure.md`](../../Documentation/chain-of-responsibility-pressure.md) — measured central branching and pattern boundary.
 - [`chain-of-responsibility-header.png`](../../Documentation/Assets/Patterns/behavioral/chain-of-responsibility-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Visitor](../Visitor/README.md) · **Next:** [Command](../Command/README.md) · **Compare with:** [Decorator](../../Structural%20Patterns/Decorator/README.md)
 

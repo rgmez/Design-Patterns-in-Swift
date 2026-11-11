@@ -1,19 +1,24 @@
-# Independent Skill Evaluation Scenarios
+# 📖 Independent Skill Evaluation Scenarios
+
+<a id="independent-skill-evaluation-scenarios"></a>
 
 Design date: 2026-11-04
 
-This document closes Internal Day 093 by defining the first realistic decision
-scenarios for the future `choose-swift-design-pattern` skill. The scenarios are
-not implementation exercises and do not extend the catalogue. They test whether
-the skill can apply the [evidence gate](skill-decision-signals.md) to unfamiliar
-app domains without copying the repository's payment, backup, notification, or
-product-sharing examples.
+This document closes Internal Day 093 by defining the first realistic decision scenarios for the future `choose-swift-design-pattern` skill. The scenarios are not implementation exercises and do not extend the catalogue. They test whether the skill can apply the [evidence gate](skill-decision-signals.md) to unfamiliar app domains without copying the repository's payment, backup, notification, or product-sharing examples.
 
-The prompts are intentionally separated from their evaluation criteria. A
-forward-test agent should receive one prompt and the skill under test, but not
-the expected verdict, rubric, catalogue source, or another scenario's result.
-The evaluator should score observable reasoning rather than exact headings or
-wording.
+The prompts are intentionally separated from their evaluation criteria. A forward-test agent should receive one prompt and the skill under test, but not the expected verdict, rubric, catalogue source, or another scenario's result. The evaluator should score observable reasoning rather than exact headings or wording.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
+
+**On this page**
+
+- [Shared response contract](#shared-response-contract)
+- [Scenario A — Carrier SDK boundary](#scenario-a--carrier-sdk-boundary)
+- [Scenario B — Offline map lifecycle](#scenario-b--offline-map-lifecycle)
+- [Scenario C — Campaign invite URL](#scenario-c--campaign-invite-url)
+- [Scenario D — Document export axes](#scenario-d--document-export-axes)
+- [Forward-test protocol for Day 097](#forward-test-protocol-for-day-097)
+- [Scope boundary and next step](#scope-boundary-and-next-step)
 
 ## Shared response contract
 
@@ -26,9 +31,7 @@ Every scenario asks for one reviewable decision. A satisfactory response must:
 5. reject the closest alternative with one discriminating reason; and
 6. name the concrete requirement that would reverse the verdict.
 
-The response must not return a menu of patterns when the supplied facts are
-sufficient. It may ask for one missing fact only when that fact would materially
-change the decision.
+The response must not return a menu of patterns when the supplied facts are sufficient. It may ask for one missing fact only when that fact would materially change the decision.
 
 ## Scenario A — Carrier SDK boundary
 
@@ -50,27 +53,14 @@ change the decision.
 ### Expected decision evidence
 
 - **Verdict:** Adapter.
-- **Pressure:** two external providers disagree on requests, units, results,
-  errors, and asynchronous contracts while the app requires one stable domain
-  vocabulary.
-- **Direct baseline:** one provider call with local result and error mapping was
-  sufficient before the second incompatible provider arrived.
-- **Moved responsibility:** each provider boundary translates between its SDK
-  and one app-owned operation; checkout no longer branches on vendors or imports
-  their types.
-- **Verification:** the same checkout behavior accepts either provider, vendor
-  errors become domain errors, invalid app input does not invoke an SDK, and no
-  SDK type crosses the boundary.
-- **Closest alternative:** Facade loses because the problem is incompatible
-  vocabulary and contracts, not a simpler entry point to a subsystem the app
-  already understands. Mediator loses because no peers react to each other over
-  time.
-- **Reversal signal:** return to a direct call and local mapping if there is one
-  simple, stable provider and the app can intentionally understand its API.
+- **Pressure:** two external providers disagree on requests, units, results, errors, and asynchronous contracts while the app requires one stable domain vocabulary.
+- **Direct baseline:** one provider call with local result and error mapping was sufficient before the second incompatible provider arrived.
+- **Moved responsibility:** each provider boundary translates between its SDK and one app-owned operation; checkout no longer branches on vendors or imports their types.
+- **Verification:** the same checkout behavior accepts either provider, vendor errors become domain errors, invalid app input does not invoke an SDK, and no SDK type crosses the boundary.
+- **Closest alternative:** Facade loses because the problem is incompatible vocabulary and contracts, not a simpler entry point to a subsystem the app already understands. Mediator loses because no peers react to each other over time.
+- **Reversal signal:** return to a direct call and local mapping if there is one simple, stable provider and the app can intentionally understand its API.
 
-A response fails this scenario if it adds a provider registry, factory, use-case
-layer, or generic networking abstraction without evidence that those owners are
-needed.
+A response fails this scenario if it adds a provider registry, factory, use-case layer, or generic networking abstraction without evidence that those owners are needed.
 
 ## Scenario B — Offline map lifecycle
 
@@ -92,28 +82,14 @@ needed.
 ### Expected decision evidence
 
 - **Verdict:** State.
-- **Pressure:** valid transitions, available actions, and worker behavior change
-  together according to event history, and duplicated switches now permit
-  contradictory decisions.
-- **Direct baseline:** one closed enum plus a pure reducer remains the first
-  choice while transitions and derived behavior stay local and reviewable.
-- **Moved responsibility:** the download context delegates each event and
-  phase-specific behavior to one owner for the current phase; transitions cannot
-  be selected arbitrarily by a caller.
-- **Verification:** legal event sequences reach the expected phases, illegal
-  events leave state unchanged, UI actions and worker decisions agree, and a
-  retry preserves the checkpoint.
-- **Closest alternative:** Strategy loses because no caller selects a policy;
-  lifecycle history selects the behavior. Builder loses because an existing
-  download changes behavior rather than constructing a value that does not yet
-  exist.
-- **Reversal signal:** retain or return to the enum reducer if all transitions,
-  actions, and effects can again live in one small exhaustive switch without
-  duplicated phase knowledge.
+- **Pressure:** valid transitions, available actions, and worker behavior change together according to event history, and duplicated switches now permit contradictory decisions.
+- **Direct baseline:** one closed enum plus a pure reducer remains the first choice while transitions and derived behavior stay local and reviewable.
+- **Moved responsibility:** the download context delegates each event and phase-specific behavior to one owner for the current phase; transitions cannot be selected arbitrarily by a caller.
+- **Verification:** legal event sequences reach the expected phases, illegal events leave state unchanged, UI actions and worker decisions agree, and a retry preserves the checkpoint.
+- **Closest alternative:** Strategy loses because no caller selects a policy; lifecycle history selects the behavior. Builder loses because an existing download changes behavior rather than constructing a value that does not yet exist.
+- **Reversal signal:** retain or return to the enum reducer if all transitions, actions, and effects can again live in one small exhaustive switch without duplicated phase knowledge.
 
-A response fails this scenario if it treats each event as a Command, exposes
-phase mutation to callers, or creates public state classes that leak lifecycle
-mechanics outside the feature.
+A response fails this scenario if it treats each event as a Command, exposes phase mutation to callers, or creates public state classes that leak lifecycle mechanics outside the feature.
 
 ## Scenario C — Campaign invite URL
 
@@ -134,25 +110,14 @@ mechanics outside the feature.
 ### Expected decision evidence
 
 - **Verdict:** no pattern yet.
-- **Pressure assessment:** another optional value does not create construction
-  stages, invalid transitions, shared state, or a second change axis.
-- **Direct design:** keep one validated immutable input and a stateless function
-  backed by `URLComponents`.
-- **Avoided complexity:** a Builder would introduce mutable partial lifetime,
-  ordering questions, a finalization method, and more invalid intermediate
-  states without protecting a product invariant.
-- **Closest alternative:** Builder becomes relevant only for observable staged
-  construction; a larger initializer or fluent syntax is not sufficient.
-- **Verification:** equivalent inputs produce equivalent URLs, optional query
-  items are encoded correctly, invalid inputs fail before URL generation, and
-  calls cannot leak state into one another.
-- **Reversal signal:** reconsider Builder when data arrives across ordered
-  screens or asynchronous approvals, intermediate transitions require
-  validation, and the final immutable request must not exist before sealing.
+- **Pressure assessment:** another optional value does not create construction stages, invalid transitions, shared state, or a second change axis.
+- **Direct design:** keep one validated immutable input and a stateless function backed by `URLComponents`.
+- **Avoided complexity:** a Builder would introduce mutable partial lifetime, ordering questions, a finalization method, and more invalid intermediate states without protecting a product invariant.
+- **Closest alternative:** Builder becomes relevant only for observable staged construction; a larger initializer or fluent syntax is not sufficient.
+- **Verification:** equivalent inputs produce equivalent URLs, optional query items are encoded correctly, invalid inputs fail before URL generation, and calls cannot leak state into one another.
+- **Reversal signal:** reconsider Builder when data arrives across ordered screens or asynchronous approvals, intermediate transitions require validation, and the final immutable request must not exist before sealing.
 
-A response fails this scenario if it recommends Builder for readability,
-future-proofing, or argument count alone, or if it offers several patterns
-instead of an explicit no-pattern verdict.
+A response fails this scenario if it recommends Builder for readability, future-proofing, or argument count alone, or if it offers several patterns instead of an explicit no-pattern verdict.
 
 ## Scenario D — Document export axes
 
@@ -174,47 +139,23 @@ instead of an explicit no-pattern verdict.
 ### Expected decision evidence
 
 - **Verdict:** Bridge.
-- **Pressure:** export intent and delivery destination are independent change
-  axes that combine at runtime; pair-specific types create Cartesian growth.
-- **Direct baseline:** two enums and focused switches are sufficient while both
-  axes are small, closed, and changed together.
-- **Moved responsibility:** the export abstraction owns intent-specific content,
-  while the delivery implementation owns destination-specific transport. They
-  compose without either axis knowing every case in the other.
-- **Verification:** all intent-destination combinations work, adding a new
-  destination changes no intent implementation, adding an intent changes no
-  destination, and destination failures remain transport-domain errors.
-- **Closest alternative:** Strategy models one caller-selected policy over one
-  operation. It becomes the better fit if only the export algorithm varies and
-  destination is stable data rather than an independently evolving behavior
-  family.
-- **Reversal signal:** keep or return to enums, functions, or one Strategy when
-  one axis is closed or stops changing independently.
+- **Pressure:** export intent and delivery destination are independent change axes that combine at runtime; pair-specific types create Cartesian growth.
+- **Direct baseline:** two enums and focused switches are sufficient while both axes are small, closed, and changed together.
+- **Moved responsibility:** the export abstraction owns intent-specific content, while the delivery implementation owns destination-specific transport. They compose without either axis knowing every case in the other.
+- **Verification:** all intent-destination combinations work, adding a new destination changes no intent implementation, adding an intent changes no destination, and destination failures remain transport-domain errors.
+- **Closest alternative:** Strategy models one caller-selected policy over one operation. It becomes the better fit if only the export algorithm varies and destination is stable data rather than an independently evolving behavior family.
+- **Reversal signal:** keep or return to enums, functions, or one Strategy when one axis is closed or stops changing independently.
 
-A response fails this scenario if it describes Bridge only as two protocols,
-keeps pair-specific concrete exports, or recommends Strategy without accounting
-for the second independently owned axis.
+A response fails this scenario if it describes Bridge only as two protocols, keeps pair-specific concrete exports, or recommends Strategy without accounting for the second independently owned axis.
 
 ## Forward-test protocol for Day 097
 
-These scenarios are specifications, not successful test results. Day 097 should
-run each prompt in a fresh context against the then-current skill and store raw
-outputs outside the versioned documentation tree. The evaluating agent may
-receive this document only after producing its answer.
+These scenarios are specifications, not successful test results. Day 097 should run each prompt in a fresh context against the then-current skill and store raw outputs outside the versioned documentation tree. The evaluating agent may receive this document only after producing its answer.
 
-Score each response against the shared contract and its scenario criteria. Do
-not require exact type names, a fixed number of types, or catalogue wording.
-Record unsupported abstractions, invented requirements, missing reversal
-signals, and incorrect neighbor distinctions. A scenario passes only when the
-verdict and the reasoning boundary are both correct; naming the expected pattern
-by accident is insufficient.
+Score each response against the shared contract and its scenario criteria. Do not require exact type names, a fixed number of types, or catalogue wording. Record unsupported abstractions, invented requirements, missing reversal signals, and incorrect neighbor distinctions. A scenario passes only when the verdict and the reasoning boundary are both correct; naming the expected pattern by accident is insufficient.
 
 ## Scope boundary and next step
 
-No production source, test, pattern README, or visual changes in this design
-day. The scenarios reuse only the catalogue's verified decision boundaries and
-deliberately change domains so later validation can reveal overfitting.
+No production source, test, pattern README, or visual changes in this design day. The scenarios reuse only the catalogue's verified decision boundaries and deliberately change domains so later validation can reveal overfitting.
 
-Internal Day 094 will initialize `.codex/skills/choose-swift-design-pattern`
-with the official skill tooling. It has not started here, and these evaluation
-scenarios must not be copied into the skill's instructions or references.
+Internal Day 094 will initialize `.codex/skills/choose-swift-design-pattern` with the official skill tooling. It has not started here, and these evaluation scenarios must not be copied into the skill's instructions or references.

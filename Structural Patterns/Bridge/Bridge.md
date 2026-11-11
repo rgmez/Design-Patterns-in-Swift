@@ -1,4 +1,6 @@
-# Bridge Design Pattern
+# 📖 Bridge Design Pattern
+
+<a id="bridge-design-pattern"></a>
 
 > [!WARNING]
 > Historical, non-canonical collection. Its three sketches do not demonstrate
@@ -6,6 +8,8 @@
 > [Bridge guide](README.md); the
 > [catalogue audit](../../Documentation/catalogue-audit.md#bridge--replace)
 > explains the misclassification.
+
+[← Historical examples](../../Documentation/historical-examples.md) · [Pattern catalogue](../../README.md#pattern-catalogue)
 
 ## Introduction
 

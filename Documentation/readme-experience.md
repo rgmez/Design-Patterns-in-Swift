@@ -1,6 +1,10 @@
-# README Experience
+# 📖 README Experience
+
+<a id="readme-experience"></a>
 
 This document defines the reading experience for the repository landing page and the 23 canonical pattern guides. It complements the visual asset contract in [`visual-style.md`](visual-style.md); it does not replace it.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
 
 ## Mode and goal
 
@@ -30,9 +34,18 @@ Every pattern guide begins with:
 2. Editorial header and normalized caption.
 3. Category and navigation back to the catalogue, reading guide, and quickstart.
 4. An `At a glance` block covering the problem, direct baseline, evidence that earns the pattern, and the condition that keeps the direct solution.
-5. The full problem → direct Swift → turning point → pattern → evidence → trade-off story.
+5. A compact `In this guide` navigation block grouping the decision, design, evidence, trade-offs, and onward links.
+6. The full problem → direct Swift → turning point → pattern → evidence → trade-off story.
 
 The summary must help a returning reader decide whether to continue; it must not replace the detailed evidence below it.
+
+## Category indexes and supporting documents
+
+Category indexes use the same section order: how to read the category, pattern catalogue, category boundary, and evidence. Present each pattern as a short entry with its established icon, a canonical guide link, and two explicit signals: `Use it when` and `Keep it simple when`. This keeps long decision criteria readable on narrow screens.
+
+Supporting documents retain their own purpose and section structure. Use a semantic title icon, a route back to the repository and catalogue, and an `On this page` index when the document is long enough to benefit from direct section access. Short references do not need an index. Historical dates, measurements, decisions, and qualifications remain historical evidence rather than being rewritten as current claims.
+
+Preserve existing heading anchors when adding icons. Canonical guides use explicit, emoji-independent section anchors so navigation stays readable and stable. Keep lower-level headings and technical prose free of decorative icons.
 
 ## Markdown rules
 

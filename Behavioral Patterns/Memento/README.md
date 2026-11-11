@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Scene-owned itinerary history must outlive one editor instance without learning its private schema.
 - **Direct baseline:** Value snapshots or a private bounded array are enough while history stays with one owner.
 - **Use Memento when:** An external caretaker must retain opaque, versioned, atomically restorable state.
 - **Keep it simple when:** The model is already public, one previous value is enough, or durable storage requires an explicit document format.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -26,6 +38,8 @@ A route-planning app edits an itinerary title, ordered stops, transport mode, an
 - The history never reads or decodes editor state.
 - Unsupported or malformed checkpoints leave both the editor and history unchanged.
 - Full-snapshot storage remains measured instead of being hidden behind the abstraction.
+
+<a id="start-with-direct-swift"></a>
 
 ## 🪶 Start with direct Swift
 
@@ -42,15 +56,21 @@ public mutating func saveRestorePoint() {
 
 Swift's copy-on-write collections make those small checkpoints independent without a pattern boundary. Keep this version while undo remains local to one editor lifetime.
 
+<a id="the-turning-point"></a>
+
 ## ⚡ The turning point
 
 The product then needs a scene-owned history that outlives editor recreation. The direct pressure implementation moves JSON outside the editor, but the archive must name, encode, and decode `DirectItineraryDraftSnapshotV1`. It therefore knows six concrete state fields and the schema version it is supposed to ignore.
 
 The 250-stop fixture measures one complete direct snapshot at 8,774 encoded bytes and four retained checkpoints at 35,096 bytes. That cost is acceptable; schema ownership, not size, is the demonstrated problem. A delta log or migration framework would add more risk than it removes. The [storage review](../../Documentation/memento-storage-review.md) also proves monotonic growth across 0, 50, and 250 stops and linear depth growth when only a same-length title changes.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Memento lets the editor hand an external history owner a sealed restore point. The history can retain, order, evict, and return that value, but only the editor can encode its private representation, validate compatibility, and commit a restored state.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -63,6 +83,8 @@ Memento lets the editor hand an external history owner a sealed restore point. T
 
 No participant is a protocol. There is one originator, one concrete caretaker, and no demonstrated runtime variation or external service boundary.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. `ItineraryDraftHistory.save(_:)` asks the editor to make a memento.
@@ -73,6 +95,8 @@ No participant is a protocol. There is one originator, one concrete caretaker, a
 6. The history removes the restore point only after restoration succeeds.
 
 `Data`, the memento, the editor, and the history are `Sendable` values. The example does not claim actor isolation or thread-safe shared mutation; ownership must still move between concurrency domains like any other mutable value.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -100,6 +124,8 @@ Notice that the caretaker sees only a sealed value. Capture, schema validation, 
 
 **Accessible description:** The route-planning scene asks the history to save an editor. The history asks the editor for an opaque memento and stores it, evicting the oldest value when full. After editor recreation, the history returns the newest memento to the editor. The editor decodes and validates it before committing, and only then does the history remove that restore point.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -110,6 +136,8 @@ swift test -Xswiftc -warnings-as-errors --filter MementoTests
 ```
 
 The package has no UI or networking dependency. Tests drive the editor and history as ordinary values and compare immutable previews.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -124,6 +152,8 @@ The package has no UI or networking dependency. Tests drive the editor and histo
 - malformed payloads also leave both owners unchanged.
 
 The earlier problem and pressure suites remain executable. They keep the editor-owned value stack and concrete JSON coupling visible as verified steps, not invented retrospective prose.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -143,6 +173,8 @@ The earlier problem and pressure suites remain executable. They keep the editor-
 - The opaque memento intentionally has no public serialization API. This history can outlive editor recreation in the same runtime, not an app launch.
 - Changing the private schema still requires the originator to define a compatibility policy; opacity moves that responsibility but does not erase it.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -154,6 +186,8 @@ The earlier problem and pressure suites remain executable. They keep the editor-
 
 Command captures *what to do*; Memento captures *what state existed*. If the itinerary later needs collaborative operation replay, Command or an operation log would solve a different requirement rather than becoming a richer memento.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep one previous value or a private bounded array when state is small and history never leaves its owner.
@@ -161,6 +195,8 @@ Command captures *what to do*; Memento captures *what state existed*. If the iti
 - Use a durable versioned document when restore points must survive app upgrades, process death, synchronization, or sharing.
 - Prefer reversible operations after measurements show full snapshots are too expensive and the team can own replay and compaction semantics.
 - Do not add a generic memento protocol, caretaker hierarchy, persistence repository, or migration engine for one concrete editor.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -174,9 +210,12 @@ Command captures *what to do*; Memento captures *what state existed*. If the iti
 - [`memento-pressure.md`](../../Documentation/memento-pressure.md) — measured pressure that earns the opaque boundary.
 - [`memento-storage-review.md`](../../Documentation/memento-storage-review.md) — content/depth growth and the delta or persistence handoff.
 - [`memento-header.png`](../../Documentation/Assets/Patterns/behavioral/memento-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Mediator](../Mediator/README.md) · **Next:** [Observer](../Observer/README.md) · **Compare with:** [Command](../Command/README.md)
 

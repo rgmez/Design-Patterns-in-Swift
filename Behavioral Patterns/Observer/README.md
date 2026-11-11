@@ -8,6 +8,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Session consumers need the current state and later changes while each subscription has its own lifetime.
@@ -15,21 +17,39 @@
 - **Use Observer when:** Consumers appear and disappear independently and must cancel without source-specific removal code.
 - **Keep it simple when:** One local closure or one observable UI model already owns delivery.
 
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
 ## 🎯 The app problem
 
 A commerce app owns one authenticated session, while account UI, cart ownership, synchronization, analytics, and short-lived screens must react to confirmed sign-in and sign-out changes. Direct calls are clear while every consumer shares the controller's lifetime. A screen that appears and disappears creates an independent subscription lifetime.
+
+<a id="start-with-direct-swift"></a>
 
 ## 🪶 Start with direct Swift
 
 [`SessionChangeDirect.swift`](../../Sources/DesignPatterns/Observer/SessionChangeDirect.swift) keeps the first solution as an exhaustive switch with concrete collaborators. That is the right choice for a fixed consumer set: there is no registration, cancellation, buffering, or ordering policy to explain.
 
+<a id="the-turning-point"></a>
+
 ## ⚡ The turning point
 
 The pressure review in [`observer-pressure.md`](../../Documentation/observer-pressure.md) adds a short-lived session screen. The direct controller must gain another concrete property and callback, and the screen cannot unregister itself from the source.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Observer separates the session source from receivers whose lifetimes vary. The source gives each receiver the current snapshot, then publishes confirmed state changes while that receiver independently chooses when to consume and cancel.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -38,12 +58,16 @@ Observer separates the session source from receivers whose lifetimes vary. The s
 | Session source and subscription boundary | [`ObservedSessionController`](../../Sources/DesignPatterns/Observer/SessionObservation.swift) | Owns the current session and continuation registry in one actor-isolated ordering domain. |
 | Receiver | `AsyncStream<UserSession>` | Lets each consumer control iteration and cancellation. |
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. A consumer requests an `AsyncStream` from the controller.
 2. Without suspending, the actor registers its continuation and enqueues the current session, so a transition cannot fall between snapshot and subscription.
 3. The controller stores a different confirmed session and yields it to every active continuation.
 4. Cancelling a consumer terminates its stream and removes only its continuation; publishing also prunes any already terminated entry.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -67,6 +91,8 @@ The controller owns both the source-of-truth transition and subscription order. 
 
 **Accessible description:** An account screen and a sync worker independently subscribe to one session controller and immediately receive its current state. The controller then sends the same confirmed changes to both. When the screen cancels, the controller removes only that continuation; the sync worker remains subscribed.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -75,6 +101,8 @@ From the repository root:
 swift build -Xswiftc -warnings-as-errors
 ```
 
+<a id="tests"></a>
+
 ## 🧪 Tests
 
 ```sh
@@ -82,6 +110,8 @@ swift test -Xswiftc -warnings-as-errors --filter ObserverTests
 ```
 
 The tests prove current-state delivery to late subscribers, fan-out to active subscribers, duplicate filtering, bounded buffering, independent cancellation, and terminated-subscription cleanup in [`ObserverTests.swift`](../../Tests/DesignPatternsTests/ObserverTests.swift).
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -98,6 +128,8 @@ The tests prove current-state delivery to late subscribers, fan-out to active su
 - A slow consumer may skip intermediate snapshots because the stream retains only the newest pending value.
 - The controller allocates and retains one continuation per active subscriber.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -106,11 +138,15 @@ The tests prove current-state delivery to late subscribers, fan-out to active su
 | Swift Observation | UI reads one observable model directly. | This example needs multiple independent async consumers and cancellation. |
 | Custom notification framework | A product has verified cross-module event semantics. | It would duplicate `AsyncStream` without a demonstrated need. |
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - When a view can read one observable session model directly.
 - When one local closure is clearer than a subscription registry.
 - When asynchronous buffering and cancellation would obscure a synchronous state update.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -119,9 +155,12 @@ The tests prove current-state delivery to late subscribers, fan-out to active su
 - [`ObserverProblemTests.swift`](../../Tests/DesignPatternsTests/ObserverProblemTests.swift) — direct baseline behavior.
 - [`ObserverPressureTests.swift`](../../Tests/DesignPatternsTests/ObserverPressureTests.swift) — lifecycle pressure.
 - [`ObserverTests.swift`](../../Tests/DesignPatternsTests/ObserverTests.swift) — subscription, duplicate, and cancellation semantics.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Memento](../Memento/README.md) · **Next:** [State](../State/README.md) · **Compare with:** [Mediator](../Mediator/README.md)
 

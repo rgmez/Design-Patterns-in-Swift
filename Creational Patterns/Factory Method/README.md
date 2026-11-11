@@ -1,4 +1,6 @@
-# Factory Method
+<a id="factory-method"></a>
+
+# 🏭 Factory Method
 
 ![Three provider import workflows prepare distinct bank feeds, create their own parsers, and converge on one normalized ledger.](../../Documentation/Assets/Patterns/creational/factory-method-header.png)
 
@@ -8,6 +10,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Each bank provider must own payload preparation and the parser created inside one shared import workflow.
@@ -15,13 +19,25 @@
 - **Use Factory Method when:** Creator-owned preparation and product creation change together while the surrounding workflow stays fixed.
 - **Keep it simple when:** Only parser selection varies or a closure keeps the variation local without exposing invalid pairings.
 
-## The app problem
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
+## 🎯 The app problem
 
 A personal-finance app imports transactions from Northstar CSV, Mercado Sur OFX, and Lumen open-banking JSON. The institutions do not return the same transport envelope, but categorization and reconciliation need one stable `BankStatementImport` value.
 
 The pressure is a workflow change, not a format count. Each provider needs its own preparation rules before parsing, and that preparation can grow to include authentication, pagination, or cursor handling without changing the normalized result contract.
 
-## Start with direct Swift
+<a id="start-with-direct-swift"></a>
+
+## 🪶 Start with direct Swift
 
 The first solution was an exhaustive provider switch. It prepared each payload, selected a parser, translated failures, and returned the common result from one function. That was appropriate while the workflows were small and closed; the baseline and its evidence remain in [`factory-method-problem.md`](../../Documentation/factory-method-problem.md) and [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md).
 
@@ -36,7 +52,9 @@ case .lumenOpenBanking:
 }
 ```
 
-## The turning point
+<a id="the-turning-point"></a>
+
+## ⚡ The turning point
 
 The central function began to own two decisions for every provider: how its transport response is prepared and which parser understands that prepared value. A new provider workflow therefore edits the same selection point even when all other workflows and the shared result stay unchanged.
 
@@ -44,11 +62,15 @@ A Simple Factory could hide parser construction behind `makeParser(for:)`, but i
 
 The [executable closure comparison](../../Documentation/factory-method-closure-comparison.md) also proves that two independently supplied closures can reproduce the result. That alternative loses here because the configuring caller must keep provider preparation paired with the parser it creates. The concrete creator makes that pair one named workflow; it does not claim that closures are inherently less capable or measure which representation has fewer lines.
 
-## Pattern intent
+<a id="pattern-intent"></a>
+
+## 🧭 Pattern intent
 
 Factory Method lets each concrete import workflow decide which parser it creates and uses, while the common workflow contract keeps account identity, provider identity, and normalized transaction output consistent. The creator variation is local to the provider workflow; callers no longer coordinate preparation and parser pairing themselves.
 
-## Participants and responsibilities
+<a id="participants-and-responsibilities"></a>
+
+## 🧩 Participants and responsibilities
 
 | App role | Swift type | Responsibility |
 | --- | --- | --- |
@@ -60,7 +82,9 @@ Factory Method lets each concrete import workflow decide which parser it creates
 
 The parser implementations are private because callers need the product contract, not provider parser identity. The public workflow types are value types: they carry no mutable session or network state in this executable example.
 
-## How the Swift implementation works
+<a id="how-the-swift-implementation-works"></a>
+
+## ⚙️ How the Swift implementation works
 
 1. `importBankStatement(_:)` selects a concrete workflow at the composition root from `BankStatementProvider`.
 2. The shared `importStatement(accountID:payload:)` operation asks that creator to prepare its provider envelope, then calls `makeParser()`.
@@ -69,7 +93,9 @@ The parser implementations are private because callers need the product contract
 
 The Factory Method is `makeParser()`. Preparation remains an explicit creator step so the example does not pretend that parser construction alone is the workflow variation. The provider switch at the composition root is a closed selection helper, not a second factory hierarchy.
 
-## Diagram
+<a id="diagram"></a>
+
+## 🗺️ Diagram
 
 ```mermaid
 flowchart LR
@@ -87,7 +113,9 @@ Observe that each concrete workflow owns the arrow from preparation to its parse
 
 **Accessible description:** The composition root chooses one of three provider workflows. The chosen workflow prepares its raw payload and creates the parser for that payload. The parser produces one normalized bank-statement result, which the shared import operation returns to the client.
 
-## Run the example
+<a id="run-the-example"></a>
+
+## ▶️ Run the example
 
 From the repository root:
 
@@ -97,7 +125,9 @@ swift build -Xswiftc -warnings-as-errors
 
 The package uses local fixtures and deterministic parser behavior; no network, credentials, or external SDKs are required.
 
-## Tests
+<a id="tests"></a>
+
+## 🧪 Tests
 
 ```sh
 swift test -Xswiftc -warnings-as-errors --filter FactoryMethodProblemTests
@@ -114,7 +144,9 @@ swift test -Xswiftc -warnings-as-errors --filter FactoryMethodProblemTests
 
 The full package suite also verifies the existing Adapter, Bridge, Strategy, and package-boundary examples.
 
-## Trade-offs
+<a id="trade-offs"></a>
+
+## ⚖️ Trade-offs
 
 ### What improves
 
@@ -129,7 +161,9 @@ The full package suite also verifies the existing Adapter, Bridge, Strategy, and
 - The composition root still has a provider selection switch; Factory Method does not remove product selection from the app boundary.
 - New creators and parsers must preserve the prepared-payload invariant and translate provider failures correctly.
 
-## Alternatives considered
+<a id="alternatives-considered"></a>
+
+## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
@@ -143,14 +177,18 @@ The full package suite also verifies the existing Adapter, Bridge, Strategy, and
 
 Factory Method differs from Simple Factory by moving the creation decision into the concrete creator. It differs from Abstract Factory because this example creates one product type, not a coordinated family.
 
-## When not to use it
+<a id="when-not-to-use-it"></a>
+
+## 🚫 When not to use it
 
 - Keep the direct switch when formats are closed and provider preparation is absent or shared.
 - Prefer a Simple Factory when parser construction is the only variation and no creator workflow owns additional steps.
 - Do not add a protocol and creator types for one parser or one call site.
 - Prefer Swift enums, functions, or a memberwise initializer when they express the construction rules without a separate workflow boundary.
 
-## Source map
+<a id="source-map"></a>
+
+## 🗂️ Source map
 
 - [`BankStatementImport.swift`](../../Sources/DesignPatterns/FactoryMethod/BankStatementImport.swift) — creators, Factory Method, parser products, and domain values.
 - [`FactoryMethodProblemTests.swift`](../../Tests/DesignPatternsTests/FactoryMethodProblemTests.swift) — creator, preparation, normalization, failure, and value-semantics tests.
@@ -158,9 +196,12 @@ Factory Method differs from Simple Factory by moving the creation decision into 
 - [`factory-method-pressure.md`](../../Documentation/factory-method-pressure.md) — measured workflow pressure and Simple Factory comparison.
 - [`factory-method-closure-comparison.md`](../../Documentation/factory-method-closure-comparison.md) — executable nearest-alternative comparison and reversal condition.
 - [`factory-method-header.png`](../../Documentation/Assets/Patterns/creational/factory-method-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Builder](../Builder/README.md) · **Next:** [Prototype](../Prototype/README.md) · **Compare with:** [Template Method](../../Behavioral%20Patterns/Template%20Method/README.md)
 

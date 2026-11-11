@@ -8,12 +8,24 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Checkout, Buy Again, and payment retry repeat inventory, payment, compensation, order, and analytics choreography.
 - **Direct baseline:** One focused orchestration function at the call site is enough for a single entry point.
 - **Use Facade when:** Several clients need one stable app-level operation over a subsystem they already understand.
 - **Keep it simple when:** There is one caller or the real issue is interface translation or peer coordination.
+
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
 
 ## 🎯 The app problem
 
@@ -30,11 +42,15 @@ The flow later appears in order history's **Buy Again** shortcut and in a paymen
 - Checkout clients should request placement without learning intermediate types, ordering, or compensation.
 - Inventory, payment, order, and analytics types must remain available to narrower use cases that genuinely need them.
 
+<a id="start-with-direct-swift"></a>
+
 ## 🪶 Start with direct Swift
 
 [`CheckoutDirect.swift`](../../Sources/DesignPatterns/Facade/CheckoutDirect.swift) keeps four concrete, value-semantic subsystems on `DirectCheckoutScreen`. Its `placeOrder(from:)` method makes the complete sequence explicit. With one caller and one short flow, that is easier to follow than an extra abstraction.
 
 [`CheckoutPressure.swift`](../../Sources/DesignPatterns/Facade/CheckoutPressure.swift) then adds direct **Buy Again** and payment-retry clients. The code deliberately retains their duplicate orchestration so the cost is executable evidence rather than a claim about future reuse.
+
+<a id="the-turning-point"></a>
 
 ## ⚡ The turning point
 
@@ -42,11 +58,15 @@ Three clients now expose **12 subsystem dependency slots**, three copies of one 
 
 A helper function could remove lines, but four coordinated mutable values would still need to move into and back out of every caller. The stable requirement is not code reuse alone: product clients need one checkout-placement boundary that owns the partial-failure rules.
 
+<a id="pattern-intent"></a>
+
 ## 🧭 Pattern intent
 
 Facade presents a focused interface over several subsystem objects. Here, `CheckoutFacade.placeOrder(from:)` is the product operation. It hides ordering, identifier handoff, compensation, and terminal analytics without pretending the subsystems no longer exist.
 
 This is a use-case facade, not a universal commerce API. It does not own cart editing, navigation, retries, tax, shipping, authentication, or every inventory and payment capability.
+
+<a id="participants-and-responsibilities"></a>
 
 ## 🧩 Participants and responsibilities
 
@@ -61,6 +81,8 @@ This is a use-case facade, not a universal commerce API. It does not own cart ed
 
 No subsystem protocol is introduced. These deterministic components have no external boundary or immediate implementation variation, so protocols would increase the example's surface without reducing risk.
 
+<a id="how-the-swift-implementation-works"></a>
+
 ## ⚙️ How the Swift implementation works
 
 1. A product client passes a validated `CheckoutSubmission` to `CheckoutFacade.placeOrder(from:)`.
@@ -70,6 +92,8 @@ No subsystem protocol is introduced. These deterministic components have no exte
 5. The facade records completion only after order creation and returns the order.
 
 The facade owns concrete subsystem values with `public private(set)` access. Clients cannot mutate coordinated state behind its back, while tests and read-only product views can inspect outcomes. The subsystem types themselves remain public and can still be instantiated directly for focused operations such as stock availability or payment-method validation.
+
+<a id="diagram"></a>
 
 ## 🗺️ Diagram
 
@@ -92,6 +116,8 @@ Notice that all three product entry points stop at the same operation. The facad
 
 **Accessible description:** The checkout screen, Buy Again shortcut, and payment retry all call `CheckoutFacade.placeOrder`. The facade reserves inventory, authorizes payment, creates the linked order, and records analytics. If payment declines, the facade releases the inventory reservation before returning the error.
 
+<a id="run-the-example"></a>
+
 ## ▶️ Run the example
 
 From the repository root:
@@ -102,6 +128,8 @@ swift test -Xswiftc -warnings-as-errors --filter FacadeTests
 ```
 
 The package uses deterministic in-memory values. It needs no backend, payment SDK, persistent store, or UI framework.
+
+<a id="tests"></a>
 
 ## 🧪 Tests
 
@@ -115,6 +143,8 @@ The package uses deterministic in-memory values. It needs no backend, payment SD
 - a lower-level subsystem remains directly usable outside the facade.
 
 The problem and pressure suites remain executable. They preserve the evidence that the direct design was initially sufficient and that three clients created the coupling which earned the final boundary.
+
+<a id="trade-offs"></a>
 
 ## ⚖️ Trade-offs
 
@@ -134,6 +164,8 @@ The problem and pressure suites remain executable. They preserve the evidence th
 - The synchronous example models local orchestration, not distributed transactions or durable compensation after process failure.
 - Read-only subsystem access exposes implementation detail, so clients should use it only for a concrete narrower need rather than reconstructing the workflow.
 
+<a id="alternatives-considered"></a>
+
 ## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
@@ -147,6 +179,8 @@ The problem and pressure suites remain executable. They preserve the evidence th
 
 Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds behavior around one interface, Strategy exchanges algorithms, and a coordinator typically owns UI flow or lifetime. Those responsibilities are deliberately not combined here.
 
+<a id="when-not-to-use-it"></a>
+
 ## 🚫 When not to use it
 
 - Keep the direct call sequence when it has one owner and failure handling is already local and obvious.
@@ -155,6 +189,8 @@ Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds 
 - Do not funnel unrelated inventory, payment, catalogue, account, and navigation operations into one convenience object.
 - Do not hide useful lower-level capabilities from clients that genuinely need them; simplify the common path, not the entire domain.
 - Do not treat an in-process facade as a transaction across remote services. Use idempotency, durable workflow state, or compensating operations when failures must survive process and network boundaries.
+
+<a id="source-map"></a>
 
 ## 🗂️ Source map
 
@@ -167,9 +203,12 @@ Facade simplifies *how clients reach a subsystem collaboration*. Decorator adds 
 - [`facade-problem.md`](../../Documentation/facade-problem.md) — original requirements, invariants, and no-pattern decision.
 - [`facade-pressure.md`](../../Documentation/facade-pressure.md) — measured coupling that earns the facade.
 - [`facade-header.png`](../../Documentation/Assets/Patterns/structural/facade-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Decorator](../Decorator/README.md) · **Next:** [Flyweight](../Flyweight/README.md) · **Compare with:** [Mediator](../../Behavioral%20Patterns/Mediator/README.md)
 

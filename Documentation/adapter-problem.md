@@ -1,8 +1,12 @@
-# Adapter Problem: Payment SDK Boundary
+# 🎯 Adapter Problem: Payment SDK Boundary
+
+<a id="adapter-problem-payment-sdk-boundary"></a>
 
 Problem-definition date: 2026-08-18
 
 This document defines Day 008 of the Adapter cycle. It fixes the app problem, the first vendor boundary, the smallest direct Swift solution, and the acceptance criteria before any pattern structure is introduced.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
 
 ## Product scenario
 

@@ -1,13 +1,10 @@
-# Historical Examples
+# 📖 Historical Examples
 
-These files preserve the repository's starting point. They are deliberately
-outside `Sources/DesignPatterns`, are not compiled by the Swift Package, and do
-not represent the current catalogue.
+<a id="historical-examples"></a>
 
-Use the canonical guide and its linked package source when learning or applying
-a pattern. Use the historical file only to study why recognizable structure is
-not enough without a real app pressure, a direct baseline, and behavioral
-evidence.
+These files preserve the repository's starting point. They are deliberately outside `Sources/DesignPatterns`, are not compiled by the Swift Package, and do not represent the current catalogue.
+
+Use the canonical guide and its linked package source when learning or applying a pattern. Use the historical file only to study why recognizable structure is not enough without a real app pressure, a direct baseline, and behavioral evidence.
 
 | Historical area | What it actually demonstrates | Canonical replacement |
 | --- | --- | --- |
@@ -18,7 +15,4 @@ evidence.
 | [External task Adapter](../Structural%20Patterns/Adapter/Adapter.md) | A recognizable target/adaptee skeleton with no realistic SDK contract pressure. | [Payment SDK Adapter](../Structural%20Patterns/Adapter/README.md) |
 | [Task Bridge collection](../Structural%20Patterns/Bridge/Bridge.md) | Three composition sketches, including Strategy-like variation, without two proven independent axes. | [Notification purpose/channel Bridge](../Structural%20Patterns/Bridge/README.md) |
 
-The evidence behind each classification is preserved in the
-[initial catalogue audit](catalogue-audit.md#existing-examples). Historical code
-should not be copied into app targets, used to count pattern coverage, or cited
-as passing package tests.
+The evidence behind each classification is preserved in the [initial catalogue audit](catalogue-audit.md#existing-examples). Historical code should not be copied into app targets, used to count pattern coverage, or cited as passing package tests.

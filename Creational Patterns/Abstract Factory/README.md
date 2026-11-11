@@ -1,4 +1,6 @@
-# Abstract Factory
+<a id="abstract-factory"></a>
+
+# 🧰 Abstract Factory
 
 ![Two regional three-part commerce families enter one selector, which installs a complete compatible family into checkout.](../../Documentation/Assets/Patterns/creational/abstract-factory-header.png)
 
@@ -8,6 +10,8 @@
 
 [← Pattern catalogue](../../README.md#pattern-catalogue) · [Reading guide](../../README.md#reading-guide) · [Quickstart](../../README.md#quickstart)
 
+<a id="at-a-glance"></a>
+
 ## ✨ At a glance
 
 - **Problem:** Regional checkout services can be selected independently and form invalid tax, payment, and receipt combinations.
@@ -15,7 +19,17 @@
 - **Use Abstract Factory when:** Several complete product families must vary while remaining internally compatible.
 - **Keep it simple when:** The family is closed, only one product varies, or one typed composition function already prevents invalid combinations.
 
-## The app problem
+**In this guide**
+
+- **Understand the decision:** [App problem](#the-app-problem) → [Direct Swift](#start-with-direct-swift) → [Turning point](#the-turning-point).
+- **Explore the design:** [Pattern intent](#pattern-intent) · [Participants](#participants-and-responsibilities) · [Implementation](#how-the-swift-implementation-works) · [Diagram](#diagram).
+- **Check the evidence:** [Run the example](#run-the-example) · [Tests](#tests).
+- **Weigh the choice:** [Trade-offs](#trade-offs) · [Alternatives](#alternatives-considered) · [When not to use it](#when-not-to-use-it).
+- **Keep exploring:** [Source map](#source-map) · [Related patterns](#continue-exploring).
+
+<a id="the-app-problem"></a>
+
+## 🎯 The app problem
 
 A white-label commerce app runs one checkout flow in the European Union and LATAM. Each region needs three related service policies:
 
@@ -25,7 +39,9 @@ A white-label commerce app runs one checkout flow in the European Union and LATA
 
 These products form a family. Selecting the EU region should never quietly pair VAT with the LATAM payment policy, and checkout should not need to coordinate three independent regional decisions.
 
-## Start with direct Swift
+<a id="start-with-direct-swift"></a>
+
+## 🪶 Start with direct Swift
 
 The original solution used concrete enum values and a small composition-root switch. That was the right baseline while all three settings changed together:
 
@@ -50,19 +66,25 @@ case .latam:
 
 The [problem baseline](../../Documentation/abstract-factory-problem.md) keeps that decision visible. There was no benefit in adding a factory when one closed switch already returned the complete immutable value.
 
-## The turning point
+<a id="the-turning-point"></a>
+
+## ⚡ The turning point
 
 Tax, payment, and receipt settings began arriving independently. Two regions across three selectable products exposed 16 declared assemblies: only two were coherent and 14 had to be rejected at runtime. The [pressure review](../../Documentation/abstract-factory-pressure.md) makes that matrix executable.
 
 The problem was not that the switches were long. The creation API treated compatible family members as unrelated choices. A complete-family boundary now removes those three independent selections from the normal composition path.
 
-## Pattern intent
+<a id="pattern-intent"></a>
+
+## 🧭 Pattern intent
 
 Abstract Factory provides creation operations for a family of related products without making the client assemble those products independently. In this app, one `RegionalCommerceFactory` creates the tax calculator, payment authorizer, and receipt formatter for a single region.
 
 The products remain small Swift enums. They do not need one protocol hierarchy per service merely to make the example resemble a class-oriented diagram.
 
-## Participants and responsibilities
+<a id="participants-and-responsibilities"></a>
+
+## 🧩 Participants and responsibilities
 
 | App role | Swift type | Responsibility |
 | --- | --- | --- |
@@ -73,7 +95,9 @@ The products remain small Swift enums. They do not need one protocol hierarchy p
 | Client | `placeRegionalOrder(_:using:)` | Uses the family without selecting or constructing individual products. |
 | Composition root | `makeRegionalServices(for:)` | Selects one concrete factory from the app-owned region enum. |
 
-## How the Swift implementation works
+<a id="how-the-swift-implementation-works"></a>
+
+## ⚙️ How the Swift implementation works
 
 1. The composition root receives one `CommerceRegion` and chooses one concrete factory.
 2. `makeRegionalServices(using:)` asks that factory for all three product values and creates `RegionalServices` inside the module boundary.
@@ -82,7 +106,9 @@ The products remain small Swift enums. They do not need one protocol hierarchy p
 
 `RegionalServices` has a `fileprivate` initializer. This prevents app callers from recreating the invalid 16-combination assembly surface. The coherence check remains because the abstract factory is public and a custom external conformer could still violate its contract. Making misuse uncommon and detectable is more useful here than pretending protocols can prove semantic compatibility.
 
-## Diagram
+<a id="diagram"></a>
+
+## 🗺️ Diagram
 
 ```mermaid
 flowchart LR
@@ -102,7 +128,9 @@ Observe that the region selects a factory once. The three products converge on o
 
 **Accessible description:** The composition root maps EU or LATAM to its regional factory. That factory creates the matching tax calculator, payment authorizer, and receipt formatter. Those three values are bundled as one regional service family and passed to the unchanged checkout operation.
 
-## Run the example
+<a id="run-the-example"></a>
+
+## ▶️ Run the example
 
 From the repository root:
 
@@ -113,7 +141,9 @@ swift test -Xswiftc -warnings-as-errors --filter AbstractFactoryTests
 
 The example is local and deterministic. It requires no network, regional tax service, payment SDK, credentials, or localization dependency.
 
-## Tests
+<a id="tests"></a>
+
+## 🧪 Tests
 
 [`AbstractFactoryTests.swift`](../../Tests/DesignPatternsTests/AbstractFactoryTests.swift) proves:
 
@@ -125,7 +155,9 @@ The example is local and deterministic. It requires no network, regional tax ser
 
 The two valid families use parameterized Swift Testing cases so each region has independent diagnostics without duplicated test logic.
 
-## Trade-offs
+<a id="trade-offs"></a>
+
+## ⚖️ Trade-offs
 
 ### What improves
 
@@ -142,7 +174,9 @@ The two valid families use parameterized Swift Testing cases so each region has 
 - The composition root still selects a factory; Abstract Factory does not make regional configuration discovery disappear.
 - Adding a new product requires updating the factory contract and every concrete family.
 
-## Alternatives considered
+<a id="alternatives-considered"></a>
+
+## 🔀 Alternatives considered
 
 | Alternative | Prefer it when | Why it does not meet this example now |
 | --- | --- | --- |
@@ -154,7 +188,9 @@ The two valid families use parameterized Swift Testing cases so each region has 
 
 A single concrete factory would not justify Abstract Factory. With only EU, a direct immutable `RegionalServices` value is clearer because there is no family selection or variation to abstract.
 
-## When not to use it
+<a id="when-not-to-use-it"></a>
+
+## 🚫 When not to use it
 
 - Keep a direct switch when one closed regional decision already returns a complete value safely.
 - Do not add an abstract factory for one product; use an initializer, function, Simple Factory, or Factory Method according to the actual workflow.
@@ -162,16 +198,21 @@ A single concrete factory would not justify Abstract Factory. With only EU, a di
 - Prefer dependency injection of a concrete aggregate when the composition root has already made the family decision.
 - Do not use Abstract Factory to hide arbitrary service-locator configuration; compatible products and their invariant must remain explicit.
 
-## Source map
+<a id="source-map"></a>
+
+## 🗂️ Source map
 
 - [`RegionalCommerce.swift`](../../Sources/DesignPatterns/AbstractFactory/RegionalCommerce.swift) — domain values, products, factories, family assembly, and checkout.
 - [`AbstractFactoryTests.swift`](../../Tests/DesignPatternsTests/AbstractFactoryTests.swift) — family creation, composition selection, checkout, defensive validation, and value-semantics tests.
 - [`abstract-factory-problem.md`](../../Documentation/abstract-factory-problem.md) — direct baseline and initial visual thesis.
 - [`abstract-factory-pressure.md`](../../Documentation/abstract-factory-pressure.md) — measured invalid-combination pressure.
 - [`abstract-factory-header.png`](../../Documentation/Assets/Patterns/creational/abstract-factory-header.png) — editorial header.
+
 ---
 
-## Continue exploring
+<a id="continue-exploring"></a>
+
+## 🔗 Continue exploring
 
 **Previous:** [Singleton](../Singleton/README.md) · **Next:** [Builder](../Builder/README.md) · **Compare with:** [Factory Method](../Factory%20Method/README.md)
 

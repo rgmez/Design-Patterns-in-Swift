@@ -1,10 +1,12 @@
-# Bonus Track Final Review
+# 🔎 Bonus Track Final Review
+
+<a id="bonus-track-final-review"></a>
 
 Review date: 2026-11-11
 
-This review closes Bonus 010 by validating the complete example-hardening track
-as one coherent change set. The track did not add a pattern or invent a new app
-requirement. It made the catalogue's narrowest decisions harder to misread.
+This review closes Bonus 010 by validating the complete example-hardening track as one coherent change set. The track did not add a pattern or invent a new app requirement. It made the catalogue's narrowest decisions harder to misread.
+
+[← Repository overview](../README.md) · [Pattern catalogue](../README.md#pattern-catalogue) · [Reading guide](../README.md#reading-guide)
 
 ## Completed outcomes
 
@@ -30,25 +32,17 @@ swift test -Xswiftc -warnings-as-errors
 - The build completed without compiler diagnostics.
 - Swift Testing passed 359 tests in 194 suites.
 - All 23 canonical guides satisfy the repository README contract.
-- 878 local Markdown targets resolve across 121 candidate files; documented
-  template placeholders are the only exclusions.
+- 878 local Markdown targets resolve across 121 candidate files; documented template placeholders are the only exclusions.
 - All 51 Mermaid fences are balanced and use supported declarations.
 - The 23 pattern headers plus the no-pattern header remain 1672 × 941 pixels.
-- The approved Adapter reference still matches repository SHA-256
-  `48babe10c2374a2d9cc424194fb1cd34a8922444d216dac6e5c1466e77c1aca4`.
+- The approved Adapter reference still matches repository SHA-256 `48babe10c2374a2d9cc424194fb1cd34a8922444d216dac6e5c1466e77c1aca4`.
 - No visual asset changed after the Day 099 contact-sheet inspection.
-- The public symbol graph contains `AudioSessionController` and no public
-  `production` or `shared` storage accessor.
+- The public symbol graph contains `AudioSessionController` and no public `production` or `shared` storage accessor.
 - `Editorial/` and `.build/automation/bonus-010/` remain ignored and untracked.
 
-The official skill quick validator cannot be rerun in the current host Python
-because its PyYAML dependency is unavailable. The skill files are unchanged
-since their successful Day 099 official validation, and Ruby independently
-parses frontmatter containing only `name` and `description`. No dependency was
-installed merely to reproduce an unchanged check.
+The official skill quick validator cannot be rerun in the current host Python because its PyYAML dependency is unavailable. The skill files are unchanged since their successful Day 099 official validation, and Ruby independently parses frontmatter containing only `name` and `description`. No dependency was installed merely to reproduce an unchanged check.
 
-Mermaid CLI also remains unavailable, so diagram validation is structural
-rather than renderer-level. No diagram syntax regression was found.
+Mermaid CLI also remains unavailable, so diagram validation is structural rather than renderer-level. No diagram syntax regression was found.
 
 ## Example-quality decision
 
@@ -61,16 +55,10 @@ The hardened examples still pass the shared evidence gate:
 - the closest alternative and new complexity are explicit; and
 - a concrete signal reverses each pattern decision.
 
-The bonus track deliberately retained direct solutions where they remain the
-better choice. It did not add a shared pattern protocol, registry, dependency
-container, parser framework, cache, persistence layer, coordinator hierarchy,
-or generic visitor algebra.
+The bonus track deliberately retained direct solutions where they remain the better choice. It did not add a shared pattern protocol, registry, dependency container, parser framework, cache, persistence layer, coordinator hierarchy, or generic visitor algebra.
 
 ## Release decision
 
-The bonus track is complete and the v1.0 candidate is requalified for explicit
-human review. No tag, GitHub release, pull request, or LinkedIn publication is
-authorized by this review.
+The bonus track is complete and the v1.0 candidate is requalified for explicit human review. No tag, GitHub release, pull request, or LinkedIn publication is authorized by this review.
 
-The next action is outside the roadmap: inspect the requalified candidate and
-approve the exact tag and release operation separately.
+The next action is outside the roadmap: inspect the requalified candidate and approve the exact tag and release operation separately.
