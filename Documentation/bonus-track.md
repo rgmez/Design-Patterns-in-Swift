@@ -153,3 +153,13 @@ Template Method remains for the closed built-in provider set because it offers
 one nominal importer type and a final module-controlled operation. Prefer the
 closure representation when providers are injected, composed externally, or
 better expressed with value semantics.
+
+## Bonus 009 decision
+
+The [Visitor extension review](visitor-extension-review.md) groups the existing
+test-only operation into an explicit extension-direction suite. It adds a new
+operation without editing production elements and records the opposite,
+compiler-enforced change surface for a new element kind.
+
+No fake element was added. Visitor remains justified only while operations grow
+faster than the stable paragraph, link, image, and table family.

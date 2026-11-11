@@ -618,7 +618,10 @@ pattern.
   The [composition review](Documentation/template-method-composition-review.md)
   proves an ordinary closure-based rail can preserve order and atomicity, then
   narrows Template Method to a closed nominal importer family.
-- [ ] **Bonus 009 — Demonstrate Visitor's extension direction.**
+- [x] **Bonus 009 — Demonstrate Visitor's extension direction.** The
+  [extension review](Documentation/visitor-extension-review.md) makes operation
+  growth executable and records the compiler-enforced cost of adding an element
+  without inventing a fifth node kind.
 - [ ] **Bonus 010 — Review the hardened catalogue.**
 
 ## Review checkpoints

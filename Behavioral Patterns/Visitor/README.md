@@ -71,6 +71,9 @@ every existing operation must define its behavior for that new kind.
 The [pressure review](../../Documentation/visitor-pressure.md) compares the
 enum with protocol requirements, a four-closure fold, free functions, and
 Visitor before accepting the new boundary.
+The [extension-direction review](../../Documentation/visitor-extension-review.md)
+turns the cheap operation direction into a dedicated executable suite and
+records the compiler-enforced change surface for a new element kind.
 
 ## 🧭 Pattern intent
 
@@ -189,8 +192,9 @@ and inspect typed results; no executable app or console output is required.
 [`VisitorTests.swift`](../../Tests/DesignPatternsTests/VisitorTests.swift)
 verifies:
 
-- concrete overload dispatch for all four elements in source order;
-- a fourth outbound-link operation without any element modification;
+- concrete overload dispatch for all four elements in source order through the
+  `ExtensionDirection` suite;
+- a fourth outbound-link operation without any production element modification;
 - accessibility finding order and cross-element heading state;
 - a complete article with no accessibility findings;
 - plain-text ordering and decorative-image exclusion; and
@@ -255,4 +259,5 @@ fail or disappear.
 - [`PublishingDocumentPressure.swift`](../../Sources/DesignPatterns/Visitor/PublishingDocumentPressure.swift) — direct extraction and localization comparison.
 - [`VisitorTests.swift`](../../Tests/DesignPatternsTests/VisitorTests.swift) — final dispatch, behavior, and extension-direction evidence.
 - [`visitor-problem.md`](../../Documentation/visitor-problem.md) and [`visitor-pressure.md`](../../Documentation/visitor-pressure.md) — evidence that earned the pattern.
+- [`visitor-extension-review.md`](../../Documentation/visitor-extension-review.md) — executable operation extension and compiler-enforced element cost.
 - [`visitor-header.png`](../../Documentation/Assets/Patterns/behavioral/visitor-header.png) — editorial header.

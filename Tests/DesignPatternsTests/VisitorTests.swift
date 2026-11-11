@@ -31,22 +31,33 @@ struct VisitorTests {
         ]
     )
 
-    @Test("Each element dispatches to its concrete visitor overload in source order")
-    func dispatchesConcreteElements() {
-        let visitor = ElementKindVisitor()
+    @Suite("Extension direction")
+    struct ExtensionDirection {
+        @Test("Each element dispatches to its concrete visitor overload in source order")
+        func dispatchesConcreteElements() {
+            let visitor = ElementKindVisitor()
 
-        VisitorTests.article.accept(visitor)
+            VisitorTests.article.accept(visitor)
 
-        #expect(visitor.visits == ["title", "paragraph", "link", "image", "table"])
-    }
+            #expect(
+                visitor.visits == [
+                    "title",
+                    "paragraph",
+                    "link",
+                    "image",
+                    "table"
+                ]
+            )
+        }
 
-    @Test("A new operation crosses all existing elements without editing them")
-    func addsOperationWithoutChangingElements() {
-        let visitor = OutboundDestinationVisitor()
+        @Test("A new operation crosses all existing elements without editing them")
+        func addsOperationWithoutChangingElements() {
+            let visitor = OutboundDestinationVisitor()
 
-        VisitorTests.article.accept(visitor)
+            VisitorTests.article.accept(visitor)
 
-        #expect(visitor.destinations == ["/routes/step-free"])
+            #expect(visitor.destinations == ["/routes/step-free"])
+        }
     }
 
     @Suite("Accessibility visitor")
