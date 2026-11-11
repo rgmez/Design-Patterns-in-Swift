@@ -1,5 +1,11 @@
 # Prototype Creational Pattern
 
+> [!WARNING]
+> Historical, non-canonical example. Its value-like payload does not justify
+> explicit cloning in Swift. Use the tested [Prototype guide](README.md); the
+> [catalogue audit](../../Documentation/catalogue-audit.md#prototype--reframe)
+> explains why value semantics must be considered first.
+
 ## Introduction
 The Prototype Creational Pattern is a design pattern that enables creating new objects by cloning an existing object, known as the prototype. This pattern is useful in scenarios where object creation is costly, and a similar object already exists.
 

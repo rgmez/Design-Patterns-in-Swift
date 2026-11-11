@@ -2,6 +2,12 @@
 
 Baseline date: 2026-08-17
 
+> [!IMPORTANT]
+> This is the historical baseline, not the current catalogue status. The
+> superseded files are mapped in [Historical Examples](historical-examples.md),
+> and the tested replacements are summarized in the
+> [complete catalogue review](catalogue-review.md).
+
 This audit records what the repository can prove today. A directory name does
 not count as a completed pattern: the example must demonstrate the pattern's
 intent, compile as part of the repository, be tested, and explain why the added

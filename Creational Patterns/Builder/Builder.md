@@ -1,5 +1,11 @@
 # Builder Design Pattern
 
+> [!WARNING]
+> Historical, non-canonical example. A direct Swift initializer is clearer for
+> this flat task value. Use the tested [Builder guide](README.md); the
+> [catalogue audit](../../Documentation/catalogue-audit.md#builder--reframe)
+> explains the missing construction pressure.
+
 ## Introduction
 The Builder Design Pattern is a creational pattern used to construct a complex object step by step. It separates the construction process of an object from its representation, allowing the same construction process to create different representations.
 

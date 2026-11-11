@@ -1,5 +1,12 @@
 # Bridge Design Pattern
 
+> [!WARNING]
+> Historical, non-canonical collection. Its three sketches do not demonstrate
+> two independently varying axes, and two are closer to Strategy. Use the tested
+> [Bridge guide](README.md); the
+> [catalogue audit](../../Documentation/catalogue-audit.md#bridge--replace)
+> explains the misclassification.
+
 ## Introduction
 
 The Bridge Design Pattern is a structural design pattern that separates an abstraction from its implementation, allowing them to be varied independently. It enhances modularity and readability in complex systems by decoupling functional abstraction from its implementation details. This pattern is particularly beneficial in scenarios where system components need to be independently extended or modified over time.

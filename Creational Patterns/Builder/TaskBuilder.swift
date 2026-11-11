@@ -1,3 +1,6 @@
+// Historical, non-canonical example excluded from the Swift Package.
+// See README.md for the tested Builder replacement.
+
 // Task structure representing a single task in the management system.
 // It includes essential details like title, type, description, deadline, priority, and assignee.
 struct Task {

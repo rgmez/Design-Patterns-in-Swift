@@ -1,5 +1,12 @@
 # Adapter Design Pattern
 
+> [!WARNING]
+> Historical, non-canonical example. It preserves a recognizable Adapter shape
+> but does not demonstrate realistic SDK contract pressure. Use the tested
+> [Adapter guide](README.md); the
+> [catalogue audit](../../Documentation/catalogue-audit.md#adapter--rebuild)
+> explains why this sketch was rebuilt.
+
 ## Introduction
 
 The Adapter Design Pattern is a structural pattern that allows objects with incompatible interfaces to work together. It acts as a bridge between two different interfaces or classes, enabling them to communicate without modifying their existing code. This pattern is particularly useful when integrating new features, APIs, or systems that do not match the existing system's interface.

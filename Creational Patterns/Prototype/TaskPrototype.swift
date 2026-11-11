@@ -1,3 +1,6 @@
+// Historical, non-canonical example excluded from the Swift Package.
+// See README.md for the tested Prototype replacement.
+
 // Protocol for cloning
 protocol TaskPrototype {
     func clone() -> TaskPrototype

@@ -1,3 +1,6 @@
+// Historical, non-canonical example excluded from the Swift Package.
+// This is a Simple Factory. See ../Factory Method/README.md for Factory Method.
+
 // Define a basic protocol for a Task
 // This protocol acts as a template for any task, ensuring they all have a title, description, and a way to perform the task.
 protocol Task {

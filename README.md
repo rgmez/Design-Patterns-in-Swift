@@ -152,6 +152,7 @@ who owns subscriptions, traversal, or history.
 | [`Sources/DesignPatterns/`](Sources/DesignPatterns/) | The implemented examples compiled by the package, organized by pattern. |
 | [`Tests/DesignPatternsTests/`](Tests/DesignPatternsTests/) | Swift Testing suites that verify the examples' behavior. |
 | [`Documentation/`](Documentation/) | Supporting problem analyses, design decisions, and progress reviews. |
+| [Historical examples](Documentation/historical-examples.md) | Superseded sketches, what they actually demonstrate, and the canonical replacement for each one. |
 
 Some older `.md` examples and playground files remain for reference. They are
 outside the Swift Package. The linked pattern READMEs describe the current,
@@ -165,6 +166,9 @@ when you want to understand the series plan or add an example:
 
 - [100-day roadmap](ROADMAP.md): the sequence of problem, changing requirement,
   and solution work for all 23 patterns, with review milestones.
+- [Bonus-track plan](Documentation/bonus-track.md): ten evidence-led stages that
+  isolate historical material and strengthen the eight narrowest canonical
+  examples without adding speculative abstractions.
 - [Catalogue audit](Documentation/catalogue-audit.md): the starting assessment
   of the historical examples and the decisions behind their replacements.
 - [Complete catalogue review](Documentation/catalogue-review.md): the validated

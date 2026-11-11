@@ -1,5 +1,12 @@
 # Factory Design Pattern
 
+> [!WARNING]
+> Historical, non-canonical example. This code is a centralized Simple Factory,
+> not Factory Method. Use the tested
+> [Factory Method guide](../Factory%20Method/README.md) for the current example;
+> the [catalogue audit](../../Documentation/catalogue-audit.md#factory-method--replace)
+> explains why this file was superseded.
+
 ## Introduction
 The Factory Design Pattern is a creational pattern that provides an interface for creating objects in a superclass but allows subclasses to alter the type of objects that will be created. This pattern is particularly useful when a system needs to be independent from the way its objects are created, composed, and represented.
 

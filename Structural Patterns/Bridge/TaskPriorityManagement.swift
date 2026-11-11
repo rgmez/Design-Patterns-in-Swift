@@ -1,5 +1,8 @@
 import Foundation
 
+// Historical, non-canonical example excluded from the Swift Package.
+// This is Strategy-like variation. See README.md for the Bridge replacement.
+
 // Task Protocol - Changed the protocol name used in the past examples to "MyTask" to avoid
 // issues with the Swift's own concurrency construct, Task.
 protocol MyTask {

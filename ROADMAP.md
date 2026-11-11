@@ -579,6 +579,25 @@ an editorial guide, not a content quota.
   with its deliberately omitted abstractions, evidence-led lessons, remaining
   validation limits, and candidate problem areas for a later roadmap.
 
+### Bonus track — Harden the examples
+
+The [bonus-track plan](Documentation/bonus-track.md) improves decision quality
+without reopening the completed catalogue or inventing requirements to defend a
+pattern.
+
+- [x] **Bonus 001 — Isolate historical examples.** Mark superseded documents
+  and Swift files as non-canonical, map each one to its tested replacement, and
+  keep the original evidence available without presenting it as current advice.
+- [ ] **Bonus 002 — Re-evaluate Factory Method against creation closures.**
+- [ ] **Bonus 003 — Constrain Singleton's shared lookup.**
+- [ ] **Bonus 004 — Tighten Flyweight measurement claims.**
+- [ ] **Bonus 005 — Define Interpreter's parser handoff.**
+- [ ] **Bonus 006 — Bound Mediator coordination responsibility.**
+- [ ] **Bonus 007 — Quantify Memento snapshot growth.**
+- [ ] **Bonus 008 — Compare Template Method with higher-order composition.**
+- [ ] **Bonus 009 — Demonstrate Visitor's extension direction.**
+- [ ] **Bonus 010 — Review the hardened catalogue.**
+
 ## Review checkpoints
 
 - **Day 007:** foundation ready.
@@ -587,7 +606,10 @@ an editorial guide, not a content quota.
 - **Day 070:** flow and structural patterns validated.
 - **Day 091:** all 23 patterns complete.
 - **Day 099:** release candidate ready for explicit approval.
-- **Day 100:** retrospective complete; v1.0 awaits explicit release approval.
+- **Day 100:** retrospective complete; the original candidate reached the
+  explicit release-approval gate before the bonus track began.
+- **Bonus 010:** hardened examples retain only evidence-backed improvements and
+  the v1.0 candidate is requalified for explicit release approval.
 
 The roadmap may be clarified as evidence emerges, but changing scope, order, or
 the Definition of Done must be visible in its own reviewed commit.

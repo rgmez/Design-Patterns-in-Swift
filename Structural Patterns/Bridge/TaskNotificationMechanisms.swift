@@ -1,5 +1,8 @@
 import Foundation
 
+// Historical, non-canonical example excluded from the Swift Package.
+// See README.md for the tested two-axis Bridge replacement.
+
 // Task Protocol - Changed the protocol name used in the past examples to "MyTask" to avoid
 // issues with the Swift's own concurrency construct, Task.
 protocol MyTask {

@@ -1,3 +1,6 @@
+// Historical, non-canonical example excluded from the Swift Package.
+// See README.md for the tested payment SDK Adapter replacement.
+
 // Define the basic Task protocol for the in-house system.
 protocol Task {
     var title: String { get }
